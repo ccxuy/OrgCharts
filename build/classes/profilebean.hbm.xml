@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE hibernate-mapping PUBLIC "- / / Hibernate / Hibernate Mapping DTD 3.0 / / EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="beans">
+    <class name="ProfileBean" table="EMP">
+        <meta attribute="class-description">This class contains the Profile detail.</meta>
+        <id name="id" column="emp_id" type="java.lang.Integer">
+        	<generator class="sequence">
+                <param name="sequence">HBXTRACK_OWNER.emp_id_seq</param>
+            </generator>
+        </id>
+        <property name="firstName" column="first_name" type="java.lang.String" />
+        <property name="lastName"  column="last_name" type="java.lang.String" />
+        <property name="email" column="email" type="java.lang.String" />
+        <property name="img" column="image" type="blob" />
+    </class>
+</hibernate-mapping>

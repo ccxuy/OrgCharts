@@ -1,0 +1,13 @@
+<ul id='org' style='display:none'>
+        <li class="root">
+           <span class="label_node">Parent</span>
+            <ul>
+                <li class="child 1">
+                    <span class="label_node">Child A</span>
+                </li>
+                <li class="child 2">
+                    <span class="label_node">Child B</span>
+                </li>
+            </ul>
+        </li>
+   </ul>

@@ -1,0 +1,9 @@
+<ul id='org' style='display:none'>
+        <li class="root">
+           <span class="label_node">Office of the Commissioner</span>
+            <ul>
+                
+                
+            <li class="child root_1"><span class="label_node">Office of Primary Care and Health Systems Mangement</span><ul><li class="child root_1_1"><span class="label_node">Center for Health Care Facility Planning, Licensure and Finance</span><ul><li class="temp child root_1_1"></li></ul></li><li class="temp child root_1"></li><li class="child root_1_2"><span class="label_node">Center for health Care Provider Services and Oversight</span></li><li class="child root_1_3"><span class="label_node">Center for Health Care Policy and Resource Development</span></li></ul></li><li class="child root_2"><span class="label_node">Division of Administration</span><ul><li class="temp child root_2"></li></ul></li><li class="child root_3"><span class="label_node">Office of Quality and Patient Safety</span><ul></ul></li><li class="child root_4"><span class="label_node">Health Facilities Management</span><ul><li class="temp child root_4 root"></li></ul></li><li class="child root_5"><span class="label_node">Office of Governmental Affiairs &amp; External Affairs</span><ul><li class="temp child root_5 root"></li></ul></li><li class="child root_6"><span class="label_node">Public Affairs Group</span></li><li class="child root_7"><span class="label_node">New York State of Health</span><ul></ul></li><li class="child root_8"><span class="label_node">Office of Health Insurance Programs</span><ul></ul></li><li class="temp root"></li><li class="child root_9"><span class="label_node">Office of Public Health</span><ul><li class="temp child root_9"></li></ul></li><li class="child root_10"><span class="label_node">Office of Miniority Health Health Disparities Prevention</span></li><li class="child root_11"><span class="label_node">Regional Offices</span></li></ul>
+        </li>
+   </ul>
