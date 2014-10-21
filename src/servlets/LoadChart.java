@@ -25,6 +25,7 @@ public class LoadChart extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String fileName=request.getParameter("fileName");
+		if(null==fileName)fileName="";
 		String fileNameToRead;
 		response.setContentType("text/html");
 		try {
