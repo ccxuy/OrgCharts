@@ -5,6 +5,7 @@ import java.sql.Blob;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -16,6 +17,8 @@ import beans.ProfileBean;
 
 //import org.json.simple.JSONObject;
 public class HibernateUtilities {
+	private static final Logger log = Logger
+			.getLogger(HibernateUtilities.class);
 
 	private static SessionFactory sessfactory;
 
@@ -24,6 +27,10 @@ public class HibernateUtilities {
 			try {
 				sessfactory = new Configuration().configure(
 						"/hibernate.cfg.xml").buildSessionFactory();
+			} catch (Exception e) {
+				log.error("Initial SessionFactory creation failed." + e);
+				throw new IllegalStateException(
+						"Initial Session Factory creation failed.");
 			} catch (Throwable ex) {
 				System.err.println("Failed to create sessionFactory object."
 						+ ex);
