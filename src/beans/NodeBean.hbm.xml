@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 21, 2014 2:38:04 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="beans.NodeBean" table="NODEBEAN">
+        <id name="user_id" type="java.lang.String">
+            <column name="USER_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="struct" type="java.sql.Clob">
+            <column name="STRUCT" />
+        </property>
+        <property name="seq_no" type="int">
+            <column name="SEQ_NO" />
+        </property>
+        <property name="time" type="java.sql.Timestamp">
+            <column name="TIME" />
+        </property>
+        <property name="data_lock" type="int">
+            <column name="DATA_LOCK" />
+        </property>
+        <property name="chart_name" type="java.lang.String">
+            <column name="CHART_NAME" />
+        </property>
+    </class>
+</hibernate-mapping>
