@@ -32,7 +32,6 @@ function ajax0() {
         }
     });
 }
-
 var node_type = "";
 var id_num = "";
 var load = true;
@@ -57,7 +56,7 @@ function init_tree() {
         get_emp_info();
     }
     console.log("done with init_tree");
-};
+}
 
 //resets all forms to initial state
 function reset_forms() {
@@ -77,7 +76,7 @@ function reset_forms() {
     $("#add_curr").attr("disabled", true);
     $("#employees").val("");
     console.log("reset_forms");
-};
+}
 
 //recusive method to adjust the class values of all the decendent nodes of $ul after one child node has been removed.
 function adjustChildren($ul, startnum, cutPoint) {
@@ -252,15 +251,15 @@ $(document).on("ready", function() {
     init_tree();
     var add_to_node, del_node, classList;
 
+
     // Edit node
-    $('body').on("click", ".edit", function(e) {
+    $(".edit").live("click", function(e) {
         classList = $(this).parent().parent().attr('class').split(/\s+/);
         $.each(classList, function(index, item) {
             if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
                 add_to_node = item;
                 //console.log(".edit", add_to_node);
             }
-
         });
 
         node_type = "";
@@ -324,7 +323,6 @@ $(document).on("ready", function() {
             unitname_field.val("");
             node_to_edit.find("> .label_node[id=ud]").text(description);
             unitdes_field.val("");
-
         }
         if (node_type == "position") {
             var unitname_field = $("#edit_position_name");
@@ -349,12 +347,11 @@ $(document).on("ready", function() {
 
         $.fancybox.close();
         init_tree();
-
     });
 
 
     // Add Node
-    $('body').on("click", ".add", function() {
+    $(".add").live("click", function() {
         click_flag = false;
         node_type = "";
         classList = $(this).parent().parent().attr('class').split(/\s+/);
@@ -363,6 +360,7 @@ $(document).on("ready", function() {
                 add_to_node = item;
             }
         });
+
     }).fancybox({
         maxWidth: 550,
         maxHeight: 300,
@@ -505,7 +503,7 @@ $(document).on("ready", function() {
     });
 
     //add/edit employee
-    $('body').on("click", ".emp", function(e) {
+    $(".emp").live("click", function(e) {
         click_flag = false;
         node_type = "";
         classList = $(this).parent().parent().attr('class').split(/\s+/);
@@ -523,6 +521,7 @@ $(document).on("ready", function() {
             $("fancy_new_employee").hide();
             $("#add_employee").show();
         }
+
 
     }).fancybox({
         maxWidth: 550,
@@ -925,11 +924,10 @@ $(document).on("ready", function() {
         get_emp(node_to_edit.attr("id"), node_to_edit);
         reset_forms();
         $.fancybox.close();
-
     });
 
     // Delete Node
-    $('body').on("click", ".del", function(e) {
+    $(".del").live("click", function(e) {
         var nodo = $(this);
         var nodeDiv = null;
 
@@ -959,9 +957,7 @@ $(document).on("ready", function() {
             }
             init_tree();
         }
-
     });
-
 
 
     //Form behavior for emptitle
@@ -1003,7 +999,5 @@ $(document).on("ready", function() {
             }
         }
     });
-
-
 
 });
