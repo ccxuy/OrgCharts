@@ -1,7 +1,18 @@
-#ignore everything under the 'bin' folder
+# Directories
+build/
 bin/
-#ignore everything under any CVS folders
+target/
+
+# Log files
+logs/
+
+# CVS folders
 CVS/
-#ignore the eclipse configuration files
-.classpath
+
+# Eclipse
+*.pydevproject
 .project
+.metadata
+.classpath
+.settings/
+.loadpath

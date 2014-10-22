@@ -7,10 +7,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
 import utilities.HibernateUtilities;
 import java.util.*;
 
 public class getEditedData extends HttpServlet {
+	Logger log = Logger.getLogger(getEditedData.class);
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -29,7 +33,9 @@ public class getEditedData extends HttpServlet {
 		System.out.println("employee Id: "+empId);
 
 		try {
+			log.debug("getEditedData:doGet");
 			HibernateUtilities.getFactory();
+			log.debug("null?" + (null==HibernateUtilities.getFactory()) );
 			List mylist = HibernateUtilities.getEditedData(empId);
 			////////////////////
 			String temp="";

@@ -2,13 +2,24 @@ package test;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
+import junit.framework.TestCase;
+
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 
+
 import utilities.HibernateUtilities;
 
-public class TestHibernateUtilities {
+public class TestHibernateUtilities extends TestCase{
+	SessionFactory sessionFactory = null;
 	
+	@Override
+	protected void setUp() throws Exception {
+		sessionFactory = HibernateUtilities.getFactory();
+	}
+
 	@Test
 	public void testTest() {
 		assertEquals("test", 2, 1+1);
@@ -16,7 +27,6 @@ public class TestHibernateUtilities {
 
 	@Test
 	public void testGetFactory() throws Exception {
-		SessionFactory sessionFactory = HibernateUtilities.getFactory();
 		assertNotNull(sessionFactory);
 	}
 
@@ -37,7 +47,10 @@ public class TestHibernateUtilities {
 
 	@Test
 	public void testEditNode() {
-		fail("Not yet implemented");
+		List resList =  HibernateUtilities.getEditedData(String.valueOf(92));
+		String resp =resList.get(0).toString()+",";
+		System.out.println(resp);
+		assertNotNull(HibernateUtilities.getEditedData(String.valueOf(92)));
 	}
 
 	@Test
