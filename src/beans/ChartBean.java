@@ -11,15 +11,15 @@ import javax.sql.rowset.serial.SerialException;
 
 import utilities.ClobConverter;
 
-public class ChartBean implements Serializable{
+public class ChartBean implements Serializable {
 
 	String uuid;
-	int owner_id;
-	String chart_name;
+	int ownerID;
+	String chartName;
 	Clob xml;
-	Timestamp create_time;
+	Timestamp timeLastModified;
 	int version;
-	Integer edit_user;
+	Integer editUser;
 
 	public ChartBean() {
 		super();
@@ -27,24 +27,24 @@ public class ChartBean implements Serializable{
 
 	/**
 	 * For new chart with String XML
+	 * 
 	 * @param owner_id
 	 * @param chart_name
 	 * @param xml
-	 * @throws SQLException 
-	 * @throws SerialException 
 	 */
-	public ChartBean(int owner_id, String chart_name, String xml) throws SerialException, SQLException {
+	public ChartBean(int owner_id, String chart_name, String xml){
 		super();
 		this.setUuidNew();
-		this.owner_id = owner_id;
-		this.chart_name = chart_name;
-		setXmlString(xml);
-		this.setCreate_timeNow();
-		this.edit_user = null;
+		this.ownerID = owner_id;
+		this.chartName = chart_name;
+		this.setXmlString(xml);
+		this.setTimeLastModifiedNow();
+		this.editUser = null;
 	}
 
 	/**
 	 * For DBA use
+	 * 
 	 * @param uuid
 	 * @param owner_id
 	 * @param chart_name
@@ -52,19 +52,17 @@ public class ChartBean implements Serializable{
 	 * @param create_time
 	 * @param version
 	 * @param edit_user
-	 * @throws SQLException 
-	 * @throws SerialException 
 	 */
 	public ChartBean(String uuid, int owner_id, String chart_name, Clob xml,
-			Timestamp create_time, int version, Integer edit_user) throws SerialException, SQLException {
+			Timestamp create_time, int version, Integer edit_user){
 		super();
 		this.uuid = uuid;
-		this.owner_id = owner_id;
-		this.chart_name = chart_name;
+		this.ownerID = owner_id;
+		this.chartName = chart_name;
 		this.xml = xml;
-		this.create_time = create_time;
+		this.timeLastModified = create_time;
 		this.version = version;
-		this.edit_user = edit_user;
+		this.editUser = edit_user;
 	}
 
 	public String getUuid() {
@@ -78,25 +76,25 @@ public class ChartBean implements Serializable{
 	public void setUuidNew() {
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
-	
+
 	public Timestamp getUuidTime() {
 		return new Timestamp(java.util.UUID.fromString(this.uuid).timestamp());
 	}
 
-	public int getOwner_id() {
-		return owner_id;
+	public int getOwnerID() {
+		return ownerID;
 	}
 
-	public void setOwner_id(int owner_id) {
-		this.owner_id = owner_id;
+	public void setOwnerID(int ownerID) {
+		this.ownerID = ownerID;
 	}
 
-	public String getChart_name() {
-		return chart_name;
+	public String getChartName() {
+		return chartName;
 	}
 
-	public void setChart_name(String chart_name) {
-		this.chart_name = chart_name;
+	public void setChartName(String chartName) {
+		this.chartName = chartName;
 	}
 
 	public Clob getXml() {
@@ -106,32 +104,32 @@ public class ChartBean implements Serializable{
 	public void setXml(Clob xml) {
 		this.xml = xml;
 	}
-	
-	public void setXmlString(String xmlString){
+
+	public void setXmlString(String xmlString) {
 		this.xml = ClobConverter.stringToClob(xmlString);
 	}
-	
-	public String getXmlString(){
+
+	public String getXmlString() {
 		return ClobConverter.clobToString(xml);
 	}
 
-	public Timestamp getCreate_time() {
-		return create_time;
-	}
-	
-	public void setCreate_timeNow() {
-		Calendar calendar = Calendar.getInstance();
-		this.create_time = new Timestamp(calendar.getTime().getTime());
+	public Timestamp getTimeLastModified() {
+		return timeLastModified;
 	}
 
-	public void setCreate_time(Timestamp create_time) {
-		this.create_time = create_time;
+	public void setTimeLastModified(Timestamp time_last_modified) {
+		this.timeLastModified = time_last_modified;
+	}
+
+	public void setTimeLastModifiedNow() {
+		Calendar calendar = Calendar.getInstance();
+		this.timeLastModified = new Timestamp(calendar.getTime().getTime());
 	}
 
 	public int getVersion() {
 		return version;
 	}
-	
+
 	public void setVersionDefault() {
 		this.version = 1;
 	}
@@ -140,20 +138,20 @@ public class ChartBean implements Serializable{
 		this.version = version;
 	}
 
-	public Integer getEdit_user() {
-		return edit_user;
+	public Integer getEditUser() {
+		return editUser;
 	}
 
-	public void setEdit_user(Integer edit_user) {
-		this.edit_user = edit_user;
+	public void setEditUser(Integer editUser) {
+		this.editUser = editUser;
 	}
 
 	@Override
 	public String toString() {
-		return "ChartBean [uuid=" + uuid + ", owner_id=" + owner_id
-				+ ", chart_name=" + chart_name + ", xml=" + getXmlString()
-				+ ", create_time=" + create_time + ", version=" + version
-				+ ", edit_user=" + edit_user + "]";
+		return "ChartBean [uuid=" + uuid + ", ownerID=" + ownerID
+				+ ", chartName=" + chartName + ", xml=" + getXmlString()
+				+ ", timeLastModified=" + timeLastModified + ", version="
+				+ version + ", editUser=" + editUser + "]";
 	}
 
 }

@@ -39,19 +39,10 @@ public class TestChartFunction {
 	public void testSaveOrUpdateChart() {
 		System.out.println("testSaveOrUpdateChart");
 		ChartBean cb;
-		try {
-			cb = new ChartBean(92, "test chart", "");
-			System.out.println(cb);
-			int ret = HibernateUtilities.saveOrUpdateChart(cb);
-			assertEquals(1, ret);
-		} catch (SerialException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//cb.setUuid("test-4234gfsdg-fas32");
+		cb = new ChartBean(82, "test chart", "123<xml>");
+		System.out.println(cb);
+		int ret = HibernateUtilities.saveOrUpdateChart(cb);
+		assertEquals(1, ret);
 	}
 
 }
