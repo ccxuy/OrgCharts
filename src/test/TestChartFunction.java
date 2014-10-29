@@ -1,0 +1,57 @@
+package test;
+
+import static org.junit.Assert.*;
+
+import java.sql.SQLException;
+
+import javax.sql.rowset.serial.SerialException;
+
+import junit.framework.Assert;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.dialect.DB2390Dialect;
+import org.junit.Before;
+import org.junit.Test;
+
+import beans.ChartBean;
+
+import utilities.HibernateUtilities;
+
+public class TestChartFunction {
+	SessionFactory sessionFactory = null;
+
+	@Before
+	public void setUp() throws Exception {
+		System.out.println("Setup hibernate");
+		sessionFactory = HibernateUtilities.getFactory();
+		System.out.println("Finish Setup hibernate");
+	}
+
+	@Test
+	public void testSearchChartByUUID() {
+		System.out.println("testSearchChartByUUID");
+		ChartBean cb = HibernateUtilities.searchChartByUUID("test");
+		System.out.println(cb);
+		assertNotNull(cb);
+	}
+
+	@Test
+	public void testSaveOrUpdateChart() {
+		System.out.println("testSaveOrUpdateChart");
+		ChartBean cb;
+		try {
+			cb = new ChartBean(92, "test chart", "");
+			System.out.println(cb);
+			int ret = HibernateUtilities.saveOrUpdateChart(cb);
+			assertEquals(1, ret);
+		} catch (SerialException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//cb.setUuid("test-4234gfsdg-fas32");
+	}
+
+}

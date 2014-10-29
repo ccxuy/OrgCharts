@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Oct 28, 2014 3:08:10 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="beans.ChartBean" table="CHART">
+        <id name="uuid" type="java.lang.String">
+            <column name="UUID" />
+            <generator class="assigned" />
+        </id>
+        <property name="owner_id" type="int">
+            <column name="OWNER_ID" />
+        </property>
+        <property name="chart_name" type="java.lang.String">
+            <column name="CHART_NAME" />
+        </property>
+        <property name="xml" type="java.sql.Clob">
+            <column name="XML" />
+        </property>
+        <property name="create_time" type="java.sql.Timestamp">
+            <column name="CREATE_TIME" />
+        </property>
+        <property name="version" type="int">
+            <column name="VERSION" />
+        </property>
+        <property name="edit_user" type="int">
+            <column name="EDIT_USER" />
+        </property>
+    </class>
+</hibernate-mapping>

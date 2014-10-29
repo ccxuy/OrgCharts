@@ -13,6 +13,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+
+import beans.ChartBean;
 import beans.ProfileBean;
 
 //import org.json.simple.JSONObject;
@@ -275,4 +277,53 @@ public class HibernateUtilities {
 		return data;
 	}
 
+	/**
+	 * Search char with uuid in UUID column.
+	 * @param uuid
+	 * @return ChartBean if success, null if failed
+	 */
+	public static ChartBean searchChartByUUID(String uuid) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			ChartBean chartBean = (ChartBean) session.get(ChartBean.class, uuid);
+			tx.commit();
+			if(null != chartBean){
+				//success
+				return chartBean;
+			}
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
+	/**
+	 * @param chartBean
+	 * @return 1 if success, 0 failed
+	 */
+	public static int saveOrUpdateChart(ChartBean chartBean) {
+		
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.saveOrUpdate(chartBean);
+			tx.commit();
+			//success
+			return 1;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return 0;
+	}
 }
