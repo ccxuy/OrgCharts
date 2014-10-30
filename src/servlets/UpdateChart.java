@@ -97,8 +97,7 @@ public class UpdateChart extends HttpServlet {
 	 */
 	private ChartBean defaultValueOfChart(ChartBean chartBean, String xml) {
 		if(null==chartBean||null==chartBean.getUuid()){
-			chartBean = new ChartBean();
-			chartBean.setUuid(Setting.DefaultData.CHARTUUID_STRING);
+			chartBean = new ChartBean(Setting.DefaultData.CHARTUUID_STRING);
 			chartBean.setXmlString(xml);
 			System.out.println("Generate defaultValueOfChart"+chartBean);
 		}
