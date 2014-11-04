@@ -644,7 +644,7 @@ $(document).on("ready", function() {
         }
     });
 
-    $("input[type=submit][id=delete_emp]").click(function() {
+    $("input[type=button][id=delete_emp]").click(function() {
         var $node = $("li." + add_to_node + ":not('.temp')");
         var $div = $("#chart").find("div." + add_to_node);
         $node.removeAttr("id");

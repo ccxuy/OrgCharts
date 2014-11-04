@@ -305,7 +305,7 @@
     <div id="fancy_delete_employee" class="cform">
       <!--         <h1>Edit Employee Profile</h1>       -->
       <form id="delete_employee_form" method="GET" action=".">
-        <input id="delete_emp" class="buttom" type=submit value="Delete" />
+        <input id="delete_emp" class="buttom" type="button" value="Delete" />
       </form>
     </div>
     <div id="fancy_curr_employee" class="cform">
@@ -314,8 +314,8 @@
         <p class="contact">
           <label for="curr_emp">Employee Name</label>
         </p>
-        <input id="employees" required/>
-        <input id="add_curr" class="buttom" type=submit value="Add" disabled/>
+        <input id="employees" />
+        <input id="add_curr" class="buttom" type="button" value="Add" disabled/>
       </form>
     </div>
   </div>
