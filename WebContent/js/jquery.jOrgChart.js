@@ -197,10 +197,10 @@
         var build_timer = window.setInterval(function() {
             buildnode_time = buildnode_time + 1;
         }, 1);
-        console.log("in build node");
+        //console.log("in build node");
         var $table = $("<table cellpadding='0' cellspacing='0' border='0'/>");
         var $tbody = $("<tbody/>");
-        console.log("constructing container");
+        //console.log("constructing container");
         // Construct the node container(s)
         var $nodeRow = $("<tr/>").addClass("node-cells");
         var $nodeCell = $("<td/>").addClass("node-cell").attr("colspan", 2);
@@ -209,9 +209,9 @@
         if ($childNodes.length > 1) {
             $nodeCell.attr("colspan", $childNodes.length * 2);
         }
-        console.log("drawing the node");
+        //console.log("drawing the node");
         // Draw the node
-        console.log("getting node contents");
+        //console.log("getting node contents");
         // Get the contents - any markup except li and ul allowed
         var $nodeContent = $node.clone()
             .children("ul,li")
@@ -219,11 +219,11 @@
             .end()
             .html();
 
-        console.log("incrementing node count");
+        //console.log("incrementing node count");
         //Increaments the node count which is used to link the source list and the org chart
         nodeCount++;
 
-        console.log("appending data");
+        //console.log("appending data");
         $node.data("tree-node", nodeCount);
         $nodeDiv = $("<div>").addClass("node")
             .data("tree-node", nodeCount)
@@ -315,7 +315,7 @@
         $nodeCell.append($nodeDiv);
         $nodeRow.append($nodeCell);
         $tbody.append($nodeRow);
-        console.log("drawing tree");
+        //console.log("drawing tree");
         if ($childNodes.length > 0) {
             // if it can be expanded then change the cursor
             //$nodeDiv.css('cursor','n-resize');
@@ -404,7 +404,7 @@
             e.stopPropagation();
         });
         clearInterval(build_timer);
-        console.log("", buildnode_time);
+        //console.log("", buildnode_time);
     }
 
     //    $.when(buildNode()).done(function(){

@@ -110,7 +110,40 @@ public class HibernateUtilities {
 		}
 		return empId;
 	}
+	
+	
+	/**
+	 * Update employee profile according to it's id.
+	 * @param employeeProfile
+	 * @return 1 if success, 0 if failed
+	 */
+	public static int editNode(ProfileBean employeeProfile){
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.update(employeeProfile);
+			tx.commit();
+			return 1;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return 0;
+	}
 
+	/**
+	 * @param sfirstName
+	 * @param slastName
+	 * @param email
+	 * @param image
+	 * @param empId
+	 * @deprecated use {@link #editNode()} instead.
+	 */
+	@Deprecated
 	public static void editNode(String sfirstName, String slastName,
 			String email, Blob image, int empId) {
 		Session session = sessfactory.openSession();

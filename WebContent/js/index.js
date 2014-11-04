@@ -506,6 +506,7 @@ $(document).on("ready", function() {
     $(".emp").live("click", function(e) {
         click_flag = false;
         node_type = "";
+
         classList = $(this).parent().parent().attr('class').split(/\s+/);
         $.each(classList, function(index, item) {
             if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
@@ -578,7 +579,7 @@ $(document).on("ready", function() {
                     source: options,
                     appendTo: "#fancy_curr_employee",
                     select: function(event, ui) {
-                        $("input[type=submit][id=add_curr]").prop('disabled', false);
+                        $("input[type=button][id=add_curr]").prop('disabled', false);
                         id_num = ui.item.id;
                     },
                 });
@@ -657,6 +658,7 @@ $(document).on("ready", function() {
     });
 
     $("input[type=submit][id=add_employee]").click(function() {
+        var check_valid = true;
         //for employee first name
         var text_field = $("#new_first_name");
         var texto = "";
@@ -664,6 +666,7 @@ $(document).on("ready", function() {
             texto = text_field.val();
         } else {
             texto = " ";
+            check_valid = false;
         }
         text_field.val("");
         //for employee last name
@@ -673,6 +676,7 @@ $(document).on("ready", function() {
             last = last_field.val();
         } else {
             last = " ";
+            check_valid = false;
         }
         last_field.val("");
         //for employee title
@@ -785,21 +789,24 @@ $(document).on("ready", function() {
                 }
             });
         }
-        $.when(ajax1()).done(function() {
-            //alert(empId);
-            //append_Id = "<span class='label_node' id='empId'>" + empId + "</span>" + "<br>";
-            $node.attr("id", empId);
-            $div.attr("id", empId);
-            get_emp(empId, $div);
-            //$('span[id=empId]').hide();
-            //init_tree();
-            reset_forms();
-        });
-        $.fancybox.close();
+        if(check_valid){
+            $.when(ajax1()).done(function() {
+                //alert(empId);
+                //append_Id = "<span class='label_node' id='empId'>" + empId + "</span>" + "<br>";
+                $node.attr("id", empId);
+                $div.attr("id", empId);
+                get_emp(empId, $div);
+                //$('span[id=empId]').hide();
+                //init_tree();
+                reset_forms();
+            });
+            $.fancybox.close();
+        }
+        
     });
 
     //add current employee
-    $("input[type=submit][id=add_curr]").click(function() {
+    $("input[type=button][id=add_curr]").click(function() {
         var $node = $("li." + add_to_node + ":not('.temp')");
         var $div = $("#chart").find("div." + add_to_node);
         $node.attr("id", id_num);
@@ -810,8 +817,12 @@ $(document).on("ready", function() {
     });
 
     //edit employee
+    // empId should already saved before this function!
     $("input[type=submit][id=edit_emp]").click(function() {
         node_to_edit = $("li." + add_to_node + ":not('.temp')");
+
+        empId = node_to_edit.attr("id");
+
         var loc_field = $("#edit_node_location");
         var locval = $("#edit_node_location").val();
         var location = loc_field.val();
@@ -854,7 +865,7 @@ $(document).on("ready", function() {
                 //alert(text+", "+respose);
             },
             error: function(xhr, textstatus, ethrown) {
-                //alert(textstatus+", "+ethrown +xhr.status);
+                alert(textstatus+", "+ethrown +xhr.status);
             }
         });
         var dn = '';
@@ -893,22 +904,31 @@ $(document).on("ready", function() {
         //employee email
         email_field.val("");
         //employee location
-        if (node_to_edit.find("> .label_node[id=loc]").exists()) {
-            alert("in if");
-            if (location != "") {
-                alert("in second if");
-                node_to_edit.find("> .label_node[id=loc]").text(location);
+        var i_dont_know_this_code = true
+        if(i_dont_know_this_code === false){
+            //Just retrieve location value 
+            location = $("#edit_node_location");
+            alert("location"+location);
+        }else{
+            if (node_to_edit.find("> .label_node[id=loc]").exists()) {
+                alert("in if");
+                if (location != "") {
+                    alert("in second if");
+                    node_to_edit.find("> .label_node[id=loc]").text(location);
+                } else {
+                    alert("in second else");
+                    node_to_edit.find("> .label_node[id=loc]").remove();
+                }
             } else {
-                alert("in second else");
-                node_to_edit.find("> .label_node[id=loc]").remove();
-            }
-        } else {
-            alert("in else");
-            if (location != "") {
-                dn = "<span class='label_node' id='loc'>" + location + "</span><br>";
-                node_to_edit.last().append(dn);
+                alert("in else");
+                alert(location);
+                if (location != "") {
+                    dn = "<span class='label_node' id='loc'>" + location + "</span><br>";
+                    node_to_edit.last().append(dn);
+                }
             }
         }
+        
         loc_field.val("");
         //employee image
         if (image != "" && node_to_edit.find("img").length != 0) {

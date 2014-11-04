@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Blob;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,10 @@ import javax.sql.rowset.serial.SerialBlob;
 import utilities.HibernateUtilities;
 
 
+/**
+ * This function is actually for add_employee button... 
+ *
+ */
 public class AddNode extends HttpServlet {
        
     /**
@@ -34,11 +39,6 @@ public class AddNode extends HttpServlet {
 		//response.setContentType("text/html");
 		
 		
-		String first_name = request.getParameter("firstName");
-		String last_name = request.getParameter("lastName");
-		//new info
-		//Blob image=request.getParameter("Image");
-		String email = request.getParameter("Email");
 		
 		//String location = request.getParameter("Location");
 		/*
@@ -46,18 +46,26 @@ public class AddNode extends HttpServlet {
 		byte[] imageData = new byte[(int) file.length()];
 		String fname = "test.jpeg";
 		*/
-		System.out.println("emp_name: "+first_name);
-		System.out.println("node_name: "+last_name);
 		//new info;
-		//System.out.println("image: "+image);
-		System.out.println("email: "+email);
 		try {
+			String first_name = request.getParameter("firstName");
+			if(null==first_name)first_name="";
+			String last_name = request.getParameter("lastName");
+			if(null==last_name)last_name="";
+			System.out.println("firstName: "+first_name);
+			System.out.println("lastName: "+last_name);
+			//new info
+			String email = request.getParameter("Email");
+			if(null==email)email="";
+			System.out.println("email: "+email);
+			Blob image=(Blob) request.getAttribute("Image");
+			System.out.println("image: "+ (image==null?"null":image.length()) );
 			//FileInputStream fileInputStream = new FileInputStream(file);
 		    //fileInputStream.read(imageData);
 		    //fileInputStream.close();
 		    //Blob blob = new SerialBlob(imageData);
 			HibernateUtilities.getFactory();
-			HibernateUtilities.addRecord(first_name, last_name, email, null);
+			HibernateUtilities.addRecord(first_name, last_name, email, image);
 			String empId=HibernateUtilities.getId();
 			response.getWriter().write(empId);
 			//request.getRequestDispatcher("/index.jsp").forward(request, response);

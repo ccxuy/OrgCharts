@@ -209,12 +209,12 @@
       <!--        <h1>New Employee Profile</h1>       -->
       <form id="add_employee_form" method="GET" action=".">
         <p class="contact">
-          <label for="name">First Name</label>
+          <label for="name">First Name<span style="color:red;">*</span></label>
         </p>
         <input type="text" placeholder="First name" name="new_first_name" id="new_first_name" required/>
 
         <p class="contact">
-          <label for="name">Last Name</label>
+          <label for="name">Last Name<span style="color:red;">*</span></label>
         </p>
         <input type="text" placeholder="Last name" name="new_last_name" id="new_last_name" required/>
 
@@ -256,12 +256,12 @@
       <!--         <h1>Edit Employee Profile</h1>       -->
       <form id="edit_employee_form" method="GET" action=".">
         <p class="contact">
-          <label for="name">First Name</label>
+          <label for="name">First Name<span style="color:red;">*</span></label>
         </p>
         <input type="text" placeholder="First name" name="edit_first_name" id="edit_first_name" required/>
 
         <p class="contact">
-          <label for="name">Last Name</label>
+          <label for="name">Last Name<span style="color:red;">*</span></label>
         </p>
         <input type="text" placeholder="Last name" name="edit_last_name" id="edit_last_name" required/>
 

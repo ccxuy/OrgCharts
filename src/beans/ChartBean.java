@@ -26,7 +26,7 @@ public class ChartBean implements Serializable {
 	}
 
 	/**
-	 * Constructor for update chart with String XML, fill rest field by setter.
+	 * Constructor for update chart, please fill rest field via setter.
 	 * @param uuid
 	 */
 	public ChartBean(String uuid){
