@@ -17,6 +17,9 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
   <!-- jQuery autocomplete stylesheet -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+  <!-- Bootstrap switch -->
+  <link rel="stylesheet" href="css/bootstrap-switch.css">
+  <script type="text/javascript" src="js/bootstrap-switch.js"></script>
 
   <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
   <script src="js/jquery.jOrgChart.js"></script>
@@ -28,6 +31,10 @@
     <div class="topbar-inner">
       <div class="container">
         <a class="brand" href="#">Interactive Organization Chart Demo</a>
+        <div class="pull-right">
+          <input type="checkbox" name="edit-checkbox" checked>
+        </div>
+        <div></div>
         <div class="pull-right">
           <div class="alert-message info" id="update_button">Save Chart</div>
         </div>
@@ -311,6 +318,8 @@
   </div>
   <script>
   jQuery(document).ready(function() {
+    // Enable edit button
+    $("[name='edit-checkbox']").bootstrapSwitch();
 
     /* Custom jQuery */
     $("#show-list").click(function(e) {
