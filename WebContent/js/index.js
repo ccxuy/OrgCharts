@@ -522,7 +522,6 @@ $(document).on("ready", function() {
             $("#add_employee").show();
         }
 
-
     }).fancybox({
         maxWidth: 550,
         maxHeight: 2000,
@@ -579,7 +578,7 @@ $(document).on("ready", function() {
                     source: options,
                     appendTo: "#fancy_curr_employee",
                     select: function(event, ui) {
-                        $("input[type=button][id=add_curr]").prop('disabled', false);
+                        $("input[type=submit][id=add_curr]").prop('disabled', false);
                         id_num = ui.item.id;
                     },
                 });
@@ -645,7 +644,7 @@ $(document).on("ready", function() {
         }
     });
 
-    $("input[type=button][id=delete_emp]").click(function() {
+    $("input[type=submit][id=delete_emp]").click(function() {
         var $node = $("li." + add_to_node + ":not('.temp')");
         var $div = $("#chart").find("div." + add_to_node);
         $node.removeAttr("id");
@@ -657,7 +656,7 @@ $(document).on("ready", function() {
         $.fancybox.close();
     });
 
-    $("input[type=button][id=add_employee]").click(function() {
+    $("input[type=submit][id=add_employee]").click(function() {
         //for employee first name
         var text_field = $("#new_first_name");
         var texto = "";
@@ -800,7 +799,7 @@ $(document).on("ready", function() {
     });
 
     //add current employee
-    $("input[type=button][id=add_curr]").click(function() {
+    $("input[type=submit][id=add_curr]").click(function() {
         var $node = $("li." + add_to_node + ":not('.temp')");
         var $div = $("#chart").find("div." + add_to_node);
         $node.attr("id", id_num);
@@ -811,7 +810,7 @@ $(document).on("ready", function() {
     });
 
     //edit employee
-    $("input[type=button][id=edit_emp]").click(function() {
+    $("input[type=submit][id=edit_emp]").click(function() {
         node_to_edit = $("li." + add_to_node + ":not('.temp')");
         var loc_field = $("#edit_node_location");
         var locval = $("#edit_node_location").val();

@@ -86,9 +86,19 @@ a:hover {
 .jOrgChart .node.unit {
     position: relative;
     font-size: 12px;
-    background-color: #9FA4BC;
+    background-color: #C7D9FF;
     border-radius: 8px;
-    border: 5px double black;
+    border: 5px solid rgb(116, 172, 255);
+    color: #000000;
+    -moz-border-radius: 8px;
+    background-blend-mode: darken;
+}
+.jOrgChart .node.position {
+    position: relative;
+    font-size: 12px;
+    background-color: #FFD3C7;
+    border-radius: 8px;
+    border: 5px double rgb(255, 95, 86);
     color: #000000;
     -moz-border-radius: 8px;
     background-blend-mode: darken;
