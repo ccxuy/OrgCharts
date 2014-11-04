@@ -96,6 +96,16 @@ a:hover{
 		line-height 	: 11px;
 		padding 		: 2px;
 	}
+.jOrgChart .node.unit{
+	position: relative;
+	font-size 			: 12px;
+	background-color 	: #9FA4BC;
+	border-radius 		: 8px;
+	border 				: 5px double black;
+	color 				: #000000;
+	-moz-border-radius 	: 8px;
+	background-blend-mode: darken;
+}
 .hidden {
     display: none;
 }
