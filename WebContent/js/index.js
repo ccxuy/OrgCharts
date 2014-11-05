@@ -817,8 +817,130 @@ $(document).on("ready", function() {
     });
 
     //edit employee
-    // empId should already saved before this function!
-    $("input[type=submit][id=edit_emp]").click(function() {
+    $('form#edit_employee_form').submit(function (e){
+        e.preventDefault();
+        // alert("submit");
+        
+
+        var loc_field = $("#edit_node_location");
+        var locval = $("#edit_node_location").val();
+        var location = loc_field.val();
+
+        var email_field = $("#edit_node_email");
+        var emailval = $("#edit_node_email").val();
+        var email = email_field.val();
+
+        var phone_field = $("#edit_node_phone");
+        var phoneval = $("#edit_node_phone").val();
+        var phone = phone_field.val();
+
+        var firstname_field = $("#edit_first_name");
+        var nameval = $("#edit_first_name").val();
+        var texto = firstname_field.val();
+
+        var lastname_field = $("#edit_last_name");
+        var last = lastname_field.val();
+
+        var img_field = $("#edit_node_image");
+        var imgval = $("#edit_node_image").val();
+        var image = "";
+
+        var title_field = $("#edit_node_title");
+        var titleval = $("#edit_node_title").val();
+        var titletexto = title_field.val();
+
+        var formData = new FormData(this);
+        node_to_edit = $("li." + add_to_node + ":not('.temp')");
+        empId = node_to_edit.attr("id");
+        formData.append("emp_Id", empId);
+        $.ajax({
+            type: "POST",
+            url: "EditNode.do",
+            cache: false,
+            data: formData,
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            success: function(respose, text, xhr) {
+                console.log("EditEmployee>POST>EditNode.do:"+text+", "+respose);
+            },
+            error: function(xhr, textstatus, ethrown) {
+                alert(textstatus+", "+ethrown +xhr.status);
+            }
+        })
+
+        //employee title
+        if (node_to_edit.find("> .label_node[id=title]").exists()) {
+            if (titletexto != "") {
+                node_to_edit.find("> .label_node[id=title]").text(titletexto);
+            } else {
+                node_to_edit.find("> .label_node[id=title]").remove();
+            }
+        } else {
+            if (titletexto != "") {
+                dn = "<span class='label_node' id='title'>" + titletexto + "</span><br>";
+                node_to_edit.last().append(dn);
+            }
+        }
+        // title_field.val("");
+        //employee phone
+        if (node_to_edit.find("> .label_node[id=phone]").exists()) {
+            if (phone != "") {
+                node_to_edit.find("> .label_node[id=phone]").text(phone);
+            } else {
+                node_to_edit.find("> .label_node[id=phone]").remove();
+            }
+        } else {
+            if (phone != "") {
+                dn = "<span class='label_node' id='phone'>" + phone + "</span><br>";
+                node_to_edit.append(dn);
+            }
+        }
+        // phone_field.val("");
+        //employee email
+        // email_field.val("");
+        //employee location
+        var i_dont_know_this_code = true
+        if(i_dont_know_this_code === false){
+            //Just retrieve location value 
+            location = $("#edit_node_location");
+            alert("location"+location);
+        }else{
+            if (node_to_edit.find("> .label_node[id=loc]").exists()) {
+                alert("in if");
+                if (location != "") {
+                    alert("in second if");
+                    node_to_edit.find("> .label_node[id=loc]").text(location);
+                } else {
+                    alert("in second else");
+                    node_to_edit.find("> .label_node[id=loc]").remove();
+                }
+            } else {
+                //alert("in else");
+                //alert(location);
+                if (location != "") {
+                    dn = "<span class='label_node' id='loc'>" + location + "</span><br>";
+                    node_to_edit.last().append(dn);
+                }
+            }
+        }
+        
+        //employee image
+        if (image != "" && node_to_edit.find("img").length != 0) {
+            node_to_edit.find("img").attr("src").text(image);
+        } else if (image != "" && node_to_edit.find("img").length == 0) {
+            var edit_image = "<img src = '" + image + "' alt = 'emp_image'>";
+            node_to_edit.append(edit_image);
+        } else if (image == "" && node_to_edit.find("img").length != 0) {
+            node_to_edit.remove(node_to_edit.find("img"));
+        }
+        //alert("finish ajax form submit"+$(this).serialize());
+        $(this)[0].reset();
+        get_emp(node_to_edit.attr("id"), node_to_edit);
+        reset_forms();
+        $.fancybox.close();
+        //return false;
+    });
+    $("input[type=submit][id=edit_empXX]").click(function() {
         node_to_edit = $("li." + add_to_node + ":not('.temp')");
 
         empId = node_to_edit.attr("id");
@@ -844,25 +966,49 @@ $(document).on("ready", function() {
 
         var img_field = $("#edit_node_image");
         var imgval = $("#edit_node_image").val();
-        var image = img_field.val();
+        var image = "";
 
         var title_field = $("#edit_node_title");
         var titleval = $("#edit_node_title").val();
         var titletexto = title_field.val();
+        alert("FormData");
+        var data = new FormData($('#edit_employee_form')[0]);
+        data.append("emp_Id", empId);
+        data.append("firstName", texto);
+        data.append("lastName", last);
+        data.append("Email", email);
+        jQuery.each($('#edit_node_image')[0].files, function(i, file) {
+            data.append('file-'+i, file);
+        });
+        alert("Append"+$('#edit_employee_form').serialize());
+
+        // var options = { 
+        //     type: "POST",
+        //     url: "EditNode.do",
+        //     data: data,
+        //     //target:   '#output',   // target element(s) to be updated with server response 
+        //     //beforeSubmit:  beforeSubmit,  // pre-submit callback 
+        //     resetForm: true,        // reset the form after successful submit 
+        //     success: function(respose, text, xhr) {
+        //         console.log("EditEmployee>POST>EditNode.do:"+text+", "+respose);
+        //     },
+        //     error: function(xhr, textstatus, ethrown) {
+        //         alert(textstatus+", "+ethrown +xhr.status);
+        //     }
+        // }; 
+        
+        // $('#edit_employee_form').ajaxSubmit(options);
 
         //ajax call to edit node info in the database   
         $.ajax({
-            type: "GET",
-            data: {
-                firstName: texto,
-                lastName: last,
-                Email: email,
-                Image: image,
-                emp_Id: empId
-            },
+            type: "POST",
+            data: data,
             url: "EditNode.do",
+            cache: false,
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             success: function(respose, text, xhr) {
-                //alert(text+", "+respose);
+                console.log("EditEmployee>POST>EditNode.do:"+text+", "+respose);
             },
             error: function(xhr, textstatus, ethrown) {
                 alert(textstatus+", "+ethrown +xhr.status);
@@ -920,8 +1066,8 @@ $(document).on("ready", function() {
                     node_to_edit.find("> .label_node[id=loc]").remove();
                 }
             } else {
-                alert("in else");
-                alert(location);
+                //alert("in else");
+                //alert(location);
                 if (location != "") {
                     dn = "<span class='label_node' id='loc'>" + location + "</span><br>";
                     node_to_edit.last().append(dn);

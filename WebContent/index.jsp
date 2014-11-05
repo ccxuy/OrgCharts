@@ -13,14 +13,15 @@
   <script type="text/javascript" src="js/prettify.js"></script>
 
   <!-- jQuery includes -->
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
   <!-- jQuery autocomplete stylesheet -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
   <!-- Bootstrap switch -->
   <link rel="stylesheet" href="css/bootstrap-switch.css">
   <script type="text/javascript" src="js/bootstrap-switch.js"></script>
-
+  <!-- jQuery Form Plugin -->
+  <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script>
   <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
   <script src="js/jquery.jOrgChart.js"></script>
   <script src="js/index.js"></script>
@@ -193,7 +194,7 @@
     </div>
     <div id="edit_employee" class="cform">
       <h1>edit/delete Employee</h1>
-      <form id="edit_employee_form" method="GET" action=".">
+      <form id="edit_employee_option_form" method="GET" action=".">
         <p class="contact">
           <label for="chart_type">edit/delete</label>
         </p>
@@ -254,51 +255,53 @@
 
     <div id="fancy_edit_employee" class="cform">
       <!--         <h1>Edit Employee Profile</h1>       -->
-      <form id="edit_employee_form" method="GET" action=".">
+      <form id="edit_employee_form" action="EditNode.do" method="post" enctype="multipart/form-data">
         <p class="contact">
-          <label for="name">First Name<span style="color:red;">*</span></label>
+          <label for="edit_first_name">First Name<span style="color:red;">*</span></label>
         </p>
         <input type="text" placeholder="First name" name="edit_first_name" id="edit_first_name" required/>
 
         <p class="contact">
-          <label for="name">Last Name<span style="color:red;">*</span></label>
+          <label for="edit_last_name">Last Name<span style="color:red;">*</span></label>
         </p>
         <input type="text" placeholder="Last name" name="edit_last_name" id="edit_last_name" required/>
 
 
         <p class="contact">
-          <label for="employee title">Employee Title</label>
+          <label for="edit_node_title">Employee Title</label>
         </p>
         <input type="text" placeholder="Employee Title" name="emp_title" id="edit_node_title" />
         <br>
 
 
         <p class="contact">
-          <label for="location">Location</label>
+          <label for="edit_node_location">Location</label>
         </p>
         <input type="text" placeholder="Location" name="location" id="edit_node_location" />
         <br>
 
         <p class="contact">
-          <label for="email">Email</label>
+          <label for="edit_node_email">Email</label>
         </p>
         <input type="text" placeholder="Email Name" name="email" id="edit_node_email" />
         <br>
 
 
         <p class="contact">
-          <label for="phone">Phone Number</label>
+          <label for="edit_node_phone">Phone Number</label>
         </p>
         <input type="text" placeholder="Phone Number" name="phone" id="edit_node_phone" />
         <br>
 
 
         <p class="contact">
-          <label for="image">Image</label>
+          <label for="edit_node_image">Image</label>
         </p>
         <input id="edit_node_image" type="file" name="image" size="chars">
         <br>
         <input id="edit_emp" class="buttom" type=submit value="Save" />
+        <br>
+        <div id="output"></div>
 
       </form>
     </div>

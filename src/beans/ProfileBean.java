@@ -1,7 +1,15 @@
 package beans;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
+
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+
+import org.apache.tomcat.util.http.fileupload.util.Streams;
 
 public class ProfileBean {
 
@@ -100,6 +108,24 @@ public class ProfileBean {
 		return "ProfileBean [id=" + id + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", email=" + email + ", img.length()="
 				+ imgLength + "]";
+	}
+
+	public void setImg(InputStream imgInputStream) {
+		try {
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			Streams.copy(imgInputStream, bytes, true);/* close stream after copy */
+			Blob blob = new SerialBlob(bytes.toByteArray());
+			this.setImg(blob);
+		} catch (SerialException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

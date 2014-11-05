@@ -39,7 +39,9 @@ public class getEditedData extends HttpServlet {
 			List mylist = HibernateUtilities.getEditedData(empId);
 			////////////////////
 			String temp="";
-			String resp =mylist.get(0).toString()+",";
+			String tmp0 = "";
+			if(null!=mylist.get(0)) tmp0 = mylist.get(0).toString();
+			String resp = tmp0+",";
 			for(int x=1; x<mylist.size(); x++){
 					temp = mylist.get(x).toString();
 					resp+=temp.substring(temp.indexOf('[')+1, temp.indexOf(']'))+",";
