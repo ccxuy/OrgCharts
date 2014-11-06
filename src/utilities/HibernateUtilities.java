@@ -348,6 +348,36 @@ public class HibernateUtilities {
 		}
 		return null;
 	}
+	
+
+	/**
+	 * @param pb
+	 * @return id(>0) if success, 0 failed
+	 */
+	public static int saveOrUpdateEmployee(ProfileBean pb) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			int id = -1;
+			//If this is a new employee profileBean.
+			if(pb.getId()<=0){
+				id = (Integer) session.save(pb);
+			}else{
+				session.saveOrUpdate(pb);
+				id = pb.getId();
+			}
+			tx.commit();
+			return id;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return 0;
+	}
 
 	/**
 	 * Search char with uuid in UUID column.
@@ -380,7 +410,6 @@ public class HibernateUtilities {
 	 * @return 1 if success, 0 failed
 	 */
 	public static int saveOrUpdateChart(ChartBean chartBean) {
-		
 		Session session = sessfactory.openSession();
 		Transaction tx = null;
 		try {

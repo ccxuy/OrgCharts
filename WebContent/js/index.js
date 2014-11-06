@@ -216,10 +216,10 @@ function get_emp(id, node) {
         var append_image = "<img src = '" + image + "' alt = 'emp_image'>";
 
         //add to employee
-        var temp = node.children("div.info");
-        var temp1 = node.children("div.opciones");
+        var temp = node.children("div.empinfo");
+        // var temp1 = node.children("div.opciones");
         temp.detach();
-        temp1.detach();
+        // temp1.detach();
         node.append(nodeText);
         if (fn != "") {
             node.children("div.empinfo").append(append_first);
@@ -231,18 +231,23 @@ function get_emp(id, node) {
             node.children("div.empinfo").find("li").last().append(append_email);
         }
         if (image != "") {
+            d = new Date();
+            // alert(image+"&ts="+d.getTime());
             // node.children("div.empinfo").append(append_image);
-            node.attr("imgurl",image);
-            node.css("background-image","url('" + image + "')");
+            node.attr("imgurl",image+"&ts="+d.getTime());
+            node.css("background-image","url('" + image + "&ts="+d.getTime() + "')");
+            node.css("background-size","106px");
         }
-        node.append(temp);
-        node.append(temp1);
+        // node.append(temp);
+        // node.append(temp1);
     });
 }
 
 var click_flag = true;
 var node_to_edit;
 
+//for reset form
+var current_form;
 //for emp
 var node_to_title;
 //for deleting an added node
@@ -659,7 +664,45 @@ $(document).on("ready", function() {
         $.fancybox.close();
     });
 
-    $("input[type=submit][id=add_employee]").click(function() {
+    //add new employee
+    $('form#add_employee_form').submit(function (e){
+        e.preventDefault();
+        current_form = $(this)
+
+        var formData = new FormData(this);
+        var $node  = $("li." + add_to_node + ":not('.temp')");
+        $.ajax({
+            type: "POST",
+            url: "AddNode.do",
+            cache: false,
+            data: formData,
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            success: function(respose, text, xhr) {
+                console.log("AddEmployee>POST>AddNode.do:"+text+", "+respose);
+                empId = parseInt(respose);
+                if(empId>0){
+                    current_form[0].reset();
+                    $node.attr("id", empId);
+                    var $div = $("#chart").find("div." + add_to_node);
+                    $div.attr("id", empId);
+                    get_emp(empId, $div);
+                    reset_forms();
+                    $.fancybox.close();
+                }else{
+                    console.log("ERROR: AddEmployee> empId"+empId);
+                    alert("ERROR happened while AddEmployee: empId"+empId);
+                }
+            },
+            error: function(xhr, textstatus, ethrown) {
+                alert(textstatus+", "+ethrown +xhr.status);
+            }
+        })
+        
+
+        //return false;
+    });
+    $("input[type=submit][id=add_employeeXX]").click(function() {
         var check_valid = true;
         //for employee first name
         var text_field = $("#new_first_name");
@@ -769,29 +812,29 @@ $(document).on("ready", function() {
         //                      }
         $div.append($node.children("div.info"));
         //$node.children("div.info").children("span[id=type]").hide();
-        function ajax1() {
-            return $.ajax({
-                type: "GET",
-                data: {
-                    firstName: texto,
-                    lastName: last,
-                    Image: img,
-                    Email: email
-                },
-                url: "AddNode.do",
-                success: function(respose, text, xhr) {
-                    //alert(text+","+respose);
-                    //location.reload();
-                    empId = respose;
-                    //alert(empId);
-                },
-                error: function(xhr, textstatus, ethrown) {
-                    alert(textstatus + ", " + ethrown + xhr.status);
-                    //location.reload();
-                }
-            });
-        }
         if(check_valid){
+            function ajax1() {
+                return $.ajax({
+                    type: "POST",
+                    data: {
+                        firstName: texto,
+                        lastName: last,
+                        Image: img,
+                        Email: email
+                    },
+                    url: "AddNode.do",
+                    success: function(respose, text, xhr) {
+                        //alert(text+","+respose);
+                        //location.reload();
+                        empId = respose;
+                        //alert(empId);
+                    },
+                    error: function(xhr, textstatus, ethrown) {
+                        alert(textstatus + ", " + ethrown + xhr.status);
+                        //location.reload();
+                    }
+                });
+            }
             $.when(ajax1()).done(function() {
                 //alert(empId);
                 //append_Id = "<span class='label_node' id='empId'>" + empId + "</span>" + "<br>";
@@ -821,39 +864,10 @@ $(document).on("ready", function() {
     //edit employee
     $('form#edit_employee_form').submit(function (e){
         e.preventDefault();
-        // alert("submit");
-        
-
-        var loc_field = $("#edit_node_location");
-        var locval = $("#edit_node_location").val();
-        var location = loc_field.val();
-
-        var email_field = $("#edit_node_email");
-        var emailval = $("#edit_node_email").val();
-        var email = email_field.val();
-
-        var phone_field = $("#edit_node_phone");
-        var phoneval = $("#edit_node_phone").val();
-        var phone = phone_field.val();
-
-        var firstname_field = $("#edit_first_name");
-        var nameval = $("#edit_first_name").val();
-        var texto = firstname_field.val();
-
-        var lastname_field = $("#edit_last_name");
-        var last = lastname_field.val();
-
-        var img_field = $("#edit_node_image");
-        var imgval = $("#edit_node_image").val();
-        var image = "";
-
-        var title_field = $("#edit_node_title");
-        var titleval = $("#edit_node_title").val();
-        var titletexto = title_field.val();
 
         var formData = new FormData(this);
-        node_to_edit = $("li." + add_to_node + ":not('.temp')");
-        empId = node_to_edit.attr("id");
+        var $node  = $("li." + add_to_node + ":not('.temp')");
+        empId = $node.attr("id");
         formData.append("emp_Id", empId);
         $.ajax({
             type: "POST",
@@ -870,79 +884,14 @@ $(document).on("ready", function() {
             }
         })
 
-        //employee title
-        if (node_to_edit.find("> .label_node[id=title]").exists()) {
-            if (titletexto != "") {
-                node_to_edit.find("> .label_node[id=title]").text(titletexto);
-            } else {
-                node_to_edit.find("> .label_node[id=title]").remove();
-            }
-        } else {
-            if (titletexto != "") {
-                dn = "<span class='label_node' id='title'>" + titletexto + "</span><br>";
-                node_to_edit.last().append(dn);
-            }
-        }
-        // title_field.val("");
-        //employee phone
-        if (node_to_edit.find("> .label_node[id=phone]").exists()) {
-            if (phone != "") {
-                node_to_edit.find("> .label_node[id=phone]").text(phone);
-            } else {
-                node_to_edit.find("> .label_node[id=phone]").remove();
-            }
-        } else {
-            if (phone != "") {
-                dn = "<span class='label_node' id='phone'>" + phone + "</span><br>";
-                node_to_edit.append(dn);
-            }
-        }
-        // phone_field.val("");
-        //employee email
-        // email_field.val("");
-        //employee location
-        var i_dont_know_this_code = true
-        if(i_dont_know_this_code === false){
-            //Just retrieve location value 
-            location = $("#edit_node_location");
-            alert("location"+location);
-        }else{
-            if (node_to_edit.find("> .label_node[id=loc]").exists()) {
-                alert("in if");
-                if (location != "") {
-                    alert("in second if");
-                    node_to_edit.find("> .label_node[id=loc]").text(location);
-                } else {
-                    alert("in second else");
-                    node_to_edit.find("> .label_node[id=loc]").remove();
-                }
-            } else {
-                //alert("in else");
-                //alert(location);
-                if (location != "") {
-                    dn = "<span class='label_node' id='loc'>" + location + "</span><br>";
-                    node_to_edit.last().append(dn);
-                }
-            }
-        }
-        
-        //employee image
-        // alert(document.URL + "EmpImage.do?empId=" + empId);
-        // if (image != "" && node_to_edit.find("img").length != 0) {
-        //     node_to_edit.find("img").attr("src").text(document.URL + "EmpImage.do?empId=" + empId);
-        // } else if (image != "" && node_to_edit.find("img").length == 0) {
-        //     var edit_image = "<img src = '" + document.URL + "EmpImage.do?empId=" + empId + "' alt = 'emp_image'>";
-        //     node_to_edit.append(edit_image);
-        // } else if (image == "" && node_to_edit.find("img").length != 0) {
-        //     node_to_edit.remove(node_to_edit.find("img"));
-        // }
-        //alert("finish ajax form submit"+$(this).serialize());
         $(this)[0].reset();
-        get_emp(node_to_edit.attr("id"), node_to_edit);
+        var $div = $("#chart").find("div." + add_to_node);
+        get_emp(empId, $div);
         reset_forms();
         $.fancybox.close();
         //return false;
     });
+
     $("input[type=submit][id=edit_empXX]").click(function() {
         node_to_edit = $("li." + add_to_node + ":not('.temp')");
 

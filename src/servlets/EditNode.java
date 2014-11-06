@@ -33,7 +33,9 @@ public class EditNode extends HttpServlet {
 	/**
 	 * TODO: un-handled exceptions for employeeProfileBean id parsing exception and hibernate exception.
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @deprecated use {@link #doPost()} instead.
 	 */
+    @Deprecated
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.setContentType("text/html");
 		

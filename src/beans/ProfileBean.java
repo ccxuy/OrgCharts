@@ -6,13 +6,15 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.SQLException;
 
+import javax.persistence.*;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
 import org.apache.tomcat.util.http.fileupload.util.Streams;
-
+@Entity
 public class ProfileBean {
-
+	@Id
+	@GeneratedValue
 	int id;
 	String firstName;
 	String lastName;
@@ -24,6 +26,7 @@ public class ProfileBean {
 
 	/**
 	 * Constructor for update ProfileBean, please fill rest field via setter.
+	 * 
 	 * @param id
 	 */
 	public ProfileBean(int id) {
@@ -34,6 +37,7 @@ public class ProfileBean {
 	/**
 	 * Constructor for update ProfileBean, please fill rest field via setter.
 	 * This one takes string id.
+	 * 
 	 * @param id
 	 */
 	public ProfileBean(String id) throws NumberFormatException {
@@ -41,6 +45,14 @@ public class ProfileBean {
 		this.id = Integer.parseInt(id);
 	}
 
+	/**
+	 * Constructor for add new employee ProfileBean.
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @param email
+	 * @param img
+	 */
 	public ProfileBean(String firstName, String lastName, String email, Blob img) {
 
 		this.firstName = firstName;
@@ -50,7 +62,21 @@ public class ProfileBean {
 
 	}
 
-	// methods for added info
+	/**
+	 * Constructor for add new employee ProfileBean.
+	 * 
+	 * @param first_name
+	 * @param last_name
+	 * @param email
+	 * @param imgInputStream
+	 */
+	public ProfileBean(String firstName, String lastName, String email,
+			InputStream imgInputStream) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.setImg(imgInputStream);
+	}
 
 	public String getEmail() {
 		return email;
@@ -96,9 +122,9 @@ public class ProfileBean {
 	public String toString() {
 		long imgLength = -1;
 		try {
-			if(null==img){
+			if (null == img) {
 				imgLength = 0;
-			}else{
+			} else {
 				imgLength = img.length();
 			}
 		} catch (SQLException e) {
@@ -106,8 +132,8 @@ public class ProfileBean {
 			e.printStackTrace();
 		}
 		return "ProfileBean [id=" + id + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + ", img.length()="
-				+ imgLength + "]";
+				+ ", lastName=" + lastName + ", email=" + email
+				+ ", img.length()=" + imgLength + "]";
 	}
 
 	public void setImg(InputStream imgInputStream) {
@@ -130,7 +156,8 @@ public class ProfileBean {
 
 	public boolean hasNoImage() {
 		try {
-			if(null==this.img || this.img.length()<=0)return true;
+			if (null == this.img || this.img.length() <= 0)
+				return true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
