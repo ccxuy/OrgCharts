@@ -184,7 +184,7 @@ function get_emp(id, node) {
                 }
                 //image
                 if (respose.split(',')[3] != "null") {
-                    image = respose.split(',')[3];
+                    image = document.URL + "EmpImage.do?empId=" + id;
                 } else {
                     image = "";
                 }
@@ -231,7 +231,9 @@ function get_emp(id, node) {
             node.children("div.empinfo").find("li").last().append(append_email);
         }
         if (image != "") {
-            node.children("div.empinfo").append(append_image);
+            // node.children("div.empinfo").append(append_image);
+            node.attr("imgurl",image);
+            node.css("background-image","url('" + image + "')");
         }
         node.append(temp);
         node.append(temp1);
@@ -808,8 +810,8 @@ $(document).on("ready", function() {
     //add current employee
     $("input[type=button][id=add_curr]").click(function() {
         var $node = $("li." + add_to_node + ":not('.temp')");
-        var $div = $("#chart").find("div." + add_to_node);
         $node.attr("id", id_num);
+        var $div = $("#chart").find("div." + add_to_node);
         $div.attr("id", id_num);
         get_emp(id_num, $div);
         reset_forms();
@@ -925,14 +927,15 @@ $(document).on("ready", function() {
         }
         
         //employee image
-        if (image != "" && node_to_edit.find("img").length != 0) {
-            node_to_edit.find("img").attr("src").text(image);
-        } else if (image != "" && node_to_edit.find("img").length == 0) {
-            var edit_image = "<img src = '" + image + "' alt = 'emp_image'>";
-            node_to_edit.append(edit_image);
-        } else if (image == "" && node_to_edit.find("img").length != 0) {
-            node_to_edit.remove(node_to_edit.find("img"));
-        }
+        // alert(document.URL + "EmpImage.do?empId=" + empId);
+        // if (image != "" && node_to_edit.find("img").length != 0) {
+        //     node_to_edit.find("img").attr("src").text(document.URL + "EmpImage.do?empId=" + empId);
+        // } else if (image != "" && node_to_edit.find("img").length == 0) {
+        //     var edit_image = "<img src = '" + document.URL + "EmpImage.do?empId=" + empId + "' alt = 'emp_image'>";
+        //     node_to_edit.append(edit_image);
+        // } else if (image == "" && node_to_edit.find("img").length != 0) {
+        //     node_to_edit.remove(node_to_edit.find("img"));
+        // }
         //alert("finish ajax form submit"+$(this).serialize());
         $(this)[0].reset();
         get_emp(node_to_edit.attr("id"), node_to_edit);

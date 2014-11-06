@@ -309,6 +309,45 @@ public class HibernateUtilities {
 		}
 		return data;
 	}
+	
+	/**
+	 * @param id
+	 * @return Employee ProfileBean if success, null if failed
+	 */
+	public static ProfileBean searchEmployeeById(int id) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			ProfileBean emp = (ProfileBean) session.get(ProfileBean.class, id);
+			tx.commit();
+			if(null != emp){
+				//success
+				return emp;
+			}
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
+	/**
+	 * @param id
+	 * @return Employee ProfileBean if success, null if failed
+	 */
+	public static ProfileBean searchEmployeeById(String id) {
+		try {
+			return searchEmployeeById(Integer.parseInt(id));
+		} catch (NumberFormatException e) {
+			System.err.println("searchEmployeeById: input not an integer!");
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * Search char with uuid in UUID column.

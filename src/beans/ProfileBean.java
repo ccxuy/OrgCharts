@@ -128,4 +128,14 @@ public class ProfileBean {
 		}
 	}
 
+	public boolean hasNoImage() {
+		try {
+			if(null==this.img || this.img.length()<=0)return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }

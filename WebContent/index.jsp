@@ -21,7 +21,7 @@
   <link rel="stylesheet" href="css/bootstrap-switch.css">
   <script type="text/javascript" src="js/bootstrap-switch.js"></script>
   <!-- jQuery Form Plugin -->
-  <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script>
+  <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
   <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
   <script src="js/jquery.jOrgChart.js"></script>
   <script src="js/index.js"></script>
