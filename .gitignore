@@ -16,3 +16,6 @@ CVS/
 .classpath
 .settings/
 .loadpath
+
+# doc or source
+doc/
