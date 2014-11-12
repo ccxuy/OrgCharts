@@ -2,13 +2,33 @@ $.ajaxSetup({
     cache: false
 });
 
+//window.location.href.split('/')[0] also work.
+// For image ajax.
+// var baseurl = window.location.protocol+"//"+window.location.host+"/"+window.location.pathname.split("/")[1]+"/";
+var url = window.location.href;
+var baseurl = url.substring(0,url.lastIndexOf('/')+1);
+alert(baseurl);
+
+function getUrlParameter(sParam){
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}
+
 function ajax0() {
     console.log("load file");
     $('#org').children().remove();
     return $.ajax({
         type: "GET",
         data: {
-            fileName: ""
+            chartid: getUrlParameter('chartid')
         },
         url: "LoadChart.do",
         success: function(respose, text, xhr) {
@@ -184,7 +204,7 @@ function get_emp(id, node) {
                 }
                 //image
                 if (respose.split(',')[3] != "null") {
-                    image = document.URL + "EmpImage.do?empId=" + id;
+                    image = baseurl + "EmpImage.do?empId=" + id;
                 } else {
                     image = "";
                 }

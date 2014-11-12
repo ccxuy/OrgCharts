@@ -76,7 +76,7 @@
   <%} %>
 
   <!-- Display chart -->
-  <ul id='org' style='display:none'>
+  <ul id="org" style="display:none" chartid="">
   </ul>
   <div id="chart" class="orgChart"></div>
 
