@@ -109,4 +109,14 @@
     <servlet-name>EmpImage</servlet-name>
     <url-pattern>/EmpImage.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>GetChartsJson</display-name>
+    <servlet-name>GetChartsJson</servlet-name>
+    <servlet-class>servlets.GetChartsJson</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>GetChartsJson</servlet-name>
+    <url-pattern>/GetChartsJson.do</url-pattern>
+  </servlet-mapping>
 </web-app>

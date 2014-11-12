@@ -27,7 +27,7 @@
   <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
   <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
   <script src="js/jquery.jOrgChart.js"></script>
-  <script src="js/index.js"></script>
+  <script src="js/chart-jsp.js"></script>
 </head>
 
 <%
