@@ -30,23 +30,24 @@ public class UpdateChart extends HttpServlet {
      */
     public UpdateChart() {
         super();
-        // TODO Auto-generated constructor stub
-    }    
-   
+    }
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
+		System.out.println("UpdateChart@doPost");
 		String update_str = (String)request.getParameter("UptString");
-		ChartBean chartBean = (ChartBean)request.getAttribute("Chart");
+		HttpSession session = request.getSession();
+		ChartBean chartBean = (ChartBean)session.getAttribute(Setting.ChartAlias.CHARTBEAN_STR);
 		
 		String upt_str = saveXml(update_str, chartBean);
 //		String upt_str = saveXmlWithOuterTag(update_str, chartBean);
 		
 		HttpSession sess = request.getSession(true);   
 		sess.setAttribute("empchart", upt_str);
-		request.getRequestDispatcher("/index.jsp").forward(request, response);
+		request.getRequestDispatcher("/chart.jsp").forward(request, response);
 			
 	}
 	
@@ -97,7 +98,7 @@ public class UpdateChart extends HttpServlet {
 	 */
 	private ChartBean defaultValueOfChart(ChartBean chartBean, String xml) {
 		if(null==chartBean||null==chartBean.getUuid()){
-			chartBean = new ChartBean(Setting.DefaultData.CHARTUUID_STRING);
+			chartBean = new ChartBean(Setting.DefaultData.CHARTUUID_STR);
 			chartBean.setXmlString(xml);
 			System.out.println("Generate defaultValueOfChart"+chartBean);
 		}

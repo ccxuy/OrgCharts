@@ -7,7 +7,7 @@ $.ajaxSetup({
 // var baseurl = window.location.protocol+"//"+window.location.host+"/"+window.location.pathname.split("/")[1]+"/";
 var url = window.location.href;
 var baseurl = url.substring(0,url.lastIndexOf('/')+1);
-alert(baseurl);
+// alert(baseurl);
 
 function getUrlParameter(sParam){
     var sPageURL = window.location.search.substring(1);

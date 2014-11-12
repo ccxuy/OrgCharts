@@ -39,7 +39,7 @@ public class EditNode extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//response.setContentType("text/html");
 		
-		System.out.println("EDIT NODE>>");
+		System.out.println("EditNode>>");
 		try {
 			HibernateUtilities.getFactory();
 			String emp_id = request.getParameter("emp_Id");

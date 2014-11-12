@@ -42,13 +42,14 @@ public class LoadChart extends HttpServlet {
 			String fileName = request.getParameter("fileName");
 			input = readFromLocalXML(fileName);
 		}else{
-			String chartUuid = (String)request.getParameter("chartUuid");
-			if(null==chartUuid){
-				chartUuid = Setting.DefaultData.CHARTUUID_STRING;
+			String chartId = (String)request.getParameter("chartid");
+			if(null==chartId||chartId.equals("")){
+				chartId = Setting.DefaultData.CHARTUUID_STR;
 			}
 			try {
+				System.out.println("LoadChart@doGet: chartid="+chartId);
 				HibernateUtilities.getFactory();
-				ChartBean chartBean = HibernateUtilities.searchChartByUUID(chartUuid);
+				ChartBean chartBean = HibernateUtilities.searchChartByUUID(chartId);
 				input = chartBean.getXmlString();
 			} catch (Exception e) {
 				e.printStackTrace();

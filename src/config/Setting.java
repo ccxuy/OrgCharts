@@ -12,8 +12,17 @@ public class Setting {
 		LOCAL_XML, HIBERNATE
 	}
 	
-	public class DefaultData{
-		public static final String CHARTUUID_STRING = "test";
+	public static class DefaultData{
+		public static final String CHARTUUID_STR = "test";
+	}
+	
+	public static class ChartAlias{
+		public static final String CHARTBEAN_STR = "ChartBean";
+		public static final String CHARTBEAN_ID_STR = "chartid";
+	}
+	
+	public static class Url{
+		public static String UpdateChart = "/UpdateChart.do";
 	}
 //	public static DefaultData getTestData(){
 //		return null;

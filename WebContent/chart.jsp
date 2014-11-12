@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+<%@page import="config.Setting"%>
+<%@page import="beans.ChartBean"%>
+<%@page import="utilities.HibernateUtilities"%>
 <html>
 
 <head>
@@ -27,11 +30,31 @@
   <script src="js/index.js"></script>
 </head>
 
+<%
+String chartId = (String)request.getParameter(Setting.ChartAlias.CHARTBEAN_ID_STR);
+ChartBean chartBean = null;
+if(null==chartId||chartId.equals("")){
+	chartId = Setting.DefaultData.CHARTUUID_STR;
+}
+try {
+	System.out.println("LoadChart@doGet: chartid="+chartId);
+	HibernateUtilities.getFactory();
+	chartBean = HibernateUtilities.searchChartByUUID(chartId);
+} catch (Exception e) {
+	e.printStackTrace();
+}
+if(null==chartBean){
+	chartBean = new ChartBean();
+	chartBean.setUuid(Setting.DefaultData.CHARTUUID_STR);
+}
+session.setAttribute(Setting.ChartAlias.CHARTBEAN_STR, chartBean);
+%>
+
 <body onload="prettyPrint();">
   <div class="topbar">
     <div class="topbar-inner">
       <div class="container">
-        <a class="brand" href="#">Interactive Organization Chart Demo</a>
+        <a class="brand" href="#"><%=chartBean.getChartName()%></a>
         <!-- <div class="pull-right">
           <input type="checkbox" name="edit-checkbox" checked>
         </div> -->
@@ -69,11 +92,6 @@
   //                });
   </script>
 
-  <% if (session.getAttribute( "empchart") != null){
-      System.out.println(session.getAttribute( "empchart"));%>
-  <%=session.getAttribute( "empchart")%>
-  <% } else { %>
-  <%} %>
 
   <!-- Display chart -->
   <ul id="org" style="display:none" chartid="">

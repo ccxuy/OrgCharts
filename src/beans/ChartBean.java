@@ -100,7 +100,7 @@ public class ChartBean implements Serializable {
 	}
 
 	public String getChartName() {
-		return chartName;
+		return null==chartName?"":chartName;
 	}
 
 	public void setChartName(String chartName) {
