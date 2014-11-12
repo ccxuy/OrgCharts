@@ -18,8 +18,8 @@
   <!-- jQuery autocomplete stylesheet -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
   <!-- Bootstrap switch -->
-  <link rel="stylesheet" href="css/bootstrap-switch.css">
-  <script type="text/javascript" src="js/bootstrap-switch.js"></script>
+  <!-- <link rel="stylesheet" href="css/bootstrap-switch.css"> -->
+  <!-- <script type="text/javascript" src="js/bootstrap-switch.js"></script> -->
   <!-- jQuery Form Plugin -->
   <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
   <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
@@ -32,9 +32,9 @@
     <div class="topbar-inner">
       <div class="container">
         <a class="brand" href="#">Interactive Organization Chart Demo</a>
-        <div class="pull-right">
+        <!-- <div class="pull-right">
           <input type="checkbox" name="edit-checkbox" checked>
-        </div>
+        </div> -->
         <div></div>
         <div class="pull-right">
           <div class="alert-message info" id="update_button">Save Chart</div>
@@ -325,7 +325,7 @@
   <script>
   jQuery(document).ready(function() {
     // Enable edit button
-    $("[name='edit-checkbox']").bootstrapSwitch();
+    // $("[name='edit-checkbox']").bootstrapSwitch();
 
     /* Custom jQuery */
     $("#show-list").click(function(e) {
