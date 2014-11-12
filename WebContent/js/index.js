@@ -347,15 +347,17 @@ $(document).on("ready", function() {
             unitname_field.val("");
             node_to_edit.find("> .label_node[id=pd]").text(description);
             unitdes_field.val("");
-        } else {
-            var unitname_field = $("#edit_unit_name");
-            var name = unitname_field.val();
-
-            node_to_edit.find("> .label_node:eq(0)").text(name);
-            unitname_field.val("");
-            node_to_edit.find("> .label_node:eq(0)").attr('id', 'un');
-            node_to_edit.addClass('unit');
         }
+        // I dont know what this code do, seems like repeat the first if for unit node.
+        // else {
+        //     var unitname_field = $("#edit_unit_name");
+        //     var name = unitname_field.val();
+
+        //     node_to_edit.find("> .label_node:eq(0)").text(name);
+        //     unitname_field.val("");
+        //     node_to_edit.find("> .label_node:eq(0)").attr('id', 'un');
+        //     node_to_edit.addClass('unit');
+        // }
 
         $.fancybox.close();
         init_tree();
@@ -446,19 +448,23 @@ $(document).on("ready", function() {
                 $node.append(append_text);
 
                 //unit discription
-                if (last != "") {
-                    //append_last = "<ul>" + append_last + "</ul>";
-                    $node.find("li").last().append(append_last)
-                }
+                $node.find("li").last().append(append_last)
+                // Add description no matter exist or not, so we can edit it later.
+                // if (last != "") {
+                //     //append_last = "<ul>" + append_last + "</ul>";
+                //     $node.find("li").last().append(append_last)
+                // }
 
                 //node type
                 //append_type = "<ul>" + append_type + "</ul>"
                 //$node.find("li").last().append(append_type);
             } else {
                 $node.find("ul:eq(0)").append(append_text);
-                if (last != "") {
-                    $node.find("li").last().append(append_last);
-                }
+                $node.find("li").last().append(append_last);
+                // Add description no matter exist or not, so we can edit it later.
+                // if (last != "") {
+                //     $node.find("li").last().append(append_last);
+                // }
                 //$node.find("li").last().append(append_type);
             }
         } else {
@@ -503,9 +509,11 @@ $(document).on("ready", function() {
                 //$node.find("li").last().append(append_type);
             } else {
                 $node.find("ul:eq(0)").append(append_text);
-                if (last != "") {
-                    $node.find("li").last().append(append_last);
-                }
+                $node.find("li").last().append(append_last);
+                // Add description no matter exist or not, so we can edit it later.
+                // if (last != "") {
+                //     $node.find("li").last().append(append_last);
+                // }
                 //$node.find("li").last().append(append_type);
             }
         }
@@ -514,7 +522,7 @@ $(document).on("ready", function() {
         $.fancybox.close();
     });
 
-    //add/edit employee
+    //add/edit employee button
     $(".emp").live("click", function(e) {
         click_flag = false;
         node_type = "";
