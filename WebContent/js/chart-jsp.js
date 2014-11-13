@@ -519,10 +519,7 @@ $(document).on("ready", function() {
                 $node.append(append_text);
 
                 //unit discription
-                if (last != "") {
-                    //append_last = "<ul>" + append_last + "</ul>";
-                    $node.find("li").last().append(append_last);
-                }
+                $node.find("li").last().append(append_last);
 
                 //node type
                 //append_type = "<ul>" + append_type + "</ul>"
