@@ -7,13 +7,13 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title>Interactive Organization Chart Demo</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css" />
-  <link rel="stylesheet" href="css/jquery.jOrgChart.css" />
-  <link rel="stylesheet" href="css/custom.css" />
-  <link href="css/prettify.css" type="text/css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/chart-bootstrap.min.css" />
+  <link rel="stylesheet" href="css/chart-jquery.jOrgChart.css" />
+  <link rel="stylesheet" href="css/chart-custom.css" />
+  <link href="css/chart-prettify.css" type="text/css" rel="stylesheet" />
   <link rel="stylesheet" href="fancybox/jquery.fancybox.css" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="css/custom.form.css" media="all" />
-  <script type="text/javascript" src="js/prettify.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/chart-custom.form.css" media="all" />
+  <script type="text/javascript" src="js/chart-prettify.js"></script>
 
   <!-- jQuery includes -->
   <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
@@ -26,15 +26,15 @@
   <!-- jQuery Form Plugin -->
   <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
   <script type="text/javascript" src="fancybox/jquery.fancybox.js"></script>
-  <script src="js/jquery.jOrgChart.js"></script>
+  <script src="js/chart-jquery.jOrgChart.js"></script>
   <script src="js/chart-jsp.js"></script>
 </head>
 
 <%
-String chartId = (String)request.getParameter(Setting.ChartAlias.CHARTBEAN_ID_STR);
+String chartId = (String)request.getParameter(Setting.ChartAlias.Chart_Id);
 ChartBean chartBean = null;
 if(null==chartId||chartId.equals("")){
-	chartId = Setting.DefaultData.CHARTUUID_STR;
+	chartId = Setting.DefaultData.ChartId_default;
 }
 try {
 	System.out.println("LoadChart@doGet: chartid="+chartId);
@@ -45,9 +45,9 @@ try {
 }
 if(null==chartBean){
 	chartBean = new ChartBean();
-	chartBean.setUuid(Setting.DefaultData.CHARTUUID_STR);
+	chartBean.setUuid(Setting.DefaultData.ChartId_default);
 }
-session.setAttribute(Setting.ChartAlias.CHARTBEAN_STR, chartBean);
+session.setAttribute(Setting.ChartAlias.ChartBean_STR, chartBean);
 %>
 
 <body onload="prettyPrint();">

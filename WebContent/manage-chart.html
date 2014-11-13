@@ -12,7 +12,7 @@
     <title>Organization Chart System</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/sb-bootstrap.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- MetisMenu CSS -->
     <link href="css/plugins/metisMenu/metisMenu.min.css" rel="stylesheet">
@@ -207,13 +207,15 @@
     <script src="js/sb-jquery.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/sb-bootstrap.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
     <script src="js/plugins/metisMenu/metisMenu.min.js"></script>
 
     <!-- DataTables JavaScript -->
-    <script src="js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+    <script src="http://editor.datatables.net/media/js/dataTables.editor.min.js"></script>
     <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
 
     <!-- Custom Theme JavaScript -->
@@ -222,7 +224,9 @@
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
     $(document).ready(function() {
-        $('#dataTables-chart').dataTable({
+        var editor; // use a global for the submit and return data rendering
+
+        var cTable = $('#dataTables-chart').dataTable({
             "ajax": 'GetChartsJson.do',
             "columns": [
                 { "data": "ID" },
@@ -233,8 +237,32 @@
                 { "data": "LMTime" },
                 { "data": "CUID" },
                 { "data": "CUName" }
+            ],
+            "rowCallback": function( row, data ) {
+                // Bold the grade for all 'A' grade browsers
+                if ( data["ID"] != "" ) {
+                  $('td:eq(0)', row).html( '<a href="chart.jsp?chartid='+data["ID"]+'">'+data["ID"]+'</a>' );
+                }
+            },
+            aButtons: [
+                { sExtends: "editor_create", editor: editor },
+                { sExtends: "editor_edit",   editor: editor },
+                { sExtends: "editor_remove", editor: editor }
             ]
         });
+        // Activate the bubble editor on click of a table cell
+        $('#dataTables-chart').on( 'click', 'tbody td:not(:first-child)', function (e) {
+            editor.bubble( this );
+        } );
+
+        // $("#dataTables-chart").on("dblclick", "tr", function() {
+        //     var iPos = cTable.fnGetPosition( this );
+        //     var aData = cTable.fnGetData( iPos );
+        //     var iId = aData[1];
+        //     $('#edit'+iId).click(); //clicks a button on the first cell
+        //     // alert(aData);
+        //     // window.open(
+        // });
     });
     </script>
 
