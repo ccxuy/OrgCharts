@@ -204,7 +204,7 @@
     <!-- /#wrapper -->
 
     <!-- jQuery -->
-    <script src="js/sb-jquery.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.1.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
@@ -215,7 +215,6 @@
     <!-- DataTables JavaScript -->
     <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
     <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
-    <script src="http://editor.datatables.net/media/js/dataTables.editor.min.js"></script>
     <script src="js/plugins/dataTables/dataTables.bootstrap.js"></script>
 
     <!-- Custom Theme JavaScript -->
@@ -223,8 +222,8 @@
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
     <script>
+    var editor; // use a global for the submit and return data rendering
     $(document).ready(function() {
-        var editor; // use a global for the submit and return data rendering
 
         var cTable = $('#dataTables-chart').dataTable({
             "ajax": 'GetChartsJson.do',
@@ -239,9 +238,9 @@
                 { "data": "CUName" }
             ],
             "rowCallback": function( row, data ) {
-                // Bold the grade for all 'A' grade browsers
+                // generate hyperlink for chart name column
                 if ( data["ID"] != "" ) {
-                  $('td:eq(0)', row).html( '<a href="chart.jsp?chartid='+data["ID"]+'">'+data["ID"]+'</a>' );
+                  $('td:eq(1)', row).html( '<a href="chart.jsp?chartid='+data["ID"]+'">'+data["ChartName"]+'</a>' );
                 }
             },
             aButtons: [
@@ -251,7 +250,7 @@
             ]
         });
         // Activate the bubble editor on click of a table cell
-        $('#dataTables-chart').on( 'click', 'tbody td:not(:first-child)', function (e) {
+        cTable.on( 'click', 'tbody td:not(:first-child)', function (e) {
             editor.bubble( this );
         } );
 

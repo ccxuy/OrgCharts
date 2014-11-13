@@ -34,13 +34,13 @@ public class EmpImage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("image/jpg");
 		ServletOutputStream out = response.getOutputStream();
-		System.out.println("EmpImage>>");
+
 		try {
 			HibernateUtilities.getFactory();
 			String emp_id = request.getParameter("empId");
 			if(null!=emp_id){
 				ProfileBean empBean = HibernateUtilities.searchEmployeeById(emp_id);
-				System.out.println(empBean);
+//				System.out.println("EmpImage>>"+empBean);
 				
 				if(empBean.hasNoImage())return;
 				InputStream is = empBean.getImg().getBinaryStream();

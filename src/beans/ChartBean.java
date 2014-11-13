@@ -1,17 +1,12 @@
 package beans;
 
-import java.io.Serializable;
 import java.sql.Clob;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import javax.sql.rowset.serial.SerialClob;
-import javax.sql.rowset.serial.SerialException;
-
 import utilities.ClobConverter;
 
-public class ChartBean implements Serializable {
+public class ChartBean{
 
 	String uuid;
 	int ownerID;

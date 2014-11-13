@@ -50,6 +50,7 @@ public class GetChartsJson extends HttpServlet {
 			JSONArray chartsJson = new JSONArray();
 			for(ChartBean cb:cbList){
 				JSONObject cbj = new JSONObject();
+				cbj.put("DT_RowId", cb.getUuid());
 				cbj.put("ID", cb.getUuid());
 				cbj.put("ChartName", cb.getChartName());
 				cbj.put("OwnerID", String.valueOf(cb.getOwnerID()));
