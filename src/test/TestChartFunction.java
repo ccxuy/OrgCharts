@@ -3,6 +3,7 @@ package test;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.rowset.serial.SerialException;
 
@@ -27,7 +28,7 @@ public class TestChartFunction {
 		System.out.println("Finish Setup hibernate");
 	}
 
-	@Test
+//	@Test
 	public void testSearchChartByUUID() {
 		System.out.println("testSearchChartByUUID");
 		ChartBean cb = HibernateUtilities.searchChartByUUID("test");
@@ -35,7 +36,7 @@ public class TestChartFunction {
 		assertNotNull(cb);
 	}
 
-	@Test
+//	@Test
 	public void testSaveOrUpdateChart() {
 		System.out.println("testSaveOrUpdateChart");
 		ChartBean cb;
@@ -43,6 +44,14 @@ public class TestChartFunction {
 		System.out.println(cb);
 		int ret = HibernateUtilities.saveOrUpdateChart(cb);
 		assertEquals(1, ret);
+	}
+	
+	@Test
+	public void testGetAllChartByOwnerId(){
+		System.out.println("testGetAllChartByOwnerId");
+		List<ChartBean> cbl = HibernateUtilities.getAllChartByOwnerId(0, 100);
+		System.out.println(cbl.size());
+		assertNotNull(cbl);
 	}
 
 }

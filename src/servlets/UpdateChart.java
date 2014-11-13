@@ -40,7 +40,7 @@ public class UpdateChart extends HttpServlet {
 		System.out.println("UpdateChart@doPost");
 		String update_str = (String)request.getParameter("UptString");
 		HttpSession session = request.getSession();
-		ChartBean chartBean = (ChartBean)session.getAttribute(Setting.ChartAlias.CHARTBEAN_STR);
+		ChartBean chartBean = (ChartBean)session.getAttribute(Setting.ChartAlias.ChartBean_STR);
 		
 		String upt_str = saveXml(update_str, chartBean);
 //		String upt_str = saveXmlWithOuterTag(update_str, chartBean);
@@ -98,7 +98,7 @@ public class UpdateChart extends HttpServlet {
 	 */
 	private ChartBean defaultValueOfChart(ChartBean chartBean, String xml) {
 		if(null==chartBean||null==chartBean.getUuid()){
-			chartBean = new ChartBean(Setting.DefaultData.CHARTUUID_STR);
+			chartBean = new ChartBean(Setting.DefaultData.ChartId_default);
 			chartBean.setXmlString(xml);
 			System.out.println("Generate defaultValueOfChart"+chartBean);
 		}

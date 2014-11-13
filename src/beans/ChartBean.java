@@ -18,9 +18,12 @@ public class ChartBean implements Serializable {
 	String chartName;
 	Clob xml;
 	Timestamp timeLastModified;
-	int version;
+	Integer version;
 	Integer editUser;
 
+	/**
+	 * Empty Constructor
+	 */
 	public ChartBean() {
 		super();
 	}
@@ -64,7 +67,7 @@ public class ChartBean implements Serializable {
 	 * @param edit_user
 	 */
 	public ChartBean(String uuid, int owner_id, String chart_name, Clob xml,
-			Timestamp create_time, int version, Integer edit_user){
+			Timestamp create_time, Integer version, Integer edit_user){
 		super();
 		this.uuid = uuid;
 		this.ownerID = owner_id;
@@ -136,7 +139,7 @@ public class ChartBean implements Serializable {
 		this.timeLastModified = new Timestamp(calendar.getTime().getTime());
 	}
 
-	public int getVersion() {
+	public Integer getVersion() {
 		return version;
 	}
 
@@ -144,7 +147,7 @@ public class ChartBean implements Serializable {
 		this.version = 1;
 	}
 
-	public void setVersion(int version) {
+	public void setVersion(Integer version) {
 		this.version = version;
 	}
 

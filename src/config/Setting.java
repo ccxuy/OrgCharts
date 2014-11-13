@@ -12,13 +12,19 @@ public class Setting {
 		LOCAL_XML, HIBERNATE
 	}
 	
+	public static class ServerSetting{
+		public static int queryLimit = 100;
+	}
+	
 	public static class DefaultData{
-		public static final String CHARTUUID_STR = "test";
+		public static String ChartId_default = "test";
 	}
 	
 	public static class ChartAlias{
-		public static final String CHARTBEAN_STR = "ChartBean";
-		public static final String CHARTBEAN_ID_STR = "chartid";
+		public static String ChartBean_STR = "ChartBean";
+		public static String Chart_Id = "chartid";
+		public static String Chart_Owner = "chartowner";
+		public static String ChartField_OwnerId = "ownerID";
 	}
 	
 	public static class Url{

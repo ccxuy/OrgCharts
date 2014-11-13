@@ -165,4 +165,8 @@ public class ProfileBean {
 		return false;
 	}
 
+	public String getWholeName() {
+		return this.getfirstName()+" "+this.getlastName();
+	}
+
 }

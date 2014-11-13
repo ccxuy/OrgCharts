@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -13,6 +14,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
+
+import config.Setting;
 
 import beans.ChartBean;
 import beans.ProfileBean;
@@ -110,14 +116,14 @@ public class HibernateUtilities {
 		}
 		return empId;
 	}
-	
-	
+
 	/**
 	 * Update employee profile according to it's id.
+	 * 
 	 * @param employeeProfile
 	 * @return 1 if success, 0 if failed
 	 */
-	public static int editNode(ProfileBean employeeProfile){
+	public static int editNode(ProfileBean employeeProfile) {
 		Session session = sessfactory.openSession();
 		Transaction tx = null;
 		try {
@@ -291,10 +297,8 @@ public class HibernateUtilities {
 	public static List searchName(int id) throws Exception {
 		List data = null;
 		Query query = null;
-		System.out.println("I am here 1");
 		Session session = sessfactory.openSession();
 		Transaction tx = null;
-		System.out.println("I am here");
 		try {
 			tx = session.beginTransaction();
 			query = session.createQuery("FROM ProfileBean where id = " + id);
@@ -309,7 +313,7 @@ public class HibernateUtilities {
 		}
 		return data;
 	}
-	
+
 	/**
 	 * @param id
 	 * @return Employee ProfileBean if success, null if failed
@@ -321,8 +325,8 @@ public class HibernateUtilities {
 			tx = session.beginTransaction();
 			ProfileBean emp = (ProfileBean) session.get(ProfileBean.class, id);
 			tx.commit();
-			if(null != emp){
-				//success
+			if (null != emp) {
+				// success
 				return emp;
 			}
 		} catch (HibernateException e) {
@@ -334,7 +338,7 @@ public class HibernateUtilities {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param id
 	 * @return Employee ProfileBean if success, null if failed
@@ -348,7 +352,6 @@ public class HibernateUtilities {
 		}
 		return null;
 	}
-	
 
 	/**
 	 * @param pb
@@ -360,10 +363,10 @@ public class HibernateUtilities {
 		try {
 			tx = session.beginTransaction();
 			int id = -1;
-			//If this is a new employee profileBean.
-			if(pb.getId()<=0){
+			// If this is a new employee profileBean.
+			if (pb.getId() <= 0) {
 				id = (Integer) session.save(pb);
-			}else{
+			} else {
 				session.saveOrUpdate(pb);
 				id = pb.getId();
 			}
@@ -381,6 +384,7 @@ public class HibernateUtilities {
 
 	/**
 	 * Search char with uuid in UUID column.
+	 * 
 	 * @param uuid
 	 * @return ChartBean if success, null if failed
 	 */
@@ -389,10 +393,11 @@ public class HibernateUtilities {
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			ChartBean chartBean = (ChartBean) session.get(ChartBean.class, uuid);
+			ChartBean chartBean = (ChartBean) session
+					.get(ChartBean.class, uuid);
 			tx.commit();
-			if(null != chartBean){
-				//success
+			if (null != chartBean) {
+				// success
 				return chartBean;
 			}
 		} catch (HibernateException e) {
@@ -404,7 +409,7 @@ public class HibernateUtilities {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param chartBean
 	 * @return 1 if success, 0 failed
@@ -416,7 +421,7 @@ public class HibernateUtilities {
 			tx = session.beginTransaction();
 			session.saveOrUpdate(chartBean);
 			tx.commit();
-			//success
+			// success
 			return 1;
 		} catch (HibernateException e) {
 			if (tx != null)
@@ -426,5 +431,81 @@ public class HibernateUtilities {
 			session.close();
 		}
 		return 0;
+	}
+	
+	public static List<ChartBean> getAllChart(){
+		return getAllChart(Setting.ServerSetting.queryLimit);
+	}
+
+	/**
+	 * @param limitQueries
+	 * @return
+	 */
+	public static List<ChartBean> getAllChart(int limitQueries) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			// Quereis
+			Criteria crit = session.createCriteria(ChartBean.class);
+			crit.setMaxResults(limitQueries);
+			List<ChartBean>  chartList = crit.list();
+			tx.commit();
+			if (null != chartList) {
+				// A success query would return not null result even no match
+				return chartList;
+			}
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
+
+	/**
+	 * getAllChartByOwnerId with default query limit
+	 * @param ownerId should not be null, or it would consider no ownerId
+	 * @return list of ChartBean created by this ownerId, null if failed
+	 */
+	public static List<ChartBean> getAllChartByOwnerId(Integer ownerId){
+		return getAllChartByOwnerId(ownerId, Setting.ServerSetting.queryLimit);
+	}
+	
+
+	/**
+	 * @param ownerId should not be null, or it would consider all ownerId
+	 * @param limitQueries
+	 * @return list of ChartBean created by this ownerId, null if failed
+	 */
+	public static List<ChartBean> getAllChartByOwnerId(Integer ownerId, int limitQueries) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			
+			// Quereis
+			Criteria crit = session.createCriteria(ChartBean.class);
+			crit.setMaxResults(limitQueries);
+			if(null != ownerId){
+				crit.add(Restrictions.eqOrIsNull(Setting.ChartAlias.ChartField_OwnerId, ownerId));
+			}
+			List<ChartBean>  chartList = crit.list();
+			tx.commit();
+			if (null != chartList) {
+				// A success query would return not null result even no match
+				return chartList;
+			}
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return null;
 	}
 }

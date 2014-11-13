@@ -44,7 +44,7 @@ public class LoadChart extends HttpServlet {
 		}else{
 			String chartId = (String)request.getParameter("chartid");
 			if(null==chartId||chartId.equals("")){
-				chartId = Setting.DefaultData.CHARTUUID_STR;
+				chartId = Setting.DefaultData.ChartId_default;
 			}
 			try {
 				System.out.println("LoadChart@doGet: chartid="+chartId);
