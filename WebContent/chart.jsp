@@ -5,7 +5,7 @@
 <html>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title>Interactive Organization Chart Demo</title>
   <link rel="stylesheet" href="css/chart-bootstrap.min.css" />
   <link rel="stylesheet" href="css/chart-jquery.jOrgChart.css" />
@@ -22,6 +22,11 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
   <!-- Bootstrap switch -->
   <!-- <link rel="stylesheet" href="css/bootstrap-switch.css"> -->
+
+
+
+
+  
   <!-- <script type="text/javascript" src="js/bootstrap-switch.js"></script> -->
   <!-- jQuery Form Plugin -->
   <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
@@ -254,13 +259,17 @@ session.setAttribute(Setting.ChartAlias.ChartBean_STR, chartBean);
         <input type="text" placeholder="Email Name" name="new_node_email" id="new_node_email" />
         <br>
 
-
         <p class="contact">
           <label for="phone">Phone Number</label>
         </p>
         <input type="text" placeholder="Phone Number" name="new_node_phone" id="new_node_phone" />
         <br>
 
+        <p class="contact">
+          <label for="phone">Fax Number</label>
+        </p>
+        <input type="text" placeholder="Fax Number" name="new_node_fax" id="new_node_fax" />
+        <br>
 
         <p class="contact">
           <label for="image">Image</label>
@@ -288,35 +297,40 @@ session.setAttribute(Setting.ChartAlias.ChartBean_STR, chartBean);
         <p class="contact">
           <label for="edit_node_title">Employee Title</label>
         </p>
-        <input type="text" placeholder="Employee Title" name="emp_title" id="edit_node_title" />
+        <input type="text" placeholder="Employee Title" name="edit_emp_title" id="edit_node_title" />
         <br>
 
 
         <p class="contact">
           <label for="edit_node_location">Location</label>
         </p>
-        <input type="text" placeholder="Location" name="location" id="edit_node_location" />
+        <input type="text" placeholder="Location" name="edit_location" id="edit_node_location" />
         <br>
 
         <p class="contact">
           <label for="edit_node_email">Email</label>
         </p>
-        <input type="text" placeholder="Email Name" name="email" id="edit_node_email" />
+        <input type="text" placeholder="Email Name" name="edit_email" id="edit_node_email" />
         <br>
-
 
         <p class="contact">
           <label for="edit_node_phone">Phone Number</label>
         </p>
-        <input type="text" placeholder="Phone Number" name="phone" id="edit_node_phone" />
+        <input type="text" placeholder="Phone Number" name="edit_phone" id="edit_node_phone" />
         <br>
 
+        <p class="contact">
+          <label for="phone">Fax Number</label>
+        </p>
+        <input type="text" placeholder="Fax Number" name="edit_fax" id="edit_node_fax" />
+        <br>
 
         <p class="contact">
           <label for="edit_node_image">Image</label>
         </p>
         <input id="edit_node_image" type="file" name="image" size="chars">
         <br>
+
         <input id="edit_emp" class="buttom" type=submit value="Save" />
         <br>
         <div id="output"></div>
@@ -340,6 +354,7 @@ session.setAttribute(Setting.ChartAlias.ChartBean_STR, chartBean);
       </form>
     </div>
   </div>
+  
   <script>
   jQuery(document).ready(function() {
     // Enable edit button
