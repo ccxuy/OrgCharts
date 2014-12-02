@@ -1,4 +1,8 @@
-This is your new Play application
+Organization Chart Project
 =================================
 
-This file will be packaged with your application, when using `activator dist`.
+Compilation to war
+===================
+1. All hibernate or other configuration files under java source folder also need to synchronize on \war\WEB-INF\classes
+2. If you deploy war on path other than root in Tomcat, you need to specify path name to valuable "application.context" in \conf\application.conf.
+3. Run \export-war.bat or "activator war"
