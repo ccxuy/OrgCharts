@@ -237,17 +237,28 @@
                 { "data": "CUID" },
                 { "data": "CUName" }
             ],
+            "columnDefs": [
+                {
+                    "targets": [ 0 ],
+                    "visible": false,
+                    "searchable": false
+                }
+            ],
             "rowCallback": function( row, data ) {
                 // generate hyperlink for chart name column
                 if ( data["ID"] != "" ) {
                   $('td:eq(1)', row).html( '<a href="chart.html?chartid='+data["ID"]+'">'+data["ChartName"]+'</a>' );
                 }
             },
-            aButtons: [
-                { sExtends: "editor_create", editor: editor },
-                { sExtends: "editor_edit",   editor: editor },
-                { sExtends: "editor_remove", editor: editor }
-            ]
+            tableTools: {
+                sRowSelect: "os",
+                sRowSelector: 'td:first-child',
+                aButtons: [
+                    { sExtends: "editor_create", editor: editor },
+                    { sExtends: "editor_edit",   editor: editor },
+                    { sExtends: "editor_remove", editor: editor }
+                ]
+            }
         });
         // Activate the bubble editor on click of a table cell
         cTable.on( 'click', 'tbody td:not(:first-child)', function (e) {

@@ -1,0 +1,1 @@
+activator clean & activator compile

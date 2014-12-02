@@ -41,7 +41,7 @@ public class HibernateUtilities {
 		              System.getProperty("user.dir"));
 			try {
 				Configuration configuration = new Configuration();
-			    configuration.configure("hibernate.cfg.xml");
+			    configuration.configure();
 			    serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
 			            configuration.getProperties()).build();
 			    sessfactory = configuration.buildSessionFactory(serviceRegistry);

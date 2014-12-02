@@ -2,15 +2,9 @@
 
 import static org.junit.Assert.*;
 
-import java.sql.SQLException;
 import java.util.List;
 
-import javax.sql.rowset.serial.SerialException;
-
-import junit.framework.Assert;
-
 import org.hibernate.SessionFactory;
-import org.hibernate.dialect.DB2390Dialect;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,6 +35,7 @@ public class TestChartFunction {
 		System.out.println("testSaveOrUpdateChart");
 		ChartBean cb;
 		cb = new ChartBean(82, "test chart", "123<xml>");
+		cb.setXmlDefault();
 		System.out.println(cb);
 		int ret = HibernateUtilities.saveOrUpdateChart(cb);
 		assertEquals(1, ret);

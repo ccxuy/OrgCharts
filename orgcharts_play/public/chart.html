@@ -37,26 +37,6 @@
   <script src="js/chart-jsp.js"></script>
 </head>
 
-<!-- <%
-String chartId = (String)request.getParameter(Setting.ChartAlias.Chart_Id);
-ChartBean chartBean = null;
-if(null==chartId||chartId.equals("")){
-	chartId = Setting.DefaultData.ChartId_default;
-}
-try {
-	System.out.println("LoadChart@doGet: chartid="+chartId);
-	HibernateUtilities.getFactory();
-	chartBean = HibernateUtilities.searchChartByUUID(chartId);
-} catch (Exception e) {
-	e.printStackTrace();
-}
-if(null==chartBean){
-	chartBean = new ChartBean();
-	chartBean.setUuid(Setting.DefaultData.ChartId_default);
-}
-session.setAttribute(Setting.ChartAlias.ChartBean_STR, chartBean);
-%> -->
-
 <body onload="prettyPrint();">
   <div class="topbar">
     <div class="topbar-inner">
@@ -77,27 +57,6 @@ session.setAttribute(Setting.ChartAlias.ChartBean_STR, chartBean);
       </div>
     </div>
   </div>
-
-  <!-- check for session to display chart -->
-  <script>
-  //          $.ajax({
-  //                  type: "GET",
-  //                  data: {Name:null, Node:"root",Location:null,Email:null,Title:null,Image:null,Phone:null},
-
-  //                  url : "AddNode.do",
-  //                  success: function (respose, text, xhr)
-  //                   {
-  //                      //alert(text+", "+respose);
-  //                      //location.reload();
-  //                    },
-  //                    error: function(xhr, textstatus, ethrown)
-  //                    {
-  //                      alert(textstatus+", "+ethrown +xhr.status);
-  //                      //location.reload();
-  //                  }
-
-  //                });
-  </script>
 
 
   <!-- Display chart -->

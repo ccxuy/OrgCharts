@@ -2,7 +2,7 @@ import com.github.play2war.plugin._
 
 name := """OrgCharts"""
 
-version := "0.2-SNAPSHOT"
+version := "0.2"
 
 Play2WarPlugin.play2WarSettings
 
@@ -16,5 +16,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
   cache,
-  javaWs
+  javaWs,
+  javaJpa,
+  "org.hibernate" % "hibernate-entitymanager" % "4.3.0.Final"
 )
