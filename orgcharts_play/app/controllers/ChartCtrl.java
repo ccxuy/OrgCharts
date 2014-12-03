@@ -7,10 +7,14 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.*;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import beans.ChartBean;
 import beans.ProfileBean;
 import play.Logger;
 import play.data.*;
+import play.libs.Json;
 import play.mvc.*;
 import config.Setting;
 import config.Setting.*;
@@ -35,26 +39,27 @@ public class ChartCtrl extends Controller {
 			List<ChartBean> cbList = HibernateUtilities.getAllChartByOwnerId((ownerId));
 			JSONArray chartsJson = new JSONArray();
 			for(ChartBean cb:cbList){
+				//TODO: change it to Gson or Jackson code to avoid hardcode name.
 				JSONObject cbj = new JSONObject();
 				cbj.put("DT_RowId", cb.getUuid());
-				cbj.put("ID", cb.getUuid());
+				cbj.put("uuid", cb.getUuid());
 				cbj.put("ChartName", cb.getChartName());
-				cbj.put("OwnerID", String.valueOf(cb.getOwnerID()));
+				cbj.put("ownerID", String.valueOf(cb.getOwnerID()));
 				ProfileBean owner = HibernateUtilities.searchEmployeeById(cb.getOwnerID());
 				cbj.put("OwnerName", null==owner?"(DELETED USER)":owner.getWholeName());
-				cbj.put("Version", cb.getVersion()==null?"n/a":String.valueOf(cb.getVersion()));
+				cbj.put("version", cb.getVersion()==null?"n/a":String.valueOf(cb.getVersion()));
 				if(null==cb.getTimeLastModified()){
-					cbj.put("LMTime", "n/a");
+					cbj.put("timeLastModified", "n/a");
 				}else{
-					cbj.put("LMTime", cb.getTimeLastModified().toString());
+					cbj.put("timeLastModified", cb.getTimeLastModified().toString());
 				}
 				
 				if(null==cb.getEditUser()){
-					cbj.put("CUID", " ");
+					cbj.put("editUser", " ");
 					cbj.put("CUName", " ");
 				}else{
 					ProfileBean cu = HibernateUtilities.searchEmployeeById(cb.getEditUser());
-					cbj.put("CUID", String.valueOf(cb.getEditUser()));
+					cbj.put("editUser", String.valueOf(cb.getEditUser()));
 					cbj.put("CUName", null==cu?"(DELETED USER)":cu.getWholeName());
 				}
 				chartsJson.add(cbj);
@@ -98,17 +103,27 @@ public class ChartCtrl extends Controller {
 			return badRequest(chartForm.get().toString());
 		} else {
 			try {
-				ChartBean cb = chartForm.get();
+				DynamicForm form = Form.form().bindFromRequest();
+				String chart_name = form.get("new_chart_name");
+				String chart_ownerid = form.get("new_chart_owner_id");
+				ChartBean cb = new ChartBean(chart_ownerid, chart_name);
+				cb.setVersionDefault();
+				System.out.println(cb);
 				HibernateUtilities.getFactory();
 				int ret = HibernateUtilities.saveOrUpdateChart(cb);
 				if (ret>=1) {
-					return ok(cb.getUuid());
+					ObjectNode jn = (ObjectNode) Json.toJson(cb);
+					jn.put("DT_RowId", cb.getUuid());
+					System.out.println(jn.textValue());
+					return ok(jn);
 				}else{
-					return badRequest(chartForm.get().toString());
+					return internalServerError(chartForm.get().toString());
 				}
+			} catch (NumberFormatException e) {
+				return badRequest("Owner id should be a number.");
 			} catch (Exception e) {
 				e.printStackTrace();
-				return internalServerError();
+				return internalServerError("ChartCtrl@createChart");
 			}
 		}
 	}

@@ -27,6 +27,11 @@ body {
     }
 }
 
+.centered
+{
+    text-align:center;
+}
+
 .navbar-top-links {
     margin-right: 0;
 }

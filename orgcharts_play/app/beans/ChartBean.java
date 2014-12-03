@@ -4,6 +4,8 @@ import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import utilities.ClobConverter;
 
 public class ChartBean {
@@ -11,6 +13,7 @@ public class ChartBean {
 	String uuid;
 	int ownerID;
 	String chartName;
+	@JsonIgnore
 	Clob xml;
 	Timestamp timeLastModified;
 	Integer version;
@@ -39,14 +42,29 @@ public class ChartBean {
 	 * 
 	 * @param owner_id
 	 * @param chart_name
-	 * @param xml
 	 */
-	public ChartBean(int owner_id, String chart_name, String xml) {
+	public ChartBean(String owner_id, String chart_name) {
+		super();
+		this.setUuidNew();
+		this.ownerID = Integer.parseInt(owner_id);
+		this.chartName = chart_name;
+		this.setXmlDefault();
+		this.setTimeLastModifiedNow();
+		this.editUser = null;
+	}
+
+	/**
+	 * Constructor for new chart with String XML
+	 * 
+	 * @param owner_id
+	 * @param chart_name
+	 */
+	public ChartBean(int owner_id, String chart_name) {
 		super();
 		this.setUuidNew();
 		this.ownerID = owner_id;
 		this.chartName = chart_name;
-		this.setXmlString(xml);
+		this.setXmlDefault();
 		this.setTimeLastModifiedNow();
 		this.editUser = null;
 	}
@@ -86,6 +104,7 @@ public class ChartBean {
 		this.uuid = java.util.UUID.randomUUID().toString();
 	}
 
+	@JsonIgnore
 	public Timestamp getUuidTime() {
 		return new Timestamp(java.util.UUID.fromString(this.uuid).timestamp());
 	}
@@ -144,7 +163,7 @@ public class ChartBean {
 	}
 
 	public void setVersionDefault() {
-		this.version = 1;
+		this.version = 0;
 	}
 
 	public void setVersion(Integer version) {

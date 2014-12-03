@@ -34,7 +34,7 @@ public class TestChartFunction {
 	public void testSaveOrUpdateChart() {
 		System.out.println("testSaveOrUpdateChart");
 		ChartBean cb;
-		cb = new ChartBean(82, "test chart", "123<xml>");
+		cb = new ChartBean(82, "test chart");
 		cb.setXmlDefault();
 		System.out.println(cb);
 		int ret = HibernateUtilities.saveOrUpdateChart(cb);
