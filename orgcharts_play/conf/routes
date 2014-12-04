@@ -10,9 +10,9 @@ GET     /chart/                               controllers.ChartCtrl.index()
 GET     /chart/all/                           controllers.ChartCtrl.getAllChart()
 GET     /chart/:id                            controllers.ChartCtrl.getChart(id: String)
 POST    /chart/                               controllers.ChartCtrl.createChart
-PUT     /chart/:id                            controllers.ChartCtrl.updateChart(id: String)
+PUT     /chart/                               controllers.ChartCtrl.updateChart()
 DELETE  /chart/:id                            controllers.ChartCtrl.deleteChart(id: String)
-POST    /chart/xml/                               controllers.ChartCtrl.updateChartXML
+POST    /chart/xml/                           controllers.ChartCtrl.updateChartXML
 
 # Employee
 GET     /employee/                               controllers.EmployeeCtrl.index()

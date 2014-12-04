@@ -71,15 +71,15 @@ body {
  
 .pop_form label  {
     display:  block;
-     margin-bottom: 5px;
+    margin-bottom: 5px;
 }
  
 .pop_form input[type="text"],  .pop_form input[type="email"],  .pop_form input[type="password"]  {
     display:  block;
-     width: 90%;
-     padding:  10px;
-     border: 1px solid #DDD;
-     color: #666;
+    width: 90%;
+    padding:  10px;
+    border: 1px solid #DDD;
+    color: #666;
 }
  
 .pop_form input[type="checkbox"]  {
@@ -90,8 +90,7 @@ body {
 .pop_form input[type="checkbox"]+label  {
     float: left;
 }
- 
- 
+
 .pop_form .checkbox  {
     margin-bottom:  10px;
      clear:  both;
@@ -100,9 +99,18 @@ body {
  
 .forgot_password  {
     display: block;
-     margin:  20px 0 10px;
-     clear:  both;
-     overflow:  hidden;
-     text-decoration:  none;
-     color: #ED6347;
+    margin:  20px 0 10px;
+    clear:  both;
+    overflow:  hidden;
+    text-decoration:  none;
+    color: #ED6347;
+}
+
+.pop_form .centered {
+    display: block;
+    padding:  10px;
+}
+
+.pop_form input[type=submit] {
+    margin-right: 10px;
 }

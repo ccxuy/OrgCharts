@@ -51,7 +51,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Organization Chart System beta v0.1</a>
+                <a class="navbar-brand" href="index.html">Organization Chart System beta v0.2</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -168,6 +168,7 @@
                     <div class="col-lg-12">
                         <p>
                             <button id="btn_new_chart" href="#popup_form" class="btn btn-default">New Chart</button>
+                            <button id="btn_edit_chart" href="#popup_form" class="btn btn-default" style="display: ;">Edit Chart</button>
                         </p>
                     </div>
                     <!-- /.col-lg-12 -->
@@ -216,31 +217,53 @@
 
     <div id="popup_form" class="popupContainer" style="display:none;">
         <header class="popupHeader">
-            <span class="header_title">New Chart</span>
+            <span class="header_title">Chart</span>
             <span class="modal_close"><i class="fa fa-times"></i></span>
         </header>
 
-        <section class="popupBody">
+        <section class="popupBody SectionNewChart">
         <!-- Here Goes all alternative Forms -->
         <div class="pop_form">
             <div class="">
-                <form id="form_new_chart">
-                    <label>Chart Name</label> <input type="text" name="new_chart_name"><br>
+                <form id="form_new_chart" method="POST">
+                    <label>Chart Name</label> <input type="text" name="new_chart_name" required><br>
                     <label>Owner ID</label> <input type="text" name="new_chart_owner_id"><br>
              
                     <div class="action_btns centered">
                         <div class="">
-                            <input type=submit id="submit_new_chart" class="btn btn-default">
+                            <input type=submit id="submit_new_chart" class="btn btn-success" value="Create Chart">
                         </div>
                     </div>
                 </form>
             </div>
         </div>
         <!-- /.pop_form -->
-
         </section>
+        <!-- /.SectionNewChart -->
+
+        <section class="popupBody SectionEditChart">
+        <!-- Here Goes all alternative Forms -->
+        <div class="pop_form">
+            <div class="">
+                <form id="form_edit_chart" method="POST">
+                    <label>Chart ID</label> <input type="text" name="chartid" required><br>
+                    <label>Chart Name</label> <input type="text" name="edit_chart_name" required><br>
+                    <label>Owner ID</label> <input type="text" name="edit_chart_owner_id"><br>
+             
+                    <div class="action_btns centered">
+                        <div class="">
+                            <input type=submit id="submit_edit_chart" class="btn btn-danger" value="Delete Chart">
+                            <input type=submit id="submit_edit_chart" class="btn btn-warning" value="Modifiy Chart">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.pop_form -->
+        </section>
+        <!-- /.pop_form -->
     </div>
-    <!-- /#popup_form -->
+    <!-- /#SectionEditChart -->
 
     <div id="lean_overlay" style="display: none; opacity: 0.6;"></div>
 
@@ -269,16 +292,17 @@
     var editor; // use a global for the submit and return data rendering
     $(document).ready(function() {
 
-        var cTable = $('#dataTables-chart').dataTable({
+        var cTableSel = $('#dataTables-chart');
+        var cTable = $('#dataTables-chart').DataTable({
             "ajax": '../chart/all/',
             "columns": [
-                { "data": "ID" },
-                { "data": "ChartName" },
-                { "data": "OwnerID" },
+                { "data": "uuid" },
+                { "data": "chartName" },
+                { "data": "ownerID" },
                 { "data": "OwnerName" },
-                { "data": "Version" },
-                { "data": "LMTime" },
-                { "data": "CUID" },
+                { "data": "version" },
+                { "data": "timeLastModified" },
+                { "data": "editUser" },
                 { "data": "CUName" }
             ],
             "columnDefs": [
@@ -290,8 +314,8 @@
             ],
             "rowCallback": function( row, data ) {
                 // generate hyperlink for chart name column
-                if ( data["ID"] != "" ) {
-                  $('td:eq(0)', row).html( '<a href="chart.html?chartid='+data["ID"]+'">'+data["ChartName"]+'</a>' );
+                if ( data["uuid"] != "" ) {
+                  $('td:eq(0)', row).html( '<a href="chart.html?chartid='+data["uuid"]+'">'+data["chartName"]+'</a>' );
                 }
             }
             // ,
@@ -305,10 +329,26 @@
             //     ]
             // }
         });
-        // Activate the bubble editor on click of a table cell
-        cTable.on( 'click', 'tbody td:not(:first-child)', function (e) {
-            editor.bubble( this );
+        // Activate the edit chart form on click of a table row
+        // cTable.on( 'click', 'tbody tr', function (e) {
+        //     alert(this);
+        // } );
+        /* Apply the tooltips */
+        $('#dataTables-chart tbody tr[title]').tooltip( {
+            "delay": 0,
+            "track": true,
+            "fade": 250
         } );
+        // $( "#dataTables-chart tbody" ).dblclick(function() {
+        //     $( "#btn_edit_chart" ).trigger( "click" );
+        // });
+        $('#dataTables-chart tbody').on( 'dblclick', 'tr', function () {
+            $("input[name='chartid']").val(this.id);
+            $("input[name='edit_chart_name']").val(cTable.row( this ).data()['chartName']);
+            $("input[name='edit_chart_owner_id']").val(cTable.row( this ).data()['ownerID']);
+            // console.log( cTable.row( this ).data() );
+            $( "#btn_edit_chart" ).trigger( "click" );
+        });
 
         $('button.editor_create').on('click', function (e) {
             e.preventDefault();
@@ -337,37 +377,51 @@
 
         // For new chart form
         $('#btn_new_chart').click(function(){
-            $("#popup_form").show();
+            $("#popup_form .SectionNewChart").show();
+            $("#popup_form .SectionEditChart").hide();
+            return false;
+        });
+        $('#btn_edit_chart').click(function(){
+            $("#popup_form .SectionNewChart").hide();
+            $("#popup_form .SectionEditChart").show();
             return false;
         });
 
         $("#btn_new_chart").leanModal({top : 200, overlay : 0.6, closeButton: ".modal_close" });
+        $("#btn_edit_chart").leanModal({top : 200, overlay : 0.6, closeButton: ".modal_close" });
 
-        $('form#form_new_chart').submit(function (e){
-            e.preventDefault();
+        $('form#form_new_chart').submit(function(e){
             var formData = new FormData(this);
+            submitFunc(e, "../chart/", formData, "POST");
+            $(this)[0].reset();
+        });
+        $('form#form_edit_chart').submit(function(e){
+            var formData = new FormData(this);
+            submitFunc(e, "../chart/", formData, "PUT");
+            $(this)[0].reset();
+        });
+
+        var submitFunc = function (e, url, formData, method){
+            e.preventDefault();
             $.ajax({
-                type: "POST",
-                url: "../chart/",
+                type: method,
+                url: url,
                 cache: false,
                 data: formData,
                 processData: false, // Don't process the files
                 contentType: false, // Set content type to false as jQuery will tell the server its a query string request
                 success: function(respose, text, xhr) {
-                    console.log("form#form_new_chart:"+text+", "+respose);
+                    console.log("submitFunc:"+text+", "+respose+", url="+url);
                     $("#popup_form").hide();
                     $("#lean_overlay").hide();
                     var j = respose;
-                    console.log("form#form_new_chart:j[uuid]="+j["uuid"]);
-                    cTable.fnAddData(j);
+                    cTableSel.dataTable().fnAddData(j);
                 },
                 error: function(xhr, textstatus, ethrown) {
                     alert(textstatus+", "+ethrown +xhr.status);
                 }
             })
-
-            $(this)[0].reset();
-        });
+        }
 
     });
     // END $(document).ready

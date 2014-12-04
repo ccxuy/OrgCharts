@@ -134,13 +134,14 @@ public class ChartBean {
 	}
 
 	public void setXmlDefault() {
-		this.setXmlString("<li class=\"root\"><span class=\"label_node\"></span><br><span class=\"label_node\"></span></li>");
+		this.setXmlString("<li class=\"root unit\"><span class=\"label_node\" id=\"un\"></span><br><span class=\"label_node\" id=\"ud\"></span></li>");
 	}
 
 	public Clob getXml() {
 		return xml;
 	}
 
+	@JsonIgnore
 	public String getXmlString() {
 		return ClobConverter.clobToString(xml);
 	}

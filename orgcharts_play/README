@@ -3,6 +3,6 @@
 
 ##Compilation to war
 ===================
-1. All hibernate or other configuration files need to put on \war\WEB-INF\classes\ and \conf\.
+1. All hibernate or other configuration files need to put on \conf\. (Extra files you want to include may put in \war\WEB-INF\classes\)
 2. If you deploy war on path other than root in Tomcat, you need to specify path name to valuable "application.context" in \conf\application.conf.
 3. Run \export-war.bat or "activator war"

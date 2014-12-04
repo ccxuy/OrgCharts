@@ -19,6 +19,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 
@@ -113,7 +114,7 @@ public class HibernateUtilities {
 			String hql = "select max(id) from ProfileBean";
 			tx = session.beginTransaction();
 			query = session.createQuery(hql);
-			System.out.println(query.list());
+			System.out.println("HibernateUtilities@getId"+query.list());
 			empId = ((Integer) (query.list().get(0))).toString();
 			tx.commit();
 
@@ -172,9 +173,6 @@ public class HibernateUtilities {
 		try {
 			tx = session.beginTransaction();
 			query = session.createQuery(hql);
-			// System.out.println("I am here hql");
-			// System.out.println(hql);
-			// System.out.println("I am here hql");
 			query.setParameter("sfirstName", sfirstName);
 			query.setParameter("slastName", slastName);
 			query.setParameter("email", email);
@@ -298,9 +296,6 @@ public class HibernateUtilities {
 		} finally {
 			session.close();
 		}
-		// System.out.println("here");
-		// System.out.println(data);
-		// System.out.println("here");
 		return data;
 	}
 
@@ -509,6 +504,37 @@ public class HibernateUtilities {
 			session.close();
 		}
 		return null;
+	}
+	
+	/**
+	 * Count how many chart have given name.
+	 * If name=null specified, it return all chart count.
+	 * @param name chart name or set to null for all chart count.
+	 * @return how many chart have this name. or -1 for failed.
+	 */
+	public static long countCharBytName(String name){
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			
+			// Quereis
+			Criteria crit = session.createCriteria(ChartBean.class);
+			crit.setProjection(Projections.rowCount());
+			if(null != name){
+//				crit.add(Restrictions.eqOrIsNull(Setting.ChartAlias.ChartField_Name, name));
+				crit.add( Restrictions.eq("Setting.ChartAlias.ChartField_Name", name));
+			}
+			Long result=(Long)crit.uniqueResult();
+			return result;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return -1;
 	}
 	
 
