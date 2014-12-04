@@ -77,7 +77,6 @@ public class GetChartsJson extends HttpServlet {
 			resultJson.put("data", chartsJson);
 			response.getOutputStream().print(resultJson.toJSONString());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
