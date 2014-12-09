@@ -240,7 +240,7 @@ public class ProfileBean {
 	}
 
 	public boolean isValid() {
-		return this.id >= 0 || this.firstName == null
+		return this.id < 0 || this.firstName == null
 				|| this.firstName.equals("") || this.lastName == null
 				|| this.lastName.equals("") ? false : true;
 	}

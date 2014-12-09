@@ -117,6 +117,10 @@ public class ChartBean {
 		this.ownerID = ownerID;
 	}
 
+	public void setOwnerID(String ownerID) {
+		this.ownerID = Integer.parseInt(ownerID);
+	}
+
 	public String getChartName() {
 		return null == chartName ? "" : chartName;
 	}
@@ -177,6 +181,12 @@ public class ChartBean {
 
 	public void setEditUser(Integer editUser) {
 		this.editUser = editUser;
+	}
+
+	public boolean isValid() {
+		return this.uuid == null || this.uuid.equals("")
+				|| this.chartName == null || this.chartName.equals("") ? false
+				: true;
 	}
 
 	@Override

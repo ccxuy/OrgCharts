@@ -133,32 +133,7 @@ public class ChartCtrl extends Controller {
 				HibernateUtilities.getFactory();
 				int ret = HibernateUtilities.saveOrUpdateChart(cb);
 				if (ret >= 1) {
-					ObjectNode cbj = (ObjectNode) Json.toJson(cb);
-					cbj.put("DT_RowId", cb.getUuid());
-					ProfileBean owner = HibernateUtilities
-							.searchEmployeeById(cb.getOwnerID());
-					cbj.put("OwnerName", null == owner ? "(DELETED USER)"
-							: owner.getWholeName());
-
-					if (null == cb.getTimeLastModified()) {
-						cbj.put("timeLastModified", "n/a");
-					} else {
-						cbj.put("timeLastModified", cb.getTimeLastModified()
-								.toString());
-					}
-
-					if (null == cb.getEditUser()) {
-						cbj.put("editUser", " ");
-						cbj.put("CUName", " ");
-					} else {
-						ProfileBean cu = HibernateUtilities
-								.searchEmployeeById(cb.getEditUser());
-						cbj.put("CUName",
-								null == cu ? "(DELETED USER)" : cu
-										.getWholeName());
-					}
-					System.out.println("ChartCtrl@createChart:cbj.textValue()="+cbj.textValue());
-					return ok(cbj);
+					return ok(parseChartbeanToJsonObjectNode(cb));
 				} else {
 					return internalServerError(form.get().toString());
 				}
@@ -172,8 +147,36 @@ public class ChartCtrl extends Controller {
 		}
 	}
 
+	/**
+	 * This method does not have protection for concurrent edition.
+	 * @return
+	 */
 	public static Result updateChart() {
-		return null;
+
+		DynamicForm form = Form.form().bindFromRequest();
+		if (form.hasErrors()) {
+			return badRequest(form.get().toString());
+		} else {
+			String chart_id = form.get("chartid");
+			String chart_name = form.get("edit_chart_name");
+			String chart_ownerid = form.get("edit_chart_owner_id");
+			try {
+				ChartBean cb = HibernateUtilities.searchChartByUUID(chart_id);
+				cb.setChartName(chart_name);
+				cb.setOwnerID(chart_ownerid);
+				cb.setTimeLastModifiedNow();
+				if(cb.isValid()){
+					HibernateUtilities.saveOrUpdateChart(cb);
+					return ok(parseChartbeanToJsonObjectNode(cb));
+				}else{
+					return badRequest("Invalid chart parameters\nChartCtrl@updateChart\n"+form.get().toString());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Logger.error("ChartCtrl@updateChartXML"+form.get().toString(), e);
+				return internalServerError("ChartCtrl@updateChart\n"+form.get().toString());
+			}
+		}
 	}
 
 	public static Result updateChartXML() {
@@ -193,13 +196,41 @@ public class ChartCtrl extends Controller {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			Logger.error("ChartCtrl@updateChartXML", e);
-			return internalServerError();
+			Logger.error("ChartCtrl@updateChartXML"+form.get().toString(), e);
+			return internalServerError("ChartCtrl@updateChartXML\n"+form.get().toString());
 		}
 	}
 
 	public static Result deleteChart(String id) {
 		return null;
+	}
+
+	private static ObjectNode parseChartbeanToJsonObjectNode(ChartBean cb) {
+		ObjectNode cbj = (ObjectNode) Json.toJson(cb);
+		cbj.put("DT_RowId", cb.getUuid());
+		ProfileBean owner = HibernateUtilities
+				.searchEmployeeById(cb.getOwnerID());
+		cbj.put("OwnerName", null == owner ? "(DELETED USER)"
+				: owner.getWholeName());
+	
+		if (null == cb.getTimeLastModified()) {
+			cbj.put("timeLastModified", "n/a");
+		} else {
+			cbj.put("timeLastModified", cb.getTimeLastModified()
+					.toString());
+		}
+	
+		if (null == cb.getEditUser()) {
+			cbj.put("editUser", " ");
+			cbj.put("CUName", " ");
+		} else {
+			ProfileBean cu = HibernateUtilities
+					.searchEmployeeById(cb.getEditUser());
+			cbj.put("CUName",
+					null == cu ? "(DELETED USER)" : cu
+							.getWholeName());
+		}
+		return cbj;
 	}
 
 }

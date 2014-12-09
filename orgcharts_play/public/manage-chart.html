@@ -246,7 +246,7 @@
         <div class="pop_form">
             <div class="">
                 <form id="form_edit_chart" method="POST">
-                    <label>Chart ID</label> <input type="text" name="chartid" required><br>
+                    <label>Chart ID</label> <input type="text" name="chartid" readonly="readonly" required><br>
                     <label>Chart Name</label> <input type="text" name="edit_chart_name" required><br>
                     <label>Owner ID</label> <input type="text" name="edit_chart_owner_id"><br>
              
@@ -342,7 +342,9 @@
         // $( "#dataTables-chart tbody" ).dblclick(function() {
         //     $( "#btn_edit_chart" ).trigger( "click" );
         // });
+        var editRow;
         $('#dataTables-chart tbody').on( 'dblclick', 'tr', function () {
+            editRow = this;
             $("input[name='chartid']").val(this.id);
             $("input[name='edit_chart_name']").val(cTable.row( this ).data()['chartName']);
             $("input[name='edit_chart_owner_id']").val(cTable.row( this ).data()['ownerID']);
@@ -350,29 +352,29 @@
             $( "#btn_edit_chart" ).trigger( "click" );
         });
 
-        $('button.editor_create').on('click', function (e) {
-            e.preventDefault();
-            editor.create(
-                'Create new record',
-                {
-                    "label": "Add",
-                    "fn": function () {
-                        editor.submit();
-                    }
-                }
-            );
-        });
+        // $('button.editor_create').on('click', function (e) {
+        //     e.preventDefault();
+        //     editor.create(
+        //         'Create new record',
+        //         {
+        //             "label": "Add",
+        //             "fn": function () {
+        //                 editor.submit();
+        //             }
+        //         }
+        //     );
+        // });
 
         // Edit record
-        cTable.on('click', 'a.editor_edit', function (e) {
-            e.preventDefault();
+        // cTable.on('click', 'a.editor_edit', function (e) {
+        //     e.preventDefault();
 
-            editor.edit(
-                $(this).parents('tr')[0],
-                'Edit record',
-                { "label": "Update", "fn": function () { editor.submit(); } }
-            );
-        } );
+        //     editor.edit(
+        //         $(this).parents('tr')[0],
+        //         'Edit record',
+        //         { "label": "Update", "fn": function () { editor.submit(); } }
+        //     );
+        // } );
         
 
         // For new chart form
@@ -392,19 +394,32 @@
 
         $('form#form_new_chart').submit(function(e){
             var formData = new FormData(this);
-            submitFunc(e, "../chart/", formData, "POST");
+            var submitSuccessCallbackFn = function(i){
+                cTableSel.dataTable().fnAddData(i);
+            }
+            submitFunc(e, "../chart/", formData, "POST", submitSuccessCallbackFn);
             $(this)[0].reset();
         });
         $('form#form_edit_chart').submit(function(e){
             var formData = new FormData(this);
-            submitFunc(e, "../chart/", formData, "PUT");
+            var submitSuccessCallbackFn = function(i){
+                // console.log( cTableSel.dataTable().fnSettings().aoData );
+                // console.log( editRow );
+                // console.log( cTable );
+                // console.log( cTableSel.dataTable() );
+                var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                cTableSel.dataTable().fnUpdate(i, pos);
+            }
+            submitFunc(e, "../chart/", formData, "PUT", submitSuccessCallbackFn);
             $(this)[0].reset();
         });
 
-        var submitFunc = function (e, url, formData, method){
-            e.preventDefault();
+        var submitFunc = function (e, url, formData, submitMethod, successCallback){
+            if(e!=null){
+                e.preventDefault();
+            }
             $.ajax({
-                type: method,
+                type: submitMethod,
                 url: url,
                 cache: false,
                 data: formData,
@@ -414,8 +429,9 @@
                     console.log("submitFunc:"+text+", "+respose+", url="+url);
                     $("#popup_form").hide();
                     $("#lean_overlay").hide();
-                    var j = respose;
-                    cTableSel.dataTable().fnAddData(j);
+                    successCallback(respose);
+                    // var j = respose;
+                    // cTableSel.dataTable().fnAddData(j);
                 },
                 error: function(xhr, textstatus, ethrown) {
                     alert(textstatus+", "+ethrown +xhr.status);

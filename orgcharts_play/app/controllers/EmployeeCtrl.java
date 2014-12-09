@@ -4,28 +4,25 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
+import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
+import play.mvc.BodyParser;
+import play.mvc.Controller;
+import play.mvc.Http.MultipartFormData;
+import play.mvc.Result;
+import utilities.HibernateUtilities;
+import beans.ChartBean;
+import beans.ProfileBean;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import beans.ChartBean;
-import beans.ProfileBean;
 import config.Setting;
 import config.Setting.StorageSetting;
-import play.Logger;
-import play.data.*;
-import play.libs.Json;
-import play.mvc.*;
-import play.mvc.Http.MultipartFormData;
-import play.mvc.Http.MultipartFormData.FilePart;
-import utilities.HibernateUtilities;
 
 public class EmployeeCtrl extends Controller {
 
@@ -59,7 +56,8 @@ public class EmployeeCtrl extends Controller {
 	public static Result getAllEmployeeNameList() {
 		try {
 			HibernateUtilities.getFactory();
-			List mylist = HibernateUtilities.searchId();
+			@SuppressWarnings("unchecked")
+			List<String> mylist = HibernateUtilities.searchId();
 			String temp = "";
 			String resp = "";
 			for (int x = 0; x < mylist.size() - 1; x++) {
@@ -87,7 +85,8 @@ public class EmployeeCtrl extends Controller {
 		try {
 			String empId = request().getQueryString("empId");
 			HibernateUtilities.getFactory();
-			List mylist = HibernateUtilities.getEditedData(empId);
+			@SuppressWarnings("unchecked")
+			List<String> mylist = HibernateUtilities.getEditedData(empId);
 			String temp = "";
 			String tmp0 = "";
 			if (null != mylist.get(0))
