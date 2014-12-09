@@ -99,7 +99,7 @@ public class ProfileBean {
 	}
 
 	public void setEmail(String email) {
-		this.email = (null==email?"":email);
+		this.email = (null == email ? "" : email);
 	}
 
 	public int getId() {
@@ -115,7 +115,7 @@ public class ProfileBean {
 	}
 
 	public void setFirstName(String firstName) {
-		this.firstName = (null==firstName?"":firstName);
+		this.firstName = (null == firstName ? "" : firstName);
 	}
 
 	public String getLastName() {
@@ -123,7 +123,7 @@ public class ProfileBean {
 	}
 
 	public void setLastName(String lastName) {
-		this.lastName = (null==lastName?"":lastName);
+		this.lastName = (null == lastName ? "" : lastName);
 	}
 
 	public Blob getImg() {
@@ -147,7 +147,7 @@ public class ProfileBean {
 	}
 
 	public void setLocation(String location) {
-		this.location = (null==location?"":location);
+		this.location = (null == location ? "" : location);
 	}
 
 	public String getPhone() {
@@ -155,7 +155,7 @@ public class ProfileBean {
 	}
 
 	public void setPhone(String phone) {
-		this.phone = (null==phone?"":phone);
+		this.phone = (null == phone ? "" : phone);
 	}
 
 	public String getFax() {
@@ -163,7 +163,7 @@ public class ProfileBean {
 	}
 
 	public void setFax(String fax) {
-		this.fax = (null==fax?"":fax);
+		this.fax = (null == fax ? "" : fax);
 	}
 
 	public Clob getExtra() {
@@ -240,9 +240,9 @@ public class ProfileBean {
 	}
 
 	public boolean isValid() {
-		return this.firstName == null || this.firstName.equals("")
-				|| this.lastName == null || this.lastName.equals("") ? false
-				: true;
+		return this.id >= 0 || this.firstName == null
+				|| this.firstName.equals("") || this.lastName == null
+				|| this.lastName.equals("") ? false : true;
 	}
 
 }

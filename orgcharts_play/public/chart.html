@@ -18,17 +18,17 @@
 
 
   <!-- jQuery includes -->
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.js"></script>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.js"></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
   <!-- jQuery autocomplete stylesheet -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
   <!-- Bootstrap switch -->
   <!-- <link rel="stylesheet" href="css/bootstrap-switch.css"> -->
+  <!-- Knockout.js -->
+  <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.2.0.js'></script>
 
 
 
-
-  
   <!-- <script type="text/javascript" src="js/bootstrap-switch.js"></script> -->
   <!-- jQuery Form Plugin -->
   <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
@@ -233,6 +233,30 @@
         <br>
 
         <p class="contact">
+          <label for="phone">Extra fields</label>
+        </p>
+        <br style="margin-top:10px">
+        <table style="margin-top:10px">
+            <tbody data-bind="foreach: extrafields">
+                <tr>
+                    <td><input data-bind='value: type' /></td>
+                    <td><input data-bind='value: text' /></td>
+                    <td><a href='#' data-bind='click: $root.removeExtraField'>Delete</a></td>
+                </tr>
+            </tbody>
+        </table>
+        <a href='#' data-bind='click: $root.addExtraField'>Add Extra field</a>
+        <br>
+
+        <p>
+            <button type=button data-bind='click: save, enable: extrafields().length > 0'>
+              Save to JSON
+            </button>
+        </p>
+         
+        <textarea style="margin-top:10px" data-bind='value: lastSavedJson' rows='5' cols='60' disabled='disabled'> </textarea>
+
+        <p class="contact">
           <label for="image">Image</label>
         </p>
         <input id="new_node_image" type="file" name="new_node_image" size="chars">
@@ -316,6 +340,7 @@
     </div>
   </div>
   
+
   <script>
   jQuery(document).ready(function() {
     // Enable edit button
@@ -345,8 +370,33 @@
 
       prettyPrint();
     });
+
+    var initialData = [
+      {type:"type1", text:"text1"}
+    ];
+    var ExtrafieldsModel = function(extrafields) {
+      var self = this;
+      self.extrafields = ko.observableArray(ko.utils.arrayMap(extrafields, function(extrafield) {
+        return { type: extrafield.type, text: extrafield.text };
+      }));
+      self.addExtraField = function() {
+        self.extrafields.push({
+          type: "",
+          text: ""
+        });
+      };
+      self.removeExtraField = function(extrafield) {
+        self.extrafields.remove(extrafield);
+      };
+      self.save = function() {
+        self.lastSavedJson(JSON.stringify(ko.toJS(self.extrafields), null, 2));
+      };
+      self.lastSavedJson = ko.observable("")
+    };
+    ko.applyBindings(new ExtrafieldsModel(initialData));
     
   });
+  // END jQuery(document).ready
 
   </script>
 

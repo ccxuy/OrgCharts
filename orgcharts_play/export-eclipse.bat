@@ -1,1 +1,1 @@
-activator eclipse with-source=true
+activator "eclipse with-source=true"

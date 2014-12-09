@@ -209,7 +209,7 @@ public class EmployeeCtrl extends Controller {
 			DynamicForm form = Form.form().bindFromRequest();
 			HibernateUtilities.getFactory();
 			String emp_id = form.get("emp_Id");
-			ProfileBean employeeProfileBean = new ProfileBean(emp_id);
+			ProfileBean employeeProfileBean = HibernateUtilities.searchEmployeeById(emp_id);
 			if(null!=employeeProfileBean){
 				
 				employeeProfileBean.setFirstName(form.get("edit_first_name"));
