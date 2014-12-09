@@ -580,4 +580,35 @@ public class HibernateUtilities {
 		}
 		return null;
 	}
+	
+	/**
+	 * @param uuid
+	 * @return 1 if success, 0 if failed,, -1 if chart of this id not found.
+	 */
+	public static int deleteChartByUUID(String uuid) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			ChartBean chartBean = (ChartBean) session
+					.get(ChartBean.class, uuid);
+			if(null == chartBean){
+				return -1;
+			}
+			session.delete(chartBean);
+			tx.commit();
+			if (null != chartBean) {
+				// success
+				return 1;
+			}
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return 0;
+	}
+	
 }

@@ -246,14 +246,14 @@
         <div class="pop_form">
             <div class="">
                 <form id="form_edit_chart" method="POST">
-                    <label>Chart ID</label> <input type="text" name="chartid" readonly="readonly" required><br>
+                    <label>Chart ID</label> <input type="text" id="chartid" name="chartid" readonly="readonly" required><br>
                     <label>Chart Name</label> <input type="text" name="edit_chart_name" required><br>
                     <label>Owner ID</label> <input type="text" name="edit_chart_owner_id"><br>
              
                     <div class="action_btns centered">
                         <div class="">
-                            <input type=submit id="submit_edit_chart" class="btn btn-danger" value="Delete Chart">
-                            <input type=submit id="submit_edit_chart" class="btn btn-warning" value="Modifiy Chart">
+                            <input type=button id="submit_delete_chart" name="submit_delete_chart" class="btn btn-danger" value="Delete Chart">
+                            <input type=submit id="submit_edit_chart" name="submit_edit_chart" class="btn btn-warning" value="Modifiy Chart">
                         </div>
                     </div>
                 </form>
@@ -412,6 +412,17 @@
             }
             submitFunc(e, "../chart/", formData, "PUT", submitSuccessCallbackFn);
             $(this)[0].reset();
+        });
+
+        $('#submit_delete_chart').click(function(){
+            var chartid = $('form#form_edit_chart #chartid').val()
+            var formData = new FormData($('form#form_edit_chart'));
+            var submitSuccessCallbackFn = function(i){
+                var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                cTableSel.dataTable().fnDeleteRow(pos);
+            }
+            submitFunc(null, "../chart/"+chartid, formData, "DELETE", submitSuccessCallbackFn);
+            $('form#form_edit_chart')[0].reset();
         });
 
         var submitFunc = function (e, url, formData, submitMethod, successCallback){
