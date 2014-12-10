@@ -14,6 +14,7 @@
   <link href="css/chart-prettify.css" type="text/css" rel="stylesheet" />
   <link rel="stylesheet" href="fancybox/jquery.fancybox.css" type="text/css" />
   <link rel="stylesheet" type="text/css" href="css/chart-custom.form.css" media="all" />
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   <script type="text/javascript" src="js/chart-prettify.js"></script>
 
 
@@ -183,10 +184,10 @@
           <label for="chart_type">edit/delete</label>
         </p>
         <label>
-          <input type="radio" class="action" id="edit_employee" name="change" value="edit_employee" />edit employee</label>
+          <input type="radio" class="action" id="edit_employee_radio" name="change" value="edit_employee" />edit employee</label>
         <label>
-          <input type="radio" class="action" id="delete_employee" name="change" value="delete_employee" />delete employee</label>
-
+          <input type="radio" class="action" id="delete_employee_radio" name="change" value="delete_employee" />delete employee</label>
+        <br>
       </form>
     </div>
 
@@ -268,15 +269,20 @@
     <div id="fancy_edit_employee" class="cform">
       <!--         <h1>Edit Employee Profile</h1>       -->
       <form id="edit_employee_form" action="EditNode.do" method="post" enctype="multipart/form-data">
+
+        <div class="cform emp-image-box" name="emp_image_box">
+          <img class="cform emp-image"  name="emp_image"></img>
+        </div>
+
         <p class="contact">
           <label for="edit_first_name">First Name<span style="color:red;">*</span></label>
         </p>
-        <input type="text" placeholder="First name" name="edit_first_name" id="edit_first_name" required/>
+        <input type="text" placeholder="First name" name="edit_first_name" id="edit_first_name" required/><br>
 
         <p class="contact">
           <label for="edit_last_name">Last Name<span style="color:red;">*</span></label>
         </p>
-        <input type="text" placeholder="Last name" name="edit_last_name" id="edit_last_name" required/>
+        <input type="text" placeholder="Last name" name="edit_last_name" id="edit_last_name" required/><br>
 
 
         <p class="contact">

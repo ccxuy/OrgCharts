@@ -57,7 +57,7 @@ public class EmployeeCtrl extends Controller {
 		try {
 			HibernateUtilities.getFactory();
 			@SuppressWarnings("unchecked")
-			List<String> mylist = HibernateUtilities.searchId();
+			List mylist = HibernateUtilities.searchId();
 			String temp = "";
 			String resp = "";
 			for (int x = 0; x < mylist.size() - 1; x++) {
@@ -86,7 +86,7 @@ public class EmployeeCtrl extends Controller {
 			String empId = request().getQueryString("empId");
 			HibernateUtilities.getFactory();
 			@SuppressWarnings("unchecked")
-			List<String> mylist = HibernateUtilities.getEditedData(empId);
+			List mylist = HibernateUtilities.getEditedData(empId);
 			String temp = "";
 			String tmp0 = "";
 			if (null != mylist.get(0))

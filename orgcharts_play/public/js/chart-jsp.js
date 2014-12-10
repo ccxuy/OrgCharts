@@ -255,9 +255,14 @@ function get_emp(id, node) {
             d = new Date();
             // alert(image+"&ts="+d.getTime());
             // node.children("div.empinfo").append(append_image);
-            var nodeimage = $("<div class='node-image'></div>")
-                .attr("imgurl",image+"&ts="+d.getTime())
-                .css("background-image","url('" + image + "&ts="+d.getTime() + "')")
+            // var nodeimage = $("<div class='node-image'></div>")
+            //     //.attr("imgurl",image+"&ts="+d.getTime())
+            //     .attr("imgurl",image)
+            //     //.css("background-image","url('" + image + "&ts="+d.getTime() + "')")
+            //     .appendTo(node);
+            node.attr("imgurl",image);
+
+            var nodeimage_icon = $('<i class="fa fa-picture-o node-image-icon"></i>')
                 .appendTo(node);
             // Old way to add image as node backround.
             // node.attr("imgurl",image+"&ts="+d.getTime());
@@ -326,7 +331,6 @@ $(document).on("ready", function() {
             $("#fancy_edit_unit").show();
             $("#edit_unit_name").val(node_to_edit.find("> .label_node:eq(0)").text());
         }
-
     }).fancybox({
 
         maxWidth: 550,
@@ -395,7 +399,6 @@ $(document).on("ready", function() {
                 add_to_node = item;
             }
         });
-
     }).fancybox({
         maxWidth: 550,
         maxHeight: 300,
@@ -555,12 +558,12 @@ $(document).on("ready", function() {
             $("#edit_employee").show();
             $("#fancy_new_employee").hide();
             $("#add_employee").hide();
+            $( "#edit_employee_radio" ).trigger( "click" );
         } else {
             $("#edit_employee").hide();
             $("fancy_new_employee").hide();
             $("#add_employee").show();
         }
-
     }).fancybox({
         maxWidth: 550,
         maxHeight: 2000,
@@ -671,9 +674,17 @@ $(document).on("ready", function() {
                 $("#edit_node_location").val(node_to_edit.find("> .label_node[id=loc]").text());
                 $("#edit_node_email").val(email);
                 $("#edit_node_phone").val(node_to_edit.find("> .label_node[id=phone]").text());
-                empId = node_to_edit.find("> .label_node[id=empId]").text();
                 if (node_to_edit.find("img").length != 0) {
                     $("#edit_node_image").val(image);
+                }
+                var node = $("#chart").find("div." + add_to_node);
+                if(node.attr("imgurl")){
+                    imgurl = node.attr("imgurl");
+                    //console.log("imgurl:"+imgurl);
+                    $(".emp-image").attr("src",imgurl);
+                    $(".emp-image-box").show();
+                }else{
+                    $(".emp-image-box").hide();
                 }
             });
             $("#fancy_edit_employee").show();
