@@ -2,7 +2,7 @@ import com.github.play2war.plugin._
 
 name := """OrgCharts"""
 
-version := "0.2"
+version := "0.5"
 
 Play2WarPlugin.play2WarSettings
 

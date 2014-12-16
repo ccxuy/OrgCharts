@@ -723,7 +723,7 @@ $(document).on("ready", function() {
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             success: function(respose, text, xhr) {
                 console.log("AddEmployee>POST>AddNode.do:"+text+", "+respose);
-                empId = parseInt(respose);
+                empId = respose.id;
                 if(empId>0){
                     current_form[0].reset();
                     $node.attr("id", empId);

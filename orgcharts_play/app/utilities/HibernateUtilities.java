@@ -345,6 +345,20 @@ public class HibernateUtilities {
 	}
 	
 	/**
+	 * @param id
+	 * @return Employee ProfileBean if success, null if failed
+	 */
+	public static ProfileBean searchEmployeeById(String id) {
+		try {
+			return searchEmployeeById(Integer.parseInt(id));
+		} catch (NumberFormatException e) {
+			System.err.println("searchEmployeeById: input not an integer!");
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
 	 * @return
 	 */
 	public static List<ProfileBean> getAllEmployee(){
@@ -352,7 +366,7 @@ public class HibernateUtilities {
 	}
 	
 	/**
-	 * @param limitQueries
+	 * @param limitQueries, <= 0 for no limit
 	 * @return
 	 */
 	public static List<ProfileBean> getAllEmployee(int limitQueries){
@@ -363,7 +377,7 @@ public class HibernateUtilities {
 			tx = session.beginTransaction();
 			// Quereis
 			Criteria crit = session.createCriteria(ProfileBean.class);
-			crit.setMaxResults(limitQueries);
+			if(limitQueries>0)crit.setMaxResults(limitQueries);
 			List<ProfileBean>  empList = crit.list();
 			tx.commit();
 			if (null != empList) {
@@ -376,20 +390,6 @@ public class HibernateUtilities {
 			e.printStackTrace();
 		} finally {
 			session.close();
-		}
-		return null;
-	}
-
-	/**
-	 * @param id
-	 * @return Employee ProfileBean if success, null if failed
-	 */
-	public static ProfileBean searchEmployeeById(String id) {
-		try {
-			return searchEmployeeById(Integer.parseInt(id));
-		} catch (NumberFormatException e) {
-			System.err.println("searchEmployeeById: input not an integer!");
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -419,6 +419,46 @@ public class HibernateUtilities {
 			e.printStackTrace();
 		} finally {
 			session.close();
+		}
+		return 0;
+	}
+
+	/**
+	 * @param empid
+	 * @return 1 if success, 0 if failed,, -1 if chart of this id not found.
+	 */
+	public static int deleteEmployeeById(int empid) {
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			ProfileBean bean = (ProfileBean) session
+					.get(ProfileBean.class, empid);
+			if(null == bean){
+				return -1;
+			}
+			session.delete(bean);
+			tx.commit();
+			if (null != bean) {
+				// success
+				return 1;
+			}
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return 0;
+	}
+
+	public static int deleteEmployeeById(String empid) {
+		try {
+			return deleteEmployeeById(Integer.parseInt(empid));
+		} catch (NumberFormatException e) {
+			System.err.println("deleteEmployeeById: input not an integer!");
+			e.printStackTrace();
 		}
 		return 0;
 	}

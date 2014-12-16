@@ -9,6 +9,7 @@ import java.util.List;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
+import play.libs.Json;
 import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
@@ -168,29 +169,28 @@ public class EmployeeCtrl extends Controller {
 			if (null == first_name || null == last_name) {
 				return badRequest();
 			}
-			// Get the rest of fields
-			String email = form.get("new_node_email");
-			if (null == email)
-				email = "";
-
-			MultipartFormData mfrom = request().body().asMultipartFormData();
-			File imgPart = mfrom.getFile("new_node_image").getFile();
-			InputStream imgInputStream = null;
-			if (null != imgPart) {
-				imgInputStream = new FileInputStream(imgPart);
-			}
 
 			ProfileBean employeeProfileBean = new ProfileBean(first_name,
-					last_name, email, imgInputStream);
-			System.out.println(employeeProfileBean);
+					last_name);
+			// Get the rest of fields
+			employeeProfileBean.setEmployeeTitle(form.get("new_title"));
+			employeeProfileBean.setLocation(form.get("new_location"));
+			employeeProfileBean.setEmail(form.get("new_email"));
+			employeeProfileBean.setFax(form.get("new_fax"));
+			employeeProfileBean.setExtraString(form.get("new_extra"));
+
+			MultipartFormData mfrom = request().body().asMultipartFormData();
+			if (null != mfrom.getFile("new_image")) {
+				File imgPart = mfrom.getFile("new_image").getFile();
+				employeeProfileBean.setImg(imgPart);
+			}
+			
+			System.out.println("@createEmployee: "+employeeProfileBean);
 
 			int ret = HibernateUtilities
 					.saveOrUpdateEmployee(employeeProfileBean);
 			if (ret > 0) {
-				System.out.println("employeeProfileBean.getId()"
-						+ employeeProfileBean.getId());
-				System.out.println("ret" + ret);
-				return ok(String.valueOf(employeeProfileBean.getId()));
+				return ok(parseEmployeeBeanToJsonObjectNode(employeeProfileBean));
 			} else {
 				return ok("-1");
 			}
@@ -216,6 +216,7 @@ public class EmployeeCtrl extends Controller {
 				employeeProfileBean.setEmployeeTitle(form.get("edit_emp_title"));
 				employeeProfileBean.setLocation(form.get("edit_location"));
 				employeeProfileBean.setEmail(form.get("edit_email"));
+				employeeProfileBean.setPhone(form.get("edit_phone"));
 				employeeProfileBean.setFax(form.get("edit_fax"));
 				employeeProfileBean.setExtraString(form.get("edit_extra"));
 
@@ -248,7 +249,37 @@ public class EmployeeCtrl extends Controller {
 	}
 
 	public static Result deleteEmployee(String id) {
-		return null;
+		DynamicForm form = Form.form().bindFromRequest();
+		if (form.hasErrors()) {
+			return badRequest(form.get().toString());
+		} else {
+			String chart_id = null != id ? id : form.get("emp_id");
+			try {
+				int ret = HibernateUtilities.deleteEmployeeById(chart_id);
+				switch (ret) {
+				case -1:
+					return badRequest("employee id not exist.\n EmployeeCtrl@deleteEmployee\n");
+				case 0:
+					return internalServerError("Hibernate Error\n EmployeeCtrl@deleteEmployee\n");
+				case 1:
+					return ok();
+
+				default:
+					return internalServerError("Unkown Error\n EmployeeCtrl@deleteEmployee\n");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				Logger.error("EmployeeCtrl@deleteEmployee" + form.get().toString(), e);
+				return internalServerError("EmployeeCtrl@deleteEmployee\n"
+						+ form.get().toString());
+			}
+		}
+	}
+
+	private static ObjectNode parseEmployeeBeanToJsonObjectNode(
+			ProfileBean employeeProfileBean) {
+		ObjectNode bj = (ObjectNode) Json.toJson(employeeProfileBean);
+		return bj;
 	}
 
 }

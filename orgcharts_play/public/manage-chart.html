@@ -164,6 +164,7 @@
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
+                <!-- /.row -->
                 <div class="row">
                     <div class="col-lg-12">
                         <p>
@@ -226,7 +227,7 @@
         <div class="pop_form">
             <div class="">
                 <form id="form_new_chart" method="POST">
-                    <label>Chart Name</label> <input type="text" name="new_chart_name" required><br>
+                    <label>Chart Name<span style="color:red;">*</span></label> <input type="text" name="new_chart_name" required><br>
                     <label>Owner ID</label> <input type="text" name="new_chart_owner_id"><br>
              
                     <div class="action_btns centered">
@@ -246,8 +247,8 @@
         <div class="pop_form">
             <div class="">
                 <form id="form_edit_chart" method="POST">
-                    <label>Chart ID</label> <input type="text" id="chartid" name="chartid" readonly="readonly" required><br>
-                    <label>Chart Name</label> <input type="text" name="edit_chart_name" required><br>
+                    <label>Chart ID<span style="color:red;">*</span></label> <input type="text" id="chartid" name="chartid" readonly="readonly" required><br>
+                    <label>Chart Name<span style="color:red;">*</span></label> <input type="text" name="edit_chart_name" required><br>
                     <label>Owner ID</label> <input type="text" name="edit_chart_owner_id"><br>
              
                     <div class="action_btns centered">
@@ -261,9 +262,9 @@
         </div>
         <!-- /.pop_form -->
         </section>
-        <!-- /.pop_form -->
+        <!-- /.SectionEditChart -->
     </div>
-    <!-- /#SectionEditChart -->
+    <!-- /#popup_form -->
 
     <div id="lean_overlay" style="display: none; opacity: 0.6;"></div>
 

@@ -17,6 +17,7 @@ import javax.sql.rowset.serial.SerialException;
 import org.hibernate.internal.util.io.StreamCopier;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import utilities.ClobConverter;
 
@@ -83,15 +84,10 @@ public class ProfileBean {
 	 * 
 	 * @param first_name
 	 * @param last_name
-	 * @param email
-	 * @param imgInputStream
 	 */
-	public ProfileBean(String firstName, String lastName, String email,
-			InputStream imgInputStream) {
+	public ProfileBean(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.email = email;
-		this.setImg(imgInputStream);
 	}
 
 	public String getEmail() {
@@ -139,7 +135,7 @@ public class ProfileBean {
 	}
 
 	public void setEmployeeTitle(String employeeTitle) {
-		this.employeeTitle = employeeTitle;
+		this.employeeTitle = (null == employeeTitle ? "" : employeeTitle);
 	}
 
 	public String getLocation() {
@@ -180,6 +176,11 @@ public class ProfileBean {
 
 	public void setExtraString(String extraString) {
 		this.extra = ClobConverter.stringToClob(extraString);
+	}
+	
+	@JsonProperty("DT_RowId")
+	public String getRowId(){
+		return String.valueOf(this.id);
 	}
 
 	@Override

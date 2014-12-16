@@ -221,7 +221,7 @@ public class ChartCtrl extends Controller {
 				int ret = HibernateUtilities.deleteChartByUUID(chart_id);
 				switch (ret) {
 				case -1:
-					return badRequest("chart id not exist.\nChartCtrl@updateChartXML\n");
+					return badRequest("chart id not exist.\nChartCtrl@deleteChart\n");
 				case 0:
 					return internalServerError("Hibernate Error\nChartCtrl@deleteChart\n");
 				case 1:
