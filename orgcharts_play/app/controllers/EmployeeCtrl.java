@@ -230,7 +230,7 @@ public class EmployeeCtrl extends Controller {
 
 				if(employeeProfileBean.isValid()){
 					HibernateUtilities.editNode(employeeProfileBean);
-					return ok();
+					return ok(parseEmployeeBeanToJsonObjectNode(employeeProfileBean));
 				}else{
 					return badRequest();
 				}
@@ -240,7 +240,7 @@ public class EmployeeCtrl extends Controller {
 			// Integer.parseInt(emp_id));
 			// request.getRequestDispatcher("/index.jsp").forward(request,
 			// response);
-			return ok();
+			return badRequest("Employee not found");
 		} catch (Exception e) {
 			e.printStackTrace();
 			Logger.error("EmployeeCtrl@updateEmployee", e);

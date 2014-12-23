@@ -1,0 +1,1 @@
+activator clean & activator compile & activator "eclipse with-source=true"
