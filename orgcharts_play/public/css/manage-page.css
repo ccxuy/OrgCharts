@@ -76,7 +76,7 @@ body {
     margin-bottom: 5px;
 }
  
-.pop_form input[type="text"],  .pop_form input[type="email"],  .pop_form input[type="password"]  {
+.pop_form input:not([type=button]):not([type=reset]):not([type=submit]), .pop_form textarea, .pop_form select {
     display:  block;
     width: 90%;
     padding:  10px;
@@ -115,4 +115,8 @@ body {
 
 .pop_form input[type=submit], .pop_form input[type=button] {
     margin-right: 10px;
+}
+
+.area-specified_user{
+    display: none;
 }

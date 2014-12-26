@@ -2,8 +2,6 @@ package security;
 
 import java.util.List;
 
-import scala.tools.nsc.settings.Final;
-
 import com.feth.play.module.pa.providers.password.UsernamePasswordAuthUser;
 import com.feth.play.module.pa.user.AuthUserIdentity;
 

@@ -33,14 +33,16 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 			// was requested before sending him to the login page
 			// if you don't call this, the user will get redirected to the page
 			// defined by your resolver
-			final String originalUrl = PlayAuthenticate
-					.storeOriginalUrl(context);
-
+			System.out.println("MyDeadboltHandle@beforeAuthCheck: context="+context);
+//			final String originalUrl = PlayAuthenticate
+//					.storeOriginalUrl(context);
+			final String originalUrl = context.request().path();
 			context.flash().put("error",
 					"You need to log in first, to view '" + originalUrl + "'");
 			return F.Promise.promise(new F.Function0<Result>() {
 				@Override
 				public Result apply() throws Throwable {
+					// Not valid visit, ask user to login as admin or...?
 					return redirect(PlayAuthenticate.getResolver().login());
 				}
 			});

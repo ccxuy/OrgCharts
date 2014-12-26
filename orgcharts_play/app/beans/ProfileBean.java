@@ -91,7 +91,7 @@ public class ProfileBean {
 	}
 
 	public String getEmail() {
-		return email;
+		return (null == email ? "" : email);
 	}
 
 	public void setEmail(String email) {
@@ -131,7 +131,7 @@ public class ProfileBean {
 	}
 
 	public String getEmployeeTitle() {
-		return employeeTitle;
+		return (null == employeeTitle ? "" : employeeTitle);
 	}
 
 	public void setEmployeeTitle(String employeeTitle) {
@@ -139,7 +139,7 @@ public class ProfileBean {
 	}
 
 	public String getLocation() {
-		return location;
+		return (null == location ? "" : location);
 	}
 
 	public void setLocation(String location) {
@@ -147,7 +147,7 @@ public class ProfileBean {
 	}
 
 	public String getPhone() {
-		return phone;
+		return (null == phone ? "" : phone);
 	}
 
 	public void setPhone(String phone) {
@@ -155,7 +155,7 @@ public class ProfileBean {
 	}
 
 	public String getFax() {
-		return fax;
+		return (null == fax ? "" : fax);
 	}
 
 	public void setFax(String fax) {

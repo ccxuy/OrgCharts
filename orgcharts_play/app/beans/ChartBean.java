@@ -2,10 +2,12 @@ package beans;
 
 import java.sql.Clob;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import scala.reflect.internal.Trees.This;
 import utilities.ClobConverter;
 
 public class ChartBean {
@@ -18,6 +20,13 @@ public class ChartBean {
 	Timestamp timeLastModified;
 	Integer version;
 	Integer editUser;
+
+	@JsonIgnore
+	final String PERMISSION_SPECIFIED = "specified";
+	@JsonIgnore
+	final String[] PERMISSION_OPTIONS = { "public", PERMISSION_SPECIFIED, "private" };
+	String permission = PERMISSION_OPTIONS[0];
+	String permittedUser;
 
 	/**
 	 * Empty Constructor
@@ -38,9 +47,9 @@ public class ChartBean {
 	}
 
 	/**
-	 * Constructor for new chart with String XML
+	 * Constructor for new chart with String XML, please fill rest field via setter.
 	 * 
-	 * @param owner_id
+	 * @param owner_id, String represented Integer of owner's user id.
 	 * @param chart_name
 	 */
 	public ChartBean(String owner_id, String chart_name) {
@@ -54,7 +63,7 @@ public class ChartBean {
 	}
 
 	/**
-	 * Constructor for new chart with String XML
+	 * Constructor for new chart with String XML, please fill rest field via setter.
 	 * 
 	 * @param owner_id
 	 * @param chart_name
@@ -183,18 +192,51 @@ public class ChartBean {
 		this.editUser = editUser;
 	}
 
+	public String getPermission() {
+		return null == this.permission ? this.PERMISSION_OPTIONS[0] : this.permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
+
+	public String getPermittedUser() {
+		return permittedUser;
+	}
+
+	public void setPermittedUser(String permittedUser) {
+		this.permittedUser = permittedUser;
+	}
+	
+	public String getPermissionDisplay(){
+		if(null!=this.permission){
+			//If this.permission === "specified" 
+			if(this.permission.equals(this.PERMISSION_SPECIFIED)){
+				return "("+this.permission.toUpperCase()+" USER: "+this.permittedUser+")";
+			}
+			return "("+this.permission.toUpperCase()+")";
+		}
+		return "";
+	}
+
 	public boolean isValid() {
-		return this.uuid == null || this.uuid.equals("")
-				|| this.chartName == null || this.chartName.equals("") ? false
-				: true;
+		if(this.uuid == null || this.uuid.equals("")
+				|| this.chartName == null || this.chartName.equals("")){
+			return false;
+		}else if (!Arrays.asList(this.PERMISSION_OPTIONS).contains(this.permission)) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "ChartBean [uuid=" + uuid + ", ownerID=" + ownerID
-				+ ", chartName=" + chartName + ", xml=" + getXmlString()
-				+ ", timeLastModified=" + timeLastModified + ", version="
-				+ version + ", editUser=" + editUser + "]";
+		return "ChartBean [uuid=" + uuid + ", chartName=" + chartName
+				+ ", permission=" + permission + ", PERMISSION_OPTIONS="
+				+ Arrays.toString(PERMISSION_OPTIONS) + ", permittedUser="
+				+ permittedUser + ", timeLastModified=" + timeLastModified
+				+ ", version=" + version + ", editUser=" + editUser
+				+ ", ownerID=" + ownerID + ", xml=" + getXmlString() + "]";
 	}
 
 }

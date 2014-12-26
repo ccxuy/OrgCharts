@@ -48,6 +48,9 @@ public class ChartCtrl extends Controller {
 				cbj.put("uuid", cb.getUuid());
 				cbj.put("chartName", cb.getChartName());
 				cbj.put("ownerID", String.valueOf(cb.getOwnerID()));
+				cbj.put("permission", cb.getPermission());
+				cbj.put("permittedUser", cb.getPermittedUser());
+				cbj.put("permissionDisplay", cb.getPermissionDisplay());
 				ProfileBean owner = HibernateUtilities.searchEmployeeById(cb
 						.getOwnerID());
 				cbj.put("OwnerName",
@@ -126,9 +129,13 @@ public class ChartCtrl extends Controller {
 		} else {
 			String chart_name = form.get("new_chart_name");
 			String chart_ownerid = form.get("new_chart_owner_id");
+			String chart_permission = form.get("new_chart_permission");
+			String chart_permitteduser = form.get("new_chart_permitted_user");
 			try {
 				ChartBean cb = new ChartBean(chart_ownerid, chart_name);
 				cb.setVersionDefault();
+				cb.setPermission(chart_permission);
+				cb.setPermittedUser(chart_permitteduser);
 				System.out.println("ChartCtrl@createChart:cb=" + cb);
 				HibernateUtilities.getFactory();
 				int ret = HibernateUtilities.saveOrUpdateChart(cb);
@@ -162,6 +169,8 @@ public class ChartCtrl extends Controller {
 			String chart_id = form.get("chartid");
 			String chart_name = form.get("edit_chart_name");
 			String chart_ownerid = form.get("edit_chart_owner_id");
+			String chart_permission = form.get("edit_chart_permission");
+			String chart_permitteduser = form.get("edit_chart_permitted_user");
 			try {
 				ChartBean cb = HibernateUtilities.searchChartByUUID(chart_id);
 				if (null == cb) {
@@ -170,6 +179,8 @@ public class ChartCtrl extends Controller {
 				}
 				cb.setChartName(chart_name);
 				cb.setOwnerID(chart_ownerid);
+				cb.setPermission(chart_permission);
+				cb.setPermittedUser(chart_permitteduser);
 				cb.setTimeLastModifiedNow();
 				if (cb.isValid()) {
 					HibernateUtilities.saveOrUpdateChart(cb);

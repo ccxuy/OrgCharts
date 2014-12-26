@@ -22,7 +22,7 @@ public class TestChartFunction {
 		System.out.println("Finish Setup hibernate");
 	}
 
-//	@Test
+	@Test
 	public void testSearchChartByUUID() {
 		System.out.println("testSearchChartByUUID");
 		ChartBean cb = HibernateUtilities.searchChartByUUID("test");
@@ -41,7 +41,7 @@ public class TestChartFunction {
 		assertEquals(1, ret);
 	}
 	
-	@Test
+//	@Test
 	public void testGetAllChartByOwnerId(){
 		System.out.println("testGetAllChartByOwnerId");
 		List<ChartBean> cbl = HibernateUtilities.getAllChartByOwnerId(0, 100);

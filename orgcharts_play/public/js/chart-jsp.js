@@ -634,6 +634,7 @@ $(document).on("ready", function() {
         //alert("clicked");
         //alert(node_type);
         if ($(this).val() == "edit_employee") {
+            $(".emp-image").attr("src","");
             $("#fancy_new_employee").hide();
             $("#fancy_delete_employee").hide();
             var fn = "";
