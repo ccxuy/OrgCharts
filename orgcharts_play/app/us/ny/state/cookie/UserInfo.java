@@ -1,5 +1,7 @@
 package us.ny.state.cookie;
 
+import java.util.ArrayList;
+
 import us.ny.state.cookie.CookieManager;
 
 public class UserInfo {
@@ -189,6 +191,31 @@ public class UserInfo {
 
 		return sb.toString();
 
+	}
+	
+	/**
+	 * Not sure this is correct or not...
+	 * @return
+	 */
+	public String getRole(){
+		HinPerm[] hPerm = getHinperms();
+		for(HinPerm hp : hPerm){
+			return hp.getRole();
+		}
+		return "";
+	}
+	
+	/**
+	 * Get all role in hinPerm
+	 * @return
+	 */
+	public ArrayList<String> getAllRoles(){
+		HinPerm[] hPerm = getHinperms();
+		ArrayList<String> roles = new ArrayList<String>();
+		for(HinPerm hp : hPerm){
+			roles.add(hp.getRole());
+		}
+		return roles;
 	}
 
 }

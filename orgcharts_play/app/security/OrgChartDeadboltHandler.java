@@ -19,11 +19,12 @@ import be.objectify.deadbolt.core.models.Subject;
 import com.feth.play.module.pa.PlayAuthenticate;
 import com.feth.play.module.pa.user.AuthUserIdentity;
 
-public class MyDeadboltHandler extends AbstractDeadboltHandler {
+public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Promise<Result> beforeAuthCheck(final Http.Context context) {
-		if (PlayAuthenticate.isLoggedIn(context.session())) {
+        System.out.println("OrgChartDeadboltHandler@beforeAuthCheck context="+context);
+        if (PlayAuthenticate.isLoggedIn(context.session())) {
 			// user is logged in
 			return F.Promise.pure(null);
 		} else {
@@ -33,7 +34,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 			// was requested before sending him to the login page
 			// if you don't call this, the user will get redirected to the page
 			// defined by your resolver
-			System.out.println("MyDeadboltHandle@beforeAuthCheck: context="+context);
+//			System.out.println("OrgChartDeadboltHandler@beforeAuthCheck: context="+context);
 //			final String originalUrl = PlayAuthenticate
 //					.storeOriginalUrl(context);
 			final String originalUrl = context.request().path();
@@ -43,7 +44,8 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 				@Override
 				public Result apply() throws Throwable {
 					// Not valid visit, ask user to login as admin or...?
-					return redirect(PlayAuthenticate.getResolver().login());
+//					return redirect(PlayAuthenticate.getResolver().login());
+					return unauthorized(views.html.defaultpages.unauthorized.render());
 				}
 			});
 		}
@@ -63,12 +65,19 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 	@Override
 	public Promise<Subject> getSubject(Context context) {
 		final AuthUserIdentity u = PlayAuthenticate.getUser(context);
-		Logger.info("MyDeadboltHandler@getSubject:u.getId()="+u.getId());
+		Logger.info("OrgChartDeadboltHandler@getSubject:u.getId()="+u.getId());
 		
 		//Get current user here using provided cookie
 		UserInfo userInfo = getUserInfo(context.session());
+        OrgChartUser user = new OrgChartUser(userInfo);
+
+        if(context.session().containsKey("fakelogin")){
+            user.setId(context.session().get("shortname"));
+            user.addRole(context.session().get("fakelogin"));
+        }
+
 		// Caching might be a good idea here
-		return F.Promise.pure((Subject)userInfo);
+		return F.Promise.pure(user);
 	}
 
 	@Override
@@ -78,7 +87,7 @@ public class MyDeadboltHandler extends AbstractDeadboltHandler {
 	}
 	
 	private UserInfo getUserInfo(Session session){
-    	System.out.println("AuthUserFilter@getUserInfo session="+session);
+    	System.out.println("OrgChartDeadboltHandler@getUserInfo session="+session);
         CookieManager cookieman = new CookieManager();
         cookieman.injectCookies(session);	
 

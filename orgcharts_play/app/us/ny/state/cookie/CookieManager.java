@@ -49,10 +49,10 @@ public class CookieManager {
 //			this.addCookieMap(cookie, "%7C", "%3A");
 //		}
 
+//        Logger.debug("CookieManager@injectCookies session="+session);
 		if (session != null) {
 			for (String keyString : session.keySet()){
-                //System.out.println("Cookie Name :"+cookie.getName());
-				Logger.debug("session key :"+keyString);
+//                System.out.println("session.keySet().keyString="+keyString);
 				if (keyString.equalsIgnoreCase("PermCookie")){
 					this.addCookieMap(session, "\\|", ":");
 				} else if (keyString.equalsIgnoreCase("WaarpCookie")){

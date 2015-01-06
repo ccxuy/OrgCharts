@@ -5,6 +5,14 @@
 # Home page
 GET     /                           controllers.Application.index()
 
+# Authentication
+GET     /loginadmin                      controllers.Application.loginAsAdmin
+GET     /loginuser                      controllers.Application.loginAsUser
+GET     /loginreadonly                      controllers.Application.loginAsReadonly
+
+GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
+GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
+
 # Charts
 GET     /chart/                               controllers.ChartCtrl.index()
 GET     /chart/all/                           controllers.ChartCtrl.getAllChart()

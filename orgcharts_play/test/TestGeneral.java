@@ -1,6 +1,4 @@
 
-
-
 import org.junit.Before;
 
 public class TestGeneral {

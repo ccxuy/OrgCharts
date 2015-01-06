@@ -13,7 +13,7 @@ public class Setting {
 	}
 	
 	public static class ServerSetting{
-		public static int queryLimit = 1000;
+		public static int queryLimit = 99999;
 	}
 	
 	public static class DefaultData{
