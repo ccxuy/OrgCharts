@@ -47,8 +47,8 @@ function ajax0() {
             console.log("finished loading file");
             //}
         },
-        error: function(xhr, textstatus, ethrown) {
-            alert(textstatus + ", " + ethrown + xhr.status);
+        error: function(msg) {
+            alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
             //location.reload();
         }
     });
@@ -775,6 +775,8 @@ $(document).on("ready", function() {
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             success: function(respose, text, xhr) {
                 console.log("EditEmployee>POST>EditNode.do:"+text+", "+respose);
+                var $div = $("#chart").find("div." + add_to_node);
+                get_emp(empId, $div);
             },
             error: function(xhr, textstatus, ethrown) {
                 alert(textstatus+", "+ethrown +xhr.status);
@@ -782,8 +784,6 @@ $(document).on("ready", function() {
         })
 
         $(this)[0].reset();
-        var $div = $("#chart").find("div." + add_to_node);
-        get_emp(empId, $div);
         reset_forms();
         $.fancybox.close();
         //return false;

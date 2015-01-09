@@ -1,9 +1,6 @@
 package security;
 
-import java.util.Collection;
-
 import play.Logger;
-import play.api.mvc.RequestHeader;
 import play.libs.F;
 import play.libs.F.Promise;
 import play.mvc.Http;
@@ -68,16 +65,20 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 		Logger.info("OrgChartDeadboltHandler@getSubject:u.getId()="+u.getId());
 		
 		//Get current user here using provided cookie
-		UserInfo userInfo = getUserInfo(context.session());
+		UserInfo userInfo = getUserInfoBySession(context.session());
         OrgChartUser user = new OrgChartUser(userInfo);
 
-        if(context.session().containsKey("fakelogin")){
-            user.setId(context.session().get("shortname"));
-            user.addRole(context.session().get("fakelogin"));
-        }
+		doBuildFakeLoginUser(context.session(), user);
 
 		// Caching might be a good idea here
 		return F.Promise.pure((Subject)user);
+	}
+
+	private static void doBuildFakeLoginUser(Session session, OrgChartUser user) {
+		if(session.containsKey("fakelogin")){
+            user.setId(session.get("shortname"));
+            user.addRole(session.get("fakelogin"));
+        }
 	}
 
 	@Override
@@ -86,8 +87,8 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 		return super.onAuthFailure(context, content);
 	}
 	
-	private UserInfo getUserInfo(Session session){
-    	System.out.println("OrgChartDeadboltHandler@getUserInfo session="+session);
+	private static UserInfo getUserInfoBySession(Session session){
+    	System.out.println("OrgChartDeadboltHandler@getUserInfoBySession session="+session);
         CookieManager cookieman = new CookieManager();
         cookieman.injectCookies(session);	
 
@@ -95,6 +96,13 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
         uInfo.inputCookies(cookieman);
         
         return uInfo;
+	}
+
+	public static OrgChartUser getOrgChartUserBySession(Session session) {
+		UserInfo userInfo = getUserInfoBySession(session);
+		OrgChartUser user = new OrgChartUser(userInfo);
+		doBuildFakeLoginUser(session, user);
+		return user;
 	}
 
 }

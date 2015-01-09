@@ -78,4 +78,13 @@ public class OrgChartUser implements Subject, UserInfoIntegration {
 		return this.userInfo;
 	}
 
+	@Override
+	public String toString() {
+		return "OrgChartUser{" +
+				"id='" + id + '\'' +
+				", roles=" + roles +
+				", permissions=" + permissions +
+				", userInfo=" + userInfo +
+				'}';
+	}
 }

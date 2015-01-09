@@ -12,6 +12,7 @@ import providers.NyGovShortnameAuthProvider;
 import providers.OrgChartAuthProvider;
 import providers.NyGovUsernameAuthProvider;
 import scala.reflect.internal.Trees.This;
+import security.OrgChartDeadboltHandler;
 import security.OrgChartRoleType;
 import security.OrgChartUser;
 import views.html.*;
@@ -22,6 +23,11 @@ public class Application extends Controller {
 //        return redirect("assets/index.html");
 //    	return ocsDashboard();
         return redirect("manage-dashboard/");
+    }
+
+    public static OrgChartUser getLoginUser(final Session session) {
+        final OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        return ocu;
     }
     
     public static Result ocsDashboard() {
@@ -39,7 +45,7 @@ public class Application extends Controller {
     }
     
     //TODO: disable this function in real application
-    @Restrict(@Group(OrgChartRoleType.ADMIN))
+    @Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
     public static Result tmp() {
         System.out.println("Application@tmp");
         return ok(views.html.tmp.render("hi"));
@@ -64,11 +70,19 @@ public class Application extends Controller {
     
     //TODO: disable this function in real application
     public static Result loginAsUser() {
-        return OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.USER.toString());
+        session().clear();
+        session("fakelogin", "user");
+        session("shortname", "yxx03");
+        OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.USER.toString());
+        return ok(views.html.tmp.render("Application@loginAsUser"));
     }
     
     //TODO: disable this function in real application
     public static Result loginAsReadonly() {
+        session().clear();
+        session("fakelogin", "readonly");
+        session("shortname", "jin");
+        OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.READONLY.toString());
         return ok(views.html.tmp.render("Application@loginAsReadonly"));
     }
 

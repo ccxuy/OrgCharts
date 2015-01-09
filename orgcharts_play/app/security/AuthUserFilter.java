@@ -43,7 +43,7 @@ public class AuthUserFilter implements EssentialFilter {
 //				System.out.println("AuthUserFilter:cookies().mkString()="+request.cookies().mkString());
 //				System.out.println("request.getQueryString(\"role\")="+request.getQueryString("role"));
 				
-//				UserInfo userInfo = getUserInfo(request);
+//				UserInfo userInfo = getUserInfoBySession(request);
 //				if(null!=userInfo){
 //					HinPerm[] hPerm = userInfo.getHinperms();
 //					for(HinPerm hp : hPerm){
@@ -61,8 +61,8 @@ public class AuthUserFilter implements EssentialFilter {
 			implements EssentialAction {
 	}
 	
-//    private UserInfo getUserInfo(RequestHeader req){
-//    	System.out.println("AuthUserFilter@getUserInfo "+req.headers().get("Cookie"));
+//    private UserInfo getUserInfoBySession(RequestHeader req){
+//    	System.out.println("AuthUserFilter@getUserInfoBySession "+req.headers().get("Cookie"));
 //        CookieManager cookieman = new CookieManager();
 //        cookieman.injectCookies(req);	
 //

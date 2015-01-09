@@ -13,6 +13,11 @@ GET     /loginreadonly                      controllers.Application.loginAsReado
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 
+# Organization Chart System Manage Page
+GET     /manage-dashboard/                           controllers.Application.ocsDashboard()
+GET     /manage-chart/                     controllers.Application.ocsCharts()
+GET     /manage-employee/                  controllers.Application.ocsEmployees()
+
 # Charts
 GET     /chart/                               controllers.ChartCtrl.index()
 GET     /chart/all/                           controllers.ChartCtrl.getAllChart()

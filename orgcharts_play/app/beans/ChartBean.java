@@ -13,7 +13,7 @@ import utilities.ClobConverter;
 public class ChartBean {
 
 	String uuid;
-	int ownerID;
+	String ownerID; //NY user shortname
 	String chartName;
 	@JsonIgnore
 	Clob xml;
@@ -22,9 +22,9 @@ public class ChartBean {
 	Integer editUser;
 
 	@JsonIgnore
-	final String PERMISSION_SPECIFIED = "specified";
+	public final static String PERMISSION_SPECIFIED = "specified";
 	@JsonIgnore
-	final String[] PERMISSION_OPTIONS = { "public", PERMISSION_SPECIFIED, "private" };
+	public final static String[] PERMISSION_OPTIONS = { "public", PERMISSION_SPECIFIED, "private" };
 	String permission = PERMISSION_OPTIONS[0];
 	String permittedUser;
 
@@ -55,22 +55,6 @@ public class ChartBean {
 	public ChartBean(String owner_id, String chart_name) {
 		super();
 		this.setUuidNew();
-		this.ownerID = Integer.parseInt(owner_id);
-		this.chartName = chart_name;
-		this.setXmlDefault();
-		this.setTimeLastModifiedNow();
-		this.editUser = null;
-	}
-
-	/**
-	 * Constructor for new chart with String XML, please fill rest field via setter.
-	 * 
-	 * @param owner_id
-	 * @param chart_name
-	 */
-	public ChartBean(int owner_id, String chart_name) {
-		super();
-		this.setUuidNew();
 		this.ownerID = owner_id;
 		this.chartName = chart_name;
 		this.setXmlDefault();
@@ -89,7 +73,7 @@ public class ChartBean {
 	 * @param version
 	 * @param edit_user
 	 */
-	public ChartBean(String uuid, int owner_id, String chart_name, Clob xml,
+	public ChartBean(String uuid, String owner_id, String chart_name, Clob xml,
 			Timestamp create_time, Integer version, Integer edit_user) {
 		super();
 		this.uuid = uuid;
@@ -118,16 +102,12 @@ public class ChartBean {
 		return new Timestamp(java.util.UUID.fromString(this.uuid).timestamp());
 	}
 
-	public int getOwnerID() {
-		return ownerID;
-	}
-
-	public void setOwnerID(int ownerID) {
-		this.ownerID = ownerID;
+	public String getOwnerID() {
+		return null==ownerID?"":ownerID;
 	}
 
 	public void setOwnerID(String ownerID) {
-		this.ownerID = Integer.parseInt(ownerID);
+		this.ownerID = ownerID;
 	}
 
 	public String getChartName() {

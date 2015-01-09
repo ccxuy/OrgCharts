@@ -2,11 +2,10 @@ package controllers;
 
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
+import be.objectify.deadbolt.core.models.Role;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import org.json.simple.*;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import beans.ChartBean;
@@ -17,6 +16,9 @@ import play.libs.Json;
 import play.mvc.*;
 import config.Setting;
 import config.Setting.*;
+import security.OrgChartDeadboltHandler;
+import security.OrgChartRoleType;
+import security.OrgChartUser;
 import utilities.HibernateUtilities;
 
 public class ChartCtrl extends Controller {
@@ -28,10 +30,9 @@ public class ChartCtrl extends Controller {
 	@SuppressWarnings("unchecked")
 	public static Result getAllChart() {
 		// Change to use session later...
-		Integer ownerId = null;
+		String ownerId = null;
 		try {
-			ownerId = Integer.parseInt(request().getQueryString(
-					Setting.ChartAlias.Chart_Owner));
+			ownerId = request().getQueryString(Setting.ChartAlias.Chart_Owner);
 		} catch (NumberFormatException e) {
 		}
 
@@ -47,14 +48,15 @@ public class ChartCtrl extends Controller {
 				cbj.put("DT_RowId", cb.getUuid());
 				cbj.put("uuid", cb.getUuid());
 				cbj.put("chartName", cb.getChartName());
-				cbj.put("ownerID", String.valueOf(cb.getOwnerID()));
+				cbj.put("ownerID", cb.getOwnerID());
 				cbj.put("permission", cb.getPermission());
 				cbj.put("permittedUser", cb.getPermittedUser());
 				cbj.put("permissionDisplay", cb.getPermissionDisplay());
+				//TODO: change to get user from cookies db?
 				ProfileBean owner = HibernateUtilities.searchEmployeeById(cb
 						.getOwnerID());
 				cbj.put("OwnerName",
-						null == owner ? "(DELETED USER)" : owner.getWholeName());
+						null == owner ? "(UNKNOWN USER)" : owner.getWholeName());
 				cbj.put("version",
 						cb.getVersion() == null ? "n/a" : String.valueOf(cb
 								.getVersion()));
@@ -73,7 +75,7 @@ public class ChartCtrl extends Controller {
 							.getEditUser());
 					cbj.put("editUser", String.valueOf(cb.getEditUser()));
 					cbj.put("CUName",
-							null == cu ? "(DELETED USER)" : cu.getWholeName());
+							null == cu ? "(DELETED EMPLOYEE)" : cu.getWholeName());
 				}
 				chartsJson.add(cbj);
 			}
@@ -86,7 +88,9 @@ public class ChartCtrl extends Controller {
 		}
 	}
 
+	@SubjectPresent
 	public static Result getChart(String id) {
+		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
 		// Read XML from storage
 		String input = "";
 		if (Setting.STORAGE == StorageSetting.HIBERNATE) {
@@ -95,11 +99,14 @@ public class ChartCtrl extends Controller {
 				chartId = Setting.DefaultData.ChartId_default;
 			}
 			try {
-				System.out.println("Chart@getChart: chartid=" + chartId);
+				System.out.println("ChartCtrl@getChart: chartid=" + chartId);
 				HibernateUtilities.getFactory();
 				ChartBean chartBean = HibernateUtilities
 						.searchChartByUUID(chartId);
-				input = chartBean.getXmlString();
+
+				if(isUserReadChartAllowed(chartBean, ocu)){
+					return ok(chartBean.getXmlString());
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				return badRequest();
@@ -107,12 +114,62 @@ public class ChartCtrl extends Controller {
 		}
 		// session("empchart", "<ul id='org' style='display:none'>" + input
 		// + "</ul>");
-		return ok(input);
+		Logger.info("ChartCtrl@getChart");
+		return forbidden(" Permission Denied : You don't have permission to access this chart! ");
+	}
+
+	private static boolean isUserReadChartAllowed(ChartBean chartBean, OrgChartUser ocu){
+//		Logger.debug("ChartCtrl@isUserReadChartAllowed chartBean="+chartBean+", ocu="+ocu);
+		//if owner, private would go through here
+		if(chartBean.getOwnerID().equals(ocu.getIdentifier())){
+//			Logger.debug("ChartCtrl@isUserReadChartAllowed >> is owner");
+			return true;
+		}
+		// Check roles, admin can do anything
+		for(Role r : ocu.getRoles()){
+			if(r.getName().equals(OrgChartRoleType.ADMIN)){
+//				Logger.debug("ChartCtrl@isUserReadChartAllowed >> is admin");
+				return true;
+			}
+		}
+		// Check specified permission
+		if(chartBean.getPermission().equals(ChartBean.PERMISSION_SPECIFIED)){
+			for(String sid : chartBean.getPermittedUser().split(";")){
+				if(sid.equals(ocu.getIdentifier())){
+//					Logger.debug("ChartCtrl@isUserReadChartAllowed >> is specified");
+					return true;
+				}
+			}
+			// Lowest permission required - public
+		}else if(chartBean.getPermission().equals(ChartBean.PERMISSION_OPTIONS[0])){
+//			Logger.debug("ChartCtrl@isUserReadChartAllowed >> is public");
+			return true;
+		}else{
+			Logger.error("ChartCtrl@isUserReadChartAllowed unknown chart permission : "+chartBean.getPermission());
+		}
+		return false;
+	}
+
+	private static boolean isUserWriteChartAllowed(ChartBean chartBean, OrgChartUser ocu){
+		// Check roles, admin can do everything.
+		for(Role r : ocu.getRoles()){
+			if(r.getName().equals(OrgChartRoleType.ADMIN)){
+				return true;
+			}
+		}
+		// User can write chart that has read access.
+		for(Role r : ocu.getRoles()){
+			if(r.getName().equals(OrgChartRoleType.ADMIN)){
+				return isUserReadChartAllowed(chartBean, ocu);
+			}
+		}
+		// Readonly
+		return false;
 	}
 
 	public static Result checkChartName(String chartName) {
 		try {
-			System.out.println("Chart@checkChartName: chartName=" + chartName);
+			System.out.println("ChartCtrl@checkChartName: chartName=" + chartName);
 			HibernateUtilities.getFactory();
 			// ChartBean chartBean = HibernateUtilities
 		} catch (Exception e) {
@@ -128,7 +185,11 @@ public class ChartCtrl extends Controller {
 			return badRequest(form.get().toString());
 		} else {
 			String chart_name = form.get("new_chart_name");
-			String chart_ownerid = form.get("new_chart_owner_id");
+			// Replace to use current login user id
+//			String chart_ownerid = form.get("new_chart_owner_id");
+			OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+			Logger.debug("ChartCtrl@createChart OrgChartUser:="+ocu);
+			String chart_ownerid = ocu.getIdentifier();
 			String chart_permission = form.get("new_chart_permission");
 			String chart_permitteduser = form.get("new_chart_permitted_user");
 			try {
@@ -144,11 +205,11 @@ public class ChartCtrl extends Controller {
 				} else {
 					return internalServerError(form.get().toString());
 				}
-			} catch (NumberFormatException e) {
-				return badRequest("Owner id should be a number. form.get(\"new_chart_owner_id\")="
-						+ chart_ownerid
-						+ "\nform.get().toString()=\n"
-						+ form.get().toString());
+//			} catch (NumberFormatException e) {
+//				return badRequest("Owner id should be a number. form.get(\"new_chart_owner_id\")="
+//						+ chart_ownerid
+//						+ "\nform.get().toString()=\n"
+//						+ form.get().toString());
 			} catch (Exception e) {
 				e.printStackTrace();
 				return internalServerError("ChartCtrl@createChart");
@@ -223,6 +284,7 @@ public class ChartCtrl extends Controller {
 	}
 
 	public static Result deleteChart(String id) {
+		System.out.println("ChartCtrl@deleteChart>> id="+id);
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.hasErrors()) {
 			return badRequest(form.get().toString());
@@ -259,10 +321,12 @@ public class ChartCtrl extends Controller {
 	private static ObjectNode parseChartbeanToJsonObjectNode(ChartBean cb) {
 		ObjectNode cbj = (ObjectNode) Json.toJson(cb);
 		cbj.put("DT_RowId", cb.getUuid());
-		ProfileBean owner = HibernateUtilities.searchEmployeeById(cb
-				.getOwnerID());
+//		ProfileBean owner = HibernateUtilities.searchEmployeeById(cb
+//				.getOwnerID());
+		//TODO: establish user database and provide query api here.
+		OrgChartUser owner = Application.getLoginUser(session());
 		cbj.put("OwnerName",
-				null == owner ? "(DELETED USER)" : owner.getWholeName());
+				null == owner ? "(UNKNOWN USER)" : owner.getUserInfo().getFullname());
 
 		if (null == cb.getTimeLastModified()) {
 			cbj.put("timeLastModified", "n/a");
@@ -276,7 +340,7 @@ public class ChartCtrl extends Controller {
 		} else {
 			ProfileBean cu = HibernateUtilities.searchEmployeeById(cb
 					.getEditUser());
-			cbj.put("CUName", null == cu ? "(DELETED USER)" : cu.getWholeName());
+			cbj.put("CUName", null == cu ? "(DELETED EMPLOYEE)" : cu.getWholeName());
 		}
 		return cbj;
 	}

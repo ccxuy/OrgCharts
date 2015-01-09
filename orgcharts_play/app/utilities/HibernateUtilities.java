@@ -158,7 +158,7 @@ public class HibernateUtilities {
 	 * @param email
 	 * @param image
 	 * @param empId
-	 * @deprecated use {@link #editNode()} instead.
+	 * @deprecated use {@link #saveOrUpdateEmployee} instead.
 	 */
 	@Deprecated
 	public static void editNode(String sfirstName, String slastName,
@@ -583,7 +583,7 @@ public class HibernateUtilities {
 	 * @param ownerId should not be null, or it would consider no ownerId
 	 * @return list of ChartBean created by this ownerId, null if failed
 	 */
-	public static List<ChartBean> getAllChartByOwnerId(Integer ownerId){
+	public static List<ChartBean> getAllChartByOwnerId(String ownerId){
 		return getAllChartByOwnerId(ownerId, Setting.ServerSetting.queryLimit);
 	}
 	
@@ -593,7 +593,7 @@ public class HibernateUtilities {
 	 * @param limitQueries
 	 * @return list of ChartBean created by this ownerId, null if failed
 	 */
-	public static List<ChartBean> getAllChartByOwnerId(Integer ownerId, int limitQueries) {
+	public static List<ChartBean> getAllChartByOwnerId(String ownerId, int limitQueries) {
 		Session session = sessfactory.openSession();
 		Transaction tx = null;
 		try {
