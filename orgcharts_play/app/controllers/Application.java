@@ -19,7 +19,23 @@ import views.html.*;
 public class Application extends Controller {
 
     public static Result index() {
-        return redirect("assets/index.html");
+//        return redirect("assets/index.html");
+//    	return ocsDashboard();
+        return redirect("manage-dashboard/");
+    }
+    
+    public static Result ocsDashboard() {
+        int numCharts = 0;
+        int numEmployees = 0;
+        return ok(views.html.manageIndex.render());
+    }
+    
+    public static Result ocsCharts() {
+        return ok(views.html.manageChart.render());
+    }
+    
+    public static Result ocsEmployees() {
+        return ok(views.html.manageEmployee.render());
     }
     
     //TODO: disable this function in real application
@@ -48,7 +64,7 @@ public class Application extends Controller {
     
     //TODO: disable this function in real application
     public static Result loginAsUser() {
-        return ok(views.html.tmp.render("Application@loginAsUser"));
+        return OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.USER.toString());
     }
     
     //TODO: disable this function in real application

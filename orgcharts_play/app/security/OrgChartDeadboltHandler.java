@@ -77,7 +77,7 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
         }
 
 		// Caching might be a good idea here
-		return F.Promise.pure(user);
+		return F.Promise.pure((Subject)user);
 	}
 
 	@Override

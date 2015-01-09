@@ -1,0 +1,264 @@
+
+@managePageTemplate{
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Employee Management</h1>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <p>
+                            <button id="btn_new_employee" href="#popup_form" class="btn btn-default">New Employee</button>
+                            <button id="btn_edit_employee" href="#popup_form" class="btn btn-default" style="display: none;">Edit Employee</button>
+                        </p>
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                Employee query result:
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover" id="dataTables-employee">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Email</th>
+                                                <th>Title</th>
+                                                <th>Location</th>
+                                                <th>Phone</th>
+                                                <th>Fax</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                                <!-- /.table-responsive -->
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+                    </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
+
+    <div id="popup_form" class="popupContainer" style="display:none;">
+        <header class="popupHeader">
+            <span class="header_title">Employee</span>
+            <span class="modal_close"><i class="fa fa-times"></i></span>
+        </header>
+
+        <section class="popupBody SectionNew">
+        <!-- Here Goes all alternative Forms -->
+        <div class="pop_form">
+            <div class="">
+                <form id="form_new_employee" method="POST">
+                    <label>First Name<span style="color:red;">*</span></label> <input type="text" name="new_first_name" required><br>
+                    <label>Last Name<span style="color:red;">*</span></label> <input type="text" name="new_last_name"><br>
+                    <label>Title</label> <input type="text" name="new_title"><br>
+                    <label>Location</label> <input type="text" name="new_location"><br>
+                    <label>Email</label> <input type="text" name="new_title"><br>
+                    <label>Phone</label> <input type="text" name="new_phone"><br>
+                    <label>Fax</label> <input type="text" name="new_fax"><br>
+
+                    <label for="image">Image</label><input id="new_node_image" type="file" name="new_image" size="chars"><br>
+             
+                    <div class="action_btns centered">
+                        <div class="">
+                            <input type=submit id="submit_new_employee" class="btn btn-success" value="Create Employee">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.pop_form -->
+        </section>
+        <!-- /.SectionNewChart -->
+
+        <section class="popupBody SectionEdit">
+        <!-- Here Goes all alternative Forms -->
+        <div class="pop_form">
+            <div class="">
+                <form id="form_edit_employee" method="POST">
+                    <label>Employee ID<span style="color:red;">*</span></label> <input type="text" name="emp_Id" readonly="readonly" required><br>
+                    <label>First Name<span style="color:red;">*</span></label> <input type="text" name="edit_first_name" required><br>
+                    <label>Last Name<span style="color:red;">*</span></label> <input type="text" name="edit_last_name"><br>
+                    <label>Title</label> <input type="text" name="edit_emp_title"><br>
+                    <label>Location</label> <input type="text" name="edit_location"><br>
+                    <label>Email</label> <input type="text" name="edit_email"><br>
+                    <label>Phone</label> <input type="text" name="edit_phone"><br>
+                    <label>Fax</label> <input type="text" name="edit_fax"><br>
+
+                    <label for="image">Image</label><input id="new_node_image" type="file" name="image" size="chars"><br>
+             
+                    <div class="action_btns centered">
+                        <div class="">
+                            <input type=button id="submit_delete_employee" name="submit_delete_employee" class="btn btn-danger" value="Delete">
+                            <input type=submit id="submit_edit_employee" name="submit_edit_employee" class="btn btn-warning" value="Modifiy">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.pop_form -->
+        </section>
+        <!-- /.SectionEditChart -->
+    </div>
+    <!-- /#popup_form -->
+
+    <div id="lean_overlay" style="display: none; opacity: 0.6;"></div>
+
+    <!-- jQuery -->
+    <script src="//code.jquery.com/jquery-2.1.1.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- DataTables JavaScript -->
+    <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+    <script src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="@routes.Assets.at("js/plugins/metisMenu/metisMenu.min.js")"></script>
+    <script src="@routes.Assets.at("js/plugins/dataTables/dataTables.bootstrap.js")"></script>
+
+    <!-- jquery.leanmodal -->
+    <script type="text/javascript" src="@routes.Assets.at("js/jquery.leanModal.min.js")"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="@routes.Assets.at("js/sb-admin-2.js")"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    var editor; // use a global for the submit and return data rendering
+    $(document).ready(function() {
+
+        var cTableSel = $('#dataTables-employee');
+        var cTable = $('#dataTables-employee').DataTable({
+            "ajax": '../employee/all/',
+            "columns": [
+                { "data": "id" },
+                { "data": "firstName" },
+                { "data": "lastName" },
+                { "data": "email" },
+                { "data": "employeeTitle" },
+                { "data": "location" },
+                { "data": "phone" },
+                { "data": "fax" }
+            ],
+            // "columnDefs": [
+            //     {
+            //         "targets": [ 0 ],
+            //         "visible": false,
+            //         "searchable": false
+            //     }
+            // ]
+        });
+        
+        
+        var editRow;
+        $('#dataTables-employee tbody').on( 'dblclick', 'tr', function () {
+            editRow = this;
+            $("input[name='emp_Id']").val(this.id);
+            $("input[name='edit_first_name']").val(cTable.row( this ).data()['firstName']);
+            $("input[name='edit_last_name']").val(cTable.row( this ).data()['lastName']);
+            $("input[name='edit_emp_title']").val(cTable.row( this ).data()['employeeTitle']);
+            $("input[name='edit_location']").val(cTable.row( this ).data()['location']);
+            $("input[name='edit_email']").val(cTable.row( this ).data()['email']);
+            $("input[name='edit_phone']").val(cTable.row( this ).data()['phone']);
+            $("input[name='edit_fax']").val(cTable.row( this ).data()['fax']);
+            // console.log( cTable.row( this ).data() );
+            $( "#btn_edit_employee" ).trigger( "click" );
+        });
+
+        // For new employee form
+        $('#btn_new_employee').click(function(){
+            $("#popup_form .SectionNew").show();
+            $("#popup_form .SectionEdit").hide();
+            return false;
+        });
+        $('#btn_edit_employee').click(function(){
+            $("#popup_form .SectionNew").hide();
+            $("#popup_form .SectionEdit").show();
+            return false;
+        });
+
+        $("#btn_new_employee").leanModal({top : 100, overlay : 0.6, closeButton: ".modal_close" });
+        $("#btn_edit_employee").leanModal({top : 100, overlay : 0.6, closeButton: ".modal_close" });
+
+        $('form#form_new_employee').submit(function(e){
+            var formData = new FormData(this);
+            var submitSuccessCallbackFn = function(i){
+                cTableSel.dataTable().fnAddData(i);
+                $('form#form_new_employee')[0].reset();
+            }
+            submitFunc(e, "../employee/", formData, "POST", submitSuccessCallbackFn);
+        });
+        $('form#form_edit_employee').submit(function(e){
+            var formData = new FormData(this);
+            var submitSuccessCallbackFn = function(i){
+                // console.log( cTableSel.dataTable().fnSettings().aoData );
+                // console.log( editRow );
+                // console.log( cTable );
+                // console.log( cTableSel.dataTable() );
+                var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                cTableSel.dataTable().fnUpdate(i, pos);
+                $('form#form_edit_employee')[0].reset();
+            }
+            submitFunc(e, "../employee/", formData, "PUT", submitSuccessCallbackFn);
+        });
+
+        $('#submit_delete_employee').click(function(){
+            var empid = $("form#form_edit_employee input[name='emp_Id']").val()
+            var formData = new FormData($('form#form_edit_employee'));
+            var submitSuccessCallbackFn = function(i){
+                var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                cTableSel.dataTable().fnDeleteRow(pos);
+                $('form#form_edit_employee')[0].reset();
+            }
+            submitFunc(null, "../employee/"+empid, formData, "DELETE", submitSuccessCallbackFn);
+        });
+
+        var submitFunc = function (e, url, formData, submitMethod, successCallback){
+            if(e!=null){
+                e.preventDefault();
+            }
+            $.ajax({
+                type: submitMethod,
+                url: url,
+                cache: false,
+                data: formData,
+                processData: false, // Don't process the files
+                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                success: function(respose, text, xhr) {
+                    console.log("submitFunc:"+text+", "+respose+", url="+url);
+                    $("#popup_form").hide();
+                    $("#lean_overlay").hide();
+                    successCallback(respose);
+                    // var j = respose;
+                    // cTableSel.dataTable().fnAddData(j);
+                },
+                error: function(xhr, textstatus, ethrown) {
+                    alert(textstatus+", "+ethrown +xhr.status);
+                    console.log(xhr);
+                }
+            })
+        }
+
+    });
+    // END $(document).ready
+
+    </script>
+}
