@@ -24,7 +24,8 @@
   <!-- jQuery autocomplete stylesheet -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
   <!-- Bootstrap switch -->
-  <!-- <link rel="stylesheet" href="css/bootstrap-switch.css"> -->
+  <link rel="stylesheet" href="css/bootstrap-switch.css">
+  <script type="text/javascript" src="js/bootstrap-switch.js"></script>
   <!-- Knockout.js -->
   <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.2.0.js'></script>
 
@@ -43,17 +44,17 @@
     <div class="topbar-inner">
       <div class="container">
         <a class="brand" href="#"><!-- <%=chartBean.getChartName()%> --></a>
-        <!-- <div class="pull-right">
-          <input type="checkbox" name="edit-checkbox" checked>
-        </div> -->
-        <div></div>
         <div class="pull-right">
           <div class="alert-message info" id="update_button">Save Chart</div>
         </div>
         <div></div>
         <div class="pull-right">
-          <div class="alert-message info" id="show-list">Show List</div>
+          <div class="alert-message info" id="show-list">XML</div>
           <pre class="prettyprint lang-html" id="list-html" style="display:none"></pre> 
+        </div>
+        <div></div>
+        <div style="margin-top: 4px;" class="pull-right">
+          <input id="editSwitch" data-on="success" data-off="danger"type="checkbox" name="edit-checkbox" data-text-label="EDIT">
         </div>
       </div>
     </div>
@@ -349,8 +350,6 @@
 
   <script>
   jQuery(document).ready(function() {
-    // Enable edit button
-    // $("[name='edit-checkbox']").bootstrapSwitch();
 
     /* Custom jQuery */
     $("#show-list").click(function(e) {
@@ -358,10 +357,10 @@
 
       $('#list-html').toggle('fast', function() {
         if ($(this).is(':visible')) {
-          $('#show-list').text('Hide List');
+          $('#show-list').text('Hide XML');
           $(".topbar").fadeTo('fast', 0.9);
         } else {
-          $('#show-list').text('Show List ');
+          $('#show-list').text(' XML ');
           $(".topbar").fadeTo('fast', 1);
         }
       });

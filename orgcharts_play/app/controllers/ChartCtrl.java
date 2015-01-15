@@ -1,8 +1,11 @@
 package controllers;
 
+import java.util.HashMap;
 import java.util.List;
 
 import be.objectify.deadbolt.core.models.Role;
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
 import org.json.simple.*;
 
@@ -22,12 +25,15 @@ import security.OrgChartUser;
 import utilities.HibernateUtilities;
 
 public class ChartCtrl extends Controller {
+	public static HashMap<String, String> chartidToTimestampLockMap;
+	public static HashMap<String, String> useridToChartidLockMap;
 
 	public static Result index() {
 		return redirect("./test");
 	}
 
 	@SuppressWarnings("unchecked")
+	@SubjectPresent
 	public static Result getAllChart() {
 		// Change to use session later...
 		String ownerId = null;
@@ -53,7 +59,8 @@ public class ChartCtrl extends Controller {
 				cbj.put("permittedUser", cb.getPermittedUser());
 				cbj.put("permissionDisplay", cb.getPermissionDisplay());
 				//TODO: change to get user from cookies db?
-				ProfileBean owner = HibernateUtilities.searchEmployeeById(cb
+				ProfileBean owner = null;
+				if(null!=cb.getOwnerID())owner = HibernateUtilities.searchEmployeeById(cb
 						.getOwnerID());
 				cbj.put("OwnerName",
 						null == owner ? "(UNKNOWN USER)" : owner.getWholeName());
@@ -67,15 +74,16 @@ public class ChartCtrl extends Controller {
 							.toString());
 				}
 
-				if (null == cb.getEditUser()) {
+				if (null == cb.getEditUserId()) {
 					cbj.put("editUser", " ");
 					cbj.put("CUName", " ");
 				} else {
-					ProfileBean cu = HibernateUtilities.searchEmployeeById(cb
-							.getEditUser());
-					cbj.put("editUser", String.valueOf(cb.getEditUser()));
+					ProfileBean cu = null;
+					if(null!=cb.getEditUserId())cu = HibernateUtilities.searchEmployeeById(cb
+							.getEditUserId());
+					cbj.put("editUser", String.valueOf(cb.getEditUserId()));
 					cbj.put("CUName",
-							null == cu ? "(DELETED EMPLOYEE)" : cu.getWholeName());
+							null == cu ? "(UNKNOWN USER)" : cu.getWholeName());
 				}
 				chartsJson.add(cbj);
 			}
@@ -89,10 +97,9 @@ public class ChartCtrl extends Controller {
 	}
 
 	@SubjectPresent
-	public static Result getChart(String id) {
+	public static Result getChart(String id){
 		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
-		// Read XML from storage
-		String input = "";
+		// Read ChartBean from storage
 		if (Setting.STORAGE == StorageSetting.HIBERNATE) {
 			String chartId = request().getQueryString("chartid");
 			if (null == chartId || chartId.equals("")) {
@@ -100,6 +107,33 @@ public class ChartCtrl extends Controller {
 			}
 			try {
 				System.out.println("ChartCtrl@getChart: chartid=" + chartId);
+				HibernateUtilities.getFactory();
+				ChartBean chartBean = HibernateUtilities
+						.searchChartByUUID(chartId);
+
+				if(isUserReadChartAllowed(chartBean, ocu)){
+					return ok(parseChartbeanToJsonObjectNode(chartBean));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				return badRequest();
+			}
+		}
+		Logger.info("ChartCtrl@getChart");
+		return forbidden(" Permission Denied : You don't have permission to access this chart! ");
+	}
+
+	@SubjectPresent
+	public static Result getChartXML(String id) {
+		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+		// Read XML from storage
+		if (Setting.STORAGE == StorageSetting.HIBERNATE) {
+			String chartId = request().getQueryString("chartid");
+			if (null == chartId || chartId.equals("")) {
+				chartId = Setting.DefaultData.ChartId_default;
+			}
+			try {
+				System.out.println("ChartCtrl@getChartXML: chartid=" + chartId);
 				HibernateUtilities.getFactory();
 				ChartBean chartBean = HibernateUtilities
 						.searchChartByUUID(chartId);
@@ -114,59 +148,11 @@ public class ChartCtrl extends Controller {
 		}
 		// session("empchart", "<ul id='org' style='display:none'>" + input
 		// + "</ul>");
-		Logger.info("ChartCtrl@getChart");
+		Logger.info("ChartCtrl@getChartXML");
 		return forbidden(" Permission Denied : You don't have permission to access this chart! ");
 	}
 
-	private static boolean isUserReadChartAllowed(ChartBean chartBean, OrgChartUser ocu){
-//		Logger.debug("ChartCtrl@isUserReadChartAllowed chartBean="+chartBean+", ocu="+ocu);
-		//if owner, private would go through here
-		if(chartBean.getOwnerID().equals(ocu.getIdentifier())){
-//			Logger.debug("ChartCtrl@isUserReadChartAllowed >> is owner");
-			return true;
-		}
-		// Check roles, admin can do anything
-		for(Role r : ocu.getRoles()){
-			if(r.getName().equals(OrgChartRoleType.ADMIN)){
-//				Logger.debug("ChartCtrl@isUserReadChartAllowed >> is admin");
-				return true;
-			}
-		}
-		// Check specified permission
-		if(chartBean.getPermission().equals(ChartBean.PERMISSION_SPECIFIED)){
-			for(String sid : chartBean.getPermittedUser().split(";")){
-				if(sid.equals(ocu.getIdentifier())){
-//					Logger.debug("ChartCtrl@isUserReadChartAllowed >> is specified");
-					return true;
-				}
-			}
-			// Lowest permission required - public
-		}else if(chartBean.getPermission().equals(ChartBean.PERMISSION_OPTIONS[0])){
-//			Logger.debug("ChartCtrl@isUserReadChartAllowed >> is public");
-			return true;
-		}else{
-			Logger.error("ChartCtrl@isUserReadChartAllowed unknown chart permission : "+chartBean.getPermission());
-		}
-		return false;
-	}
-
-	private static boolean isUserWriteChartAllowed(ChartBean chartBean, OrgChartUser ocu){
-		// Check roles, admin can do everything.
-		for(Role r : ocu.getRoles()){
-			if(r.getName().equals(OrgChartRoleType.ADMIN)){
-				return true;
-			}
-		}
-		// User can write chart that has read access.
-		for(Role r : ocu.getRoles()){
-			if(r.getName().equals(OrgChartRoleType.ADMIN)){
-				return isUserReadChartAllowed(chartBean, ocu);
-			}
-		}
-		// Readonly
-		return false;
-	}
-
+	@SubjectPresent
 	public static Result checkChartName(String chartName) {
 		try {
 			System.out.println("ChartCtrl@checkChartName: chartName=" + chartName);
@@ -179,6 +165,7 @@ public class ChartCtrl extends Controller {
 		return ok();
 	}
 
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result createChart() {
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.hasErrors()) {
@@ -215,6 +202,7 @@ public class ChartCtrl extends Controller {
 				return internalServerError("ChartCtrl@createChart");
 			}
 		}
+//		return forbidden(" Permission Denied : You don't have permission to create chart! ");
 	}
 
 	/**
@@ -222,6 +210,7 @@ public class ChartCtrl extends Controller {
 	 * 
 	 * @return
 	 */
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result updateChart() {
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.hasErrors()) {
@@ -238,17 +227,21 @@ public class ChartCtrl extends Controller {
 					return badRequest("Chart not exist, try to refresh data.\nChartCtrl@updateChart\n"
 							+ form.get().toString());
 				}
-				cb.setChartName(chart_name);
-				cb.setOwnerID(chart_ownerid);
-				cb.setPermission(chart_permission);
-				cb.setPermittedUser(chart_permitteduser);
-				cb.setTimeLastModifiedNow();
-				if (cb.isValid()) {
-					HibernateUtilities.saveOrUpdateChart(cb);
-					return ok(parseChartbeanToJsonObjectNode(cb));
-				} else {
-					return badRequest("Invalid chart parameters\nChartCtrl@updateChart\n"
-							+ form.get().toString());
+
+				OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+				if(isUserWriteChartAllowed(cb, ocu)){
+					cb.setChartName(chart_name);
+					cb.setOwnerID(chart_ownerid);
+					cb.setPermission(chart_permission);
+					cb.setPermittedUser(chart_permitteduser);
+					cb.setTimeLastModifiedNow();
+					if (cb.isValid()) {
+						HibernateUtilities.saveOrUpdateChart(cb);
+						return ok(parseChartbeanToJsonObjectNode(cb));
+					} else {
+						return badRequest("Invalid chart parameters\nChartCtrl@updateChart\n"
+								+ form.get().toString());
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -258,8 +251,10 @@ public class ChartCtrl extends Controller {
 						+ form.get().toString());
 			}
 		}
+		return forbidden(" Permission Denied : You don't have permission to edit this chart! ");
 	}
 
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result updateChartXML() {
 		System.out.println("ChartCtrl@updateChartXML>>");
 		DynamicForm form = Form.form().bindFromRequest();
@@ -269,9 +264,12 @@ public class ChartCtrl extends Controller {
 			HibernateUtilities.getFactory();
 			ChartBean chartBean = HibernateUtilities.searchChartByUUID(chartId);
 			if (null != chartBean && null != update_str) {
-				chartBean.setXmlString(update_str);
-				HibernateUtilities.saveOrUpdateChart(chartBean);
-				return ok();
+				OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+				if(isUserWriteChartAllowed(chartBean, ocu)){
+					chartBean.setXmlString(update_str);
+					HibernateUtilities.saveOrUpdateChart(chartBean);
+					return ok();
+				}
 			} else {
 				return notFound(chartId);
 			}
@@ -281,8 +279,10 @@ public class ChartCtrl extends Controller {
 			return internalServerError("ChartCtrl@updateChartXML\n"
 					+ form.get().toString());
 		}
+		return forbidden(" Permission Denied : You don't have permission to edit this chart! ");
 	}
 
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result deleteChart(String id) {
 		System.out.println("ChartCtrl@deleteChart>> id="+id);
 		DynamicForm form = Form.form().bindFromRequest();
@@ -291,17 +291,21 @@ public class ChartCtrl extends Controller {
 		} else {
 			String chart_id = null != id ? id : form.get("chartid");
 			try {
-				int ret = HibernateUtilities.deleteChartByUUID(chart_id);
-				switch (ret) {
-				case -1:
-					return badRequest("chart id not exist.\nChartCtrl@deleteChart\n");
-				case 0:
-					return internalServerError("Hibernate Error\nChartCtrl@deleteChart\n");
-				case 1:
-					return ok();
-
-				default:
-					return internalServerError("Unkown Error\nChartCtrl@deleteChart\n");
+				HibernateUtilities.getFactory();
+				ChartBean chartBean = HibernateUtilities.searchChartByUUID(chart_id);
+				OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+				if(isUserWriteChartAllowed(chartBean, ocu)){
+					int ret = HibernateUtilities.deleteChartByUUID(chart_id);
+					switch (ret) {
+						case -1:
+							return badRequest("chart id not exist.\nChartCtrl@deleteChart\n");
+						case 0:
+							return internalServerError("Hibernate Error\nChartCtrl@deleteChart\n");
+						case 1:
+							return ok();
+						default:
+							return internalServerError("Unkown Error\nChartCtrl@deleteChart\n");
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -310,6 +314,7 @@ public class ChartCtrl extends Controller {
 						+ form.get().toString());
 			}
 		}
+		return forbidden(" Permission Denied : You don't have permission to delete this chart! ");
 	}
 
 	/**
@@ -334,15 +339,73 @@ public class ChartCtrl extends Controller {
 			cbj.put("timeLastModified", cb.getTimeLastModified().toString());
 		}
 
-		if (null == cb.getEditUser()) {
+		if (null == cb.getEditUserId()) {
 			cbj.put("editUser", " ");
 			cbj.put("CUName", " ");
 		} else {
 			ProfileBean cu = HibernateUtilities.searchEmployeeById(cb
-					.getEditUser());
-			cbj.put("CUName", null == cu ? "(DELETED EMPLOYEE)" : cu.getWholeName());
+					.getEditUserId());
+			cbj.put("editUser", cb.getEditUserId());
+			cbj.put("CUName", null == cu ? "(UNKNOWN USER)" : cu.getWholeName());
 		}
 		return cbj;
+	}
+
+
+
+	private static boolean isUserReadChartAllowed(ChartBean chartBean, OrgChartUser ocu){
+		if(null==ocu){
+			return false;
+		}
+//		Logger.debug("ChartCtrl@isUserReadChartAllowed chartBean="+chartBean+", ocu="+ocu);
+		//if owner, private would go through here
+		if(chartBean.getOwnerID().trim().equals(ocu.getIdentifier().trim())){
+//			Logger.debug("ChartCtrl@isUserReadChartAllowed >> is owner");
+			return true;
+		}
+		// Check roles, admin can do anything
+		for(Role r : ocu.getRoles()){
+			if(r.getName().equals(OrgChartRoleType.ADMIN)){
+//				Logger.debug("ChartCtrl@isUserReadChartAllowed >> is admin");
+				return true;
+			}
+		}
+		// Check specified permission
+		if(chartBean.getPermission().equals(ChartBean.PERMISSION_SPECIFIED)){
+			for(String sid : chartBean.getPermittedUser().split(";")){
+				if(sid.equals(ocu.getIdentifier())){
+//					Logger.debug("ChartCtrl@isUserReadChartAllowed >> is specified");
+					return true;
+				}
+			}
+			// Lowest permission required - public
+		}else if(chartBean.getPermission().equals(ChartBean.PERMISSION_OPTIONS[0])){
+//			Logger.debug("ChartCtrl@isUserReadChartAllowed >> is public");
+			return true;
+		}else{
+			Logger.error("ChartCtrl@isUserReadChartAllowed unknown chart permission : "+chartBean.getPermission());
+		}
+		return false;
+	}
+
+	private static boolean isUserWriteChartAllowed(ChartBean chartBean, OrgChartUser ocu){
+		if(null==ocu){
+			return false;
+		}
+		// Check roles, admin can do everything.
+		for(Role r : ocu.getRoles()){
+			if(r.getName().equals(OrgChartRoleType.ADMIN)){
+				return true;
+			}
+		}
+		// User can write chart that has read access.
+		for(Role r : ocu.getRoles()){
+			if(r.getName().equals(OrgChartRoleType.ADMIN)){
+				return isUserReadChartAllowed(chartBean, ocu);
+			}
+		}
+		// Readonly
+		return false;
 	}
 
 }

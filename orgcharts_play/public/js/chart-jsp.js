@@ -31,7 +31,7 @@ function ajax0() {
         data: {
             chartid: chartid
         },
-        url: "../chart/"+chartid,
+        url: "../chart/xml/"+chartid,
         success: function(respose, text, xhr) {
             //if(respose!=$('#org').html()){
             //alert("in here");
@@ -49,7 +49,6 @@ function ajax0() {
         },
         error: function(msg) {
             alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
-            //location.reload();
         }
     });
 }
@@ -390,7 +389,8 @@ $(document).on("ready", function() {
 
 
     // Add Node
-    $(".add").live("click", function() {
+    $(".add").live("click", function(e) {
+        e.stopPropagation();
         click_flag = false;
         node_type = "";
         classList = $(this).parent().parent().attr('class').split(/\s+/);
@@ -866,25 +866,56 @@ $(document).on("ready", function() {
 
 
 
-  // Update Chart
-  $("#update_button").click(function() {
-    var updatestrg = $('#org').html();
-    $.ajax({
-      type: 'Post',
-      dataType: 'text',
-      data: {
-        chartid: chartid,
-        UptString: updatestrg
-      },
-      url: '../chart/xml/',
-      success: function(respose, text, xhr) {
-        alert("Successfully Saved");
-        //location.reload();
-      },
-      error: function(xhr, textstatus, ethrown) {
-        alert(textstatus + ", " + ethrown);
+    // Update Chart
+    $("#update_button").click(function() {
+        var updatestrg = $('#org').html();
+        $.ajax({
+          type: 'Post',
+          dataType: 'text',
+          data: {
+            chartid: chartid,
+            UptString: updatestrg
+          },
+          url: '../chart/xml/',
+          success: function(respose, text, xhr) {
+            alert("Successfully Saved");
+            //location.reload();
+          },
+          error: function(msg) {
+              alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+          }
+        });
+    });
+
+  
+    // Enable edit button
+    $("#editSwitch").bootstrapSwitch();
+    $("#editSwitch").on('switch-change', function (e, data) {
+      var $element = $(data.el),
+      value = data.value;
+      if(value===true){
+        function ajaxRequestPermission() {
+          return $.ajax({
+            type: "GET",
+            data: {
+                edit: "enable",
+                chartid: chartid
+            },
+            url: "../chart/edit/",
+            success: function(respose, text, xhr) {
+                //alert(text+","+respose);
+            },
+            error: function(xhr, textstatus, ethrown) {
+                alert(textstatus + ", " + ethrown + xhr.status);
+                //location.reload();
+            }
+          });
+        }
+      }else if(value===false){
+
+      }else{
+        console.log("#editSwitch ERROR: "+e, $element, value);
       }
     });
-  });
 
 });

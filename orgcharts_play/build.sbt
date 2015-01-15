@@ -2,7 +2,7 @@ import com.github.play2war.plugin._
 
 name := """OrgCharts"""
 
-version := "0.6"
+version := "0.8"
 
 Play2WarPlugin.play2WarSettings
 
@@ -15,6 +15,7 @@ scalaVersion := "2.11.1"
 libraryDependencies ++= Seq(
   "be.objectify"  %% "deadbolt-java"     % "2.3.2",
   "com.feth"      %% "play-authenticate" % "0.6.8",
+  // "joda-time" %% "joda-time" % "2.7",
   javaJdbc,
   javaEbean,
   cache,

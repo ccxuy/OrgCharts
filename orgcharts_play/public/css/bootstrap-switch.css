@@ -211,6 +211,7 @@
   width: 33%;
 }
 .has-switch span.switch-left {
+  float:left;
   -webkit-border-top-left-radius: 4px;
   -moz-border-radius-topleft: 4px;
   border-top-left-radius: 4px;

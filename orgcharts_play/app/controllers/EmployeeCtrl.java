@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import be.objectify.deadbolt.java.actions.Group;
+import be.objectify.deadbolt.java.actions.Restrict;
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -14,6 +17,7 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Result;
+import security.OrgChartRoleType;
 import utilities.HibernateUtilities;
 import beans.ChartBean;
 import beans.ProfileBean;
@@ -32,6 +36,7 @@ public class EmployeeCtrl extends Controller {
 	}
 
 	@BodyParser.Of(BodyParser.Json.class)
+	@SubjectPresent
 	public static Result getAllEmployee() {
 		try {
 			HibernateUtilities.getFactory();
@@ -54,6 +59,7 @@ public class EmployeeCtrl extends Controller {
 	 * @deprecated
 	 */
 	@Deprecated
+	@SubjectPresent
 	public static Result getAllEmployeeNameList() {
 		try {
 			HibernateUtilities.getFactory();
@@ -82,6 +88,7 @@ public class EmployeeCtrl extends Controller {
 	 * @deprecated
 	 */
 	@Deprecated
+	@SubjectPresent
 	public static Result getEmployeeEditData() {
 		try {
 			String empId = request().getQueryString("empId");
@@ -109,6 +116,7 @@ public class EmployeeCtrl extends Controller {
 		}
 	}
 
+	@SubjectPresent
 	public static Result getEmployee(String id) {
 		// Read XML from storage
 		String input = "";
@@ -134,6 +142,7 @@ public class EmployeeCtrl extends Controller {
 		return ok(input);
 	}
 
+	@SubjectPresent
 	public static Result getEmployeeImage() {
 		try {
 			HibernateUtilities.getFactory();
@@ -157,6 +166,7 @@ public class EmployeeCtrl extends Controller {
 		return badRequest();
 	}
 
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result createEmployee() {
 		try {
 			HibernateUtilities.getFactory();
@@ -202,6 +212,7 @@ public class EmployeeCtrl extends Controller {
 		}
 	}
 
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result updateEmployee() {
 		System.out.println("EmployeeCtrl@updateEmployee>>");
 		try {
@@ -248,6 +259,7 @@ public class EmployeeCtrl extends Controller {
 		}
 	}
 
+	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
 	public static Result deleteEmployee(String id) {
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.hasErrors()) {

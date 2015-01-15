@@ -1,5 +1,6 @@
 package controllers;
 
+import be.objectify.deadbolt.java.actions.SubjectPresent;
 import com.feth.play.module.pa.PlayAuthenticate;
 
 import be.objectify.deadbolt.java.actions.Group;
@@ -29,17 +30,20 @@ public class Application extends Controller {
         final OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         return ocu;
     }
-    
+
+    @SubjectPresent
     public static Result ocsDashboard() {
         int numCharts = 0;
         int numEmployees = 0;
         return ok(views.html.manageIndex.render());
     }
-    
+
+    @SubjectPresent
     public static Result ocsCharts() {
         return ok(views.html.manageChart.render());
     }
-    
+
+    @SubjectPresent
     public static Result ocsEmployees() {
         return ok(views.html.manageEmployee.render());
     }
@@ -55,7 +59,7 @@ public class Application extends Controller {
     public static Result loginAsAdmin() {
     	session().clear();
         session("fakelogin", "admin");
-        session("shortname", "Tony");
+        session("shortname", "tony");
 //        return PlayAuthenticate.loginAndRedirect(ctx(),new NyAuthUser());
         OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.ADMIN.toString());
         Logger.debug("Application@loginAsAdmin isLoggedIn="+PlayAuthenticate.isLoggedIn(session()));
@@ -67,12 +71,21 @@ public class Application extends Controller {
 //    	PlayAuthenticate.handleAuthentication(NyGovUsernameAuthProvider.PROVIDER_KEY, ctx(), arg2);
       return ok(views.html.tmp.render("Application@loginAsAdmin"));
     }
-    
+
     //TODO: disable this function in real application
     public static Result loginAsUser() {
         session().clear();
         session("fakelogin", "user");
         session("shortname", "yxx03");
+        OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.USER.toString());
+        return ok(views.html.tmp.render("Application@loginAsUser"));
+    }
+
+    //TODO: disable this function in real application
+    public static Result loginAsUser2() {
+        session().clear();
+        session("fakelogin", "user");
+        session("shortname", "arul");
         OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.USER.toString());
         return ok(views.html.tmp.render("Application@loginAsUser"));
     }

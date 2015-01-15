@@ -23,7 +23,7 @@
   <property generated="never" lazy="false" name="version" type="int">
    <column name="VERSION"/>
   </property>
-  <property generated="never" lazy="false" name="editUser" type="int">
+  <property generated="never" lazy="false" name="editUserId" type="java.lang.String">
    <column name="EDIT_USER"/>
   </property>
   <property generated="never" lazy="false" name="permission" type="java.lang.String">

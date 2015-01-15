@@ -8,6 +8,7 @@ GET     /                           controllers.Application.index()
 # Authentication
 GET     /loginadmin                      controllers.Application.loginAsAdmin
 GET     /loginuser                      controllers.Application.loginAsUser
+GET     /loginuser2                      controllers.Application.loginAsUser2
 GET     /loginreadonly                      controllers.Application.loginAsReadonly
 
 GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
@@ -22,6 +23,7 @@ GET     /manage-employee/                  controllers.Application.ocsEmployees(
 GET     /chart/                               controllers.ChartCtrl.index()
 GET     /chart/all/                           controllers.ChartCtrl.getAllChart()
 GET     /chart/:id                            controllers.ChartCtrl.getChart(id: String)
+GET     /chart/xml/:id                        controllers.ChartCtrl.getChartXML(id: String)
 POST    /chart/                               controllers.ChartCtrl.createChart
 PUT     /chart/                               controllers.ChartCtrl.updateChart()
 DELETE  /chart/:id                            controllers.ChartCtrl.deleteChart(id: String)

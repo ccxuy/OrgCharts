@@ -1,5 +1,8 @@
 @(wrapperContent: Html)
 
+@import be.objectify.deadbolt.java.views.html._
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,13 +56,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">Organization Chart System beta v0.6</a>
+                <a class="navbar-brand" href="@routes.Application.index()">Organization Chart System beta v0.8</a>
             </div>
             <!-- /.navbar-header -->
 
             <ul class="nav navbar-top-links navbar-right">
-                <!-- /.dropdown -->
-                <li class="dropdown">
+                <!-- <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
                     </a>
@@ -98,23 +100,26 @@
                             </a>
                         </li>
                     </ul>
-                    <!-- /.dropdown-alerts -->
-                </li>
+                    //.dropdown-alerts
+                </li> -->
                 <!-- /.dropdown -->
                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i> Tony Yan
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
+                    @defining(Application.getLoginUser(session())) { user =>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                            @user.getUserInfo().getFullname() (@user.getIdentifier())
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <!-- <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                            </li>
+                            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                            </li>
+                            <li class="divider"></li> -->
+                            <li><a href="@com.feth.play.module.pa.controllers.routes.Authenticate.logout()"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    }
                 </li>
                 <!-- /.dropdown -->
             </ul>
@@ -132,7 +137,6 @@
                                     </button>
                                 </span>
                             </div>
-                            <!-- /input-group -->
                         </li>
                         <li>
                             <a href="@routes.Application.ocsDashboard()"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
@@ -146,9 +150,9 @@
                         <!-- <li>
                             <a href="#"><i class="fa fa-table fa-fw"></i> Data</a>
                         </li> -->
-                        <li>
+                        <!-- <li>
                             <a href="#"><i class="fa fa-wrench fa-fw"></i> System Administration</a>
-                        </li>
+                        </li> -->
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->

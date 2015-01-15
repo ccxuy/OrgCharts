@@ -19,7 +19,7 @@ public class ChartBean {
 	Clob xml;
 	Timestamp timeLastModified;
 	Integer version;
-	Integer editUser;
+	String editUserId;
 
 	@JsonIgnore
 	public final static String PERMISSION_SPECIFIED = "specified";
@@ -59,7 +59,7 @@ public class ChartBean {
 		this.chartName = chart_name;
 		this.setXmlDefault();
 		this.setTimeLastModifiedNow();
-		this.editUser = null;
+		this.editUserId = "";
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class ChartBean {
 	 * @param edit_user
 	 */
 	public ChartBean(String uuid, String owner_id, String chart_name, Clob xml,
-			Timestamp create_time, Integer version, Integer edit_user) {
+			Timestamp create_time, Integer version, String edit_user) {
 		super();
 		this.uuid = uuid;
 		this.ownerID = owner_id;
@@ -82,7 +82,7 @@ public class ChartBean {
 		this.xml = xml;
 		this.timeLastModified = create_time;
 		this.version = version;
-		this.editUser = edit_user;
+		this.editUserId = "";
 	}
 
 	public String getUuid() {
@@ -164,12 +164,12 @@ public class ChartBean {
 		this.version = version;
 	}
 
-	public Integer getEditUser() {
-		return editUser;
+	public String getEditUserId() {
+		return editUserId;
 	}
 
-	public void setEditUser(Integer editUser) {
-		this.editUser = editUser;
+	public void setEditUserId(String editUserId) {
+		this.editUserId = editUserId;
 	}
 
 	public String getPermission() {
@@ -215,7 +215,7 @@ public class ChartBean {
 				+ ", permission=" + permission + ", PERMISSION_OPTIONS="
 				+ Arrays.toString(PERMISSION_OPTIONS) + ", permittedUser="
 				+ permittedUser + ", timeLastModified=" + timeLastModified
-				+ ", version=" + version + ", editUser=" + editUser
+				+ ", version=" + version + ", editUserId=" + editUserId
 				+ ", ownerID=" + ownerID + ", xml=" + getXmlString() + "]";
 	}
 
