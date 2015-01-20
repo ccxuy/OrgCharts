@@ -288,7 +288,7 @@ $(document).on("ready", function() {
     var add_to_node, del_node, classList;
 
 
-    // Edit node
+    // Edit node icon
     $(".edit").live("click", function(e) {
         classList = $(this).parent().parent().attr('class').split(/\s+/);
         $.each(classList, function(index, item) {
@@ -346,6 +346,35 @@ $(document).on("ready", function() {
     });
 
 
+    // Add Node
+    $(".add").live("click", function(e) {
+        e.stopPropagation();
+        click_flag = false;
+        node_type = "";
+        classList = $(this).parent().parent().attr('class').split(/\s+/);
+        $.each(classList, function(index, item) {
+            if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
+                add_to_node = item;
+            }
+        });
+    }).fancybox({
+        maxWidth: 550,
+        maxHeight: 300,
+        fitToView: false,
+        width: '70%',
+        height: '70%',
+        autoSize: false,
+        closeClick: false,
+        openEffect: 'elastic',
+        closeEffect: 'elastic',
+        afterClose: function() {
+            click_flag = true;
+            reset_forms();
+        }
+    });
+
+
+    // Edit node details
     $("input[type=button][id=edit_node]").click(function() {
         if (node_type == "unit") {
             var unitname_field = $("#edit_unit_name");
@@ -384,34 +413,6 @@ $(document).on("ready", function() {
 
         $.fancybox.close();
         init_tree();
-    });
-
-
-    // Add Node
-    $(".add").live("click", function(e) {
-        e.stopPropagation();
-        click_flag = false;
-        node_type = "";
-        classList = $(this).parent().parent().attr('class').split(/\s+/);
-        $.each(classList, function(index, item) {
-            if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
-                add_to_node = item;
-            }
-        });
-    }).fancybox({
-        maxWidth: 550,
-        maxHeight: 300,
-        fitToView: false,
-        width: '70%',
-        height: '70%',
-        autoSize: false,
-        closeClick: false,
-        openEffect: 'elastic',
-        closeEffect: 'elastic',
-        afterClose: function() {
-            click_flag = true;
-            reset_forms();
-        }
     });
 
     $("input[type=radio][name=chart_type]").click(function() {
@@ -795,8 +796,20 @@ $(document).on("ready", function() {
                 del_node = item;
             }
         });
+
+        node_type = "";
+        $.each(classList, function(index, item) {
+            if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
+                del_node = item;
+                console.log(del_node);
+            }
+            if (item == "position" || item == "unit") {
+                node_type = item;
+            }
+        });
+
         node_to_edit = $("li." + del_node + ":not('.temp')");
-        //concider removing only if node is not a position node with an employee in it
+        //consider removing only if node is not a position node with an employee in it
         if (node_to_edit.attr("id") == null) {
             if (node_to_edit.children('ul').children().length == 0) {
                 //if node is a leaf node remove the node completely
@@ -806,9 +819,17 @@ $(document).on("ready", function() {
                 node_to_edit.removeData();
                 adjustChildren($ul, childNum, 0);
             } else {
-                //if node is not leaf node remove all information but keep the actural node
-                node_to_edit.children("span").remove();
-                node_to_edit.children("div:not('.opciones')").remove();
+                // if node is not leaf node remove all information but keep the actural node
+                // node_to_edit.children("span").remove();
+                // node_to_edit.children("div:not('.opciones')").remove();
+                if (node_type == "unit") {
+                    node_to_edit.find("> .label_node[id=un]").text("");
+                    node_to_edit.find("> .label_node[id=ud]").text("");
+                }
+                if (node_type == "position") {
+                    node_to_edit.find("> .label_node[id=pn]").text("");
+                    node_to_edit.find("> .label_node[id=pd]").text("");
+                }
             }
             init_tree();
         }
