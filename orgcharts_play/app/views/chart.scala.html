@@ -1,3 +1,5 @@
+@(chartBean: beans.ChartBean)
+
 <!DOCTYPE html>
 <html>
 
@@ -7,12 +9,12 @@
   <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
   
-  <link rel="stylesheet" href="assets/css/chart-bootstrap.min.css" />
-  <link rel="stylesheet" href="assets/css/chart-jquery.jOrgChart.css" />
-  <link rel="stylesheet" href="assets/css/chart-custom.css" />
-  <link href="assets/css/chart-prettify.css" type="text/css" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/fancybox/jquery.fancybox.css" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="assets/css/chart-custom.form.css" media="all" />
+  <link rel="stylesheet" href="@routes.Assets.at("css/chart-bootstrap.min.css")" />
+  <link rel="stylesheet" href="@routes.Assets.at("css/chart-jquery.jOrgChart.css")" />
+  <link rel="stylesheet" href="@routes.Assets.at("css/chart-custom.css")" />
+  <link href="@routes.Assets.at("css/chart-prettify.css")" type="text/css" rel="stylesheet" />
+  <link rel="stylesheet" href="@routes.Assets.at("fancybox/jquery.fancybox.css")" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("css/chart-custom.form.css")" media="all" />
 
 
   <!-- jQuery includes -->
@@ -21,37 +23,42 @@
   <!-- jQuery autocomplete stylesheet -->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
   <!-- Bootstrap switch -->
-  <!-- <link rel="stylesheet" href="css/bootstrap-switch.css"> -->
+  <link rel="stylesheet" href="@routes.Assets.at("css/bootstrap-switch.css")">
+  <script type="text/javascript" src="@routes.Assets.at("js/bootstrap-switch.js")"></script>
   <!-- Knockout.js -->
   <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.2.0.js'></script>
 
-  <script type="text/javascript" src="assets/js/chart-prettify.js"></script>
+  <script type="text/javascript" src="@routes.Assets.at("js/chart-prettify.js")"></script>
 
 
   <!-- <script type="text/javascript" src="js/bootstrap-switch.js"></script> -->
   <!-- jQuery Form Plugin -->
   <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
-  <script type="text/javascript" src="assets/fancybox/jquery.fancybox.js"></script>
-  <script src="assets/js/chart-jquery.jOrgChart.js"></script>
-  <script src="assets/js/chart-jsp.js"></script>
+  <script type="text/javascript" src="@routes.Assets.at("fancybox/jquery.fancybox.js")"></script>
+  <script src="@routes.Assets.at("js/chart-jquery.jOrgChart.js")"></script>
+  <script src="@routes.Assets.at("js/chart-jsp.js")"></script>
 </head>
 
 <body onload="prettyPrint();">
   <div class="topbar">
     <div class="topbar-inner">
-      <div class="container">
+      <div class="container" style="width: auto;">
+        <ul class="nav">
+          <li><a href="@routes.Application.ocsCharts()" class="pull-left">Back</a></li>
+          <li class="divider-vertical"></li>
+        </ul>
         <a class="brand" href="#"><!-- <%=chartBean.getChartName()%> --></a>
-        <!-- <div class="pull-right">
-          <input type="checkbox" name="edit-checkbox" checked>
-        </div> -->
-        <div></div>
         <div class="pull-right">
           <div class="alert-message info" id="update_button">Save Chart</div>
         </div>
         <div></div>
         <div class="pull-right">
-          <div class="alert-message info" id="show-list">Show List</div>
+          <div class="alert-message info" id="show-list">XML</div>
           <pre class="prettyprint lang-html" id="list-html" style="display:none"></pre> 
+        </div>
+        <div></div>
+        <div style="margin-top: 4px;" class="pull-right">
+          <input id="editSwitch" data-on="success" data-off="danger"type="checkbox" name="edit-checkbox" data-text-label="EDIT">
         </div>
       </div>
     </div>

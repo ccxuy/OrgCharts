@@ -207,7 +207,7 @@
             "rowCallback": function(row, data) {
                     // generate hyperlink for chart name column
                     if (data["uuid"] != "") {
-                        $('td:eq(0)', row).html('<a href="../assets/chart.html?chartid=' + data["uuid"] + '">' + data["chartName"] + '</a>');
+                        $('td:eq(0)', row).html('<a href="@routes.ChartCtrl.showChart()?chartid=' + data["uuid"] + '">' + data["chartName"] + '</a>');
                     }
                 }
                 // ,

@@ -87,4 +87,13 @@ public class OrgChartUser implements Subject, UserInfoIntegration {
 				", userInfo=" + userInfo +
 				'}';
 	}
+
+	public boolean isAdmin(){
+		for (Role r : this.getRoles()) {
+			if (r.getName().equals(OrgChartRoleType.ADMIN)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

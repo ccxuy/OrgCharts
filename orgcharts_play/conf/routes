@@ -21,8 +21,10 @@ GET     /manage-employee/                  controllers.Application.ocsEmployees(
 
 # Charts
 GET     /chart/                               controllers.ChartCtrl.index()
+GET     /chart/show/                          controllers.ChartCtrl.showChart()
 GET     /chart/all/                           controllers.ChartCtrl.getAllChart()
 GET     /chart/:id                            controllers.ChartCtrl.getChart(id: String)
+GET     /chart/edit/:id                       controllers.ChartCtrl.requestChartEdit(id: String)
 GET     /chart/xml/:id                        controllers.ChartCtrl.getChartXML(id: String)
 POST    /chart/                               controllers.ChartCtrl.createChart
 PUT     /chart/                               controllers.ChartCtrl.updateChart()

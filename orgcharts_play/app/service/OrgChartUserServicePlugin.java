@@ -38,8 +38,10 @@ public class OrgChartUserServicePlugin extends UserServicePlugin {
 //		} else {
 //			return null;
 //		}
-        final OrgChartUser u = new OrgChartUser();
-		return u.getIdentifier();
+//        final OrgChartUser u = new OrgChartUser();
+//		return u.getIdentifier();
+		// We don't need to save user in requirement.
+		return identity.getId();
 	}
 
 	@Override

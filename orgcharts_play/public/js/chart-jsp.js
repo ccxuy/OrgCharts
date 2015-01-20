@@ -6,18 +6,17 @@ $.ajaxSetup({
 // For image ajax.
 // var baseurl = window.location.protocol+"//"+window.location.host+"/"+window.location.pathname.split("/")[1]+"/";
 var url = window.location.href;
-var baseurl = url.substring(0,url.lastIndexOf('/')+1);
+var baseurl = url.substring(0, url.lastIndexOf('/') + 1);
 var chartid = getUrlParameter('chartid');
+var chartRestUrlBase = "../";
 // alert(baseurl);
 
-function getUrlParameter(sParam){
+function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) 
-    {
+    for (var i = 0; i < sURLVariables.length; i++) {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
-        {
+        if (sParameterName[0] == sParam) {
             return sParameterName[1];
         }
     }
@@ -31,7 +30,7 @@ function ajax0() {
         data: {
             chartid: chartid
         },
-        url: "../chart/xml/"+chartid,
+        url: chartRestUrlBase + "../chart/xml/" + chartid,
         success: function(respose, text, xhr) {
             //if(respose!=$('#org').html()){
             //alert("in here");
@@ -180,7 +179,7 @@ function get_emp(id, node) {
             data: {
                 empId: id
             },
-            url: "../employee/EditData/",
+            url: chartRestUrlBase + "../employee/EditData/",
             success: function(respose, text, xhr) {
                 //alert(text+","+respose);
                 //location.reload();
@@ -204,7 +203,7 @@ function get_emp(id, node) {
                 }
                 //image
                 if (respose.split(',')[3] != "null") {
-                    image = baseurl + "../employee/image/?empId=" + id;
+                    image = baseurl + chartRestUrlBase + "../employee/image/?empId=" + id;
                 } else {
                     image = "";
                 }
@@ -259,7 +258,7 @@ function get_emp(id, node) {
             //     .attr("imgurl",image)
             //     //.css("background-image","url('" + image + "&ts="+d.getTime() + "')")
             //     .appendTo(node);
-            node.attr("imgurl",image);
+            node.attr("imgurl", image);
 
             var nodeimage_icon = $('<i class="fa fa-picture-o node-image-icon"></i>')
                 .appendTo(node);
@@ -473,11 +472,11 @@ $(document).on("ready", function() {
 
                 //unit discription
                 $node.find("li").last().append(append_last)
-                // Add description no matter exist or not, so we can edit it later.
-                // if (last != "") {
-                //     //append_last = "<ul>" + append_last + "</ul>";
-                //     $node.find("li").last().append(append_last)
-                // }
+                    // Add description no matter exist or not, so we can edit it later.
+                    // if (last != "") {
+                    //     //append_last = "<ul>" + append_last + "</ul>";
+                    //     $node.find("li").last().append(append_last)
+                    // }
 
                 //node type
                 //append_type = "<ul>" + append_type + "</ul>"
@@ -558,7 +557,7 @@ $(document).on("ready", function() {
             $("#edit_employee").show();
             $("#fancy_new_employee").hide();
             $("#add_employee").hide();
-            $( "#edit_employee_radio" ).trigger( "click" );
+            $("#edit_employee_radio").trigger("click");
         } else {
             $("#edit_employee").hide();
             $("fancy_new_employee").hide();
@@ -597,7 +596,7 @@ $(document).on("ready", function() {
             function ajax3() {
                 return $.ajax({
                     type: "GET",
-                    url: "../employee/RetrieveEmpData/",
+                    url: chartRestUrlBase + "../employee/RetrieveEmpData/",
                     success: function(respose, text, xhr) {
                         emp_list = respose.split(",");
                     },
@@ -634,7 +633,7 @@ $(document).on("ready", function() {
         //alert("clicked");
         //alert(node_type);
         if ($(this).val() == "edit_employee") {
-            $(".emp-image").attr("src","");
+            $(".emp-image").attr("src", "");
             $("#fancy_new_employee").hide();
             $("#fancy_delete_employee").hide();
             var fn = "";
@@ -650,7 +649,7 @@ $(document).on("ready", function() {
                     data: {
                         empId: empId
                     },
-                    url: "../employee/EditData/",
+                    url: chartRestUrlBase + "../employee/EditData/",
                     success: function(respose, text, xhr) {
                         //alert(text+","+respose);
                         //location.reload();
@@ -679,12 +678,12 @@ $(document).on("ready", function() {
                     $("#edit_node_image").val(image);
                 }
                 var node = $("#chart").find("div." + add_to_node);
-                if(node.attr("imgurl")){
+                if (node.attr("imgurl")) {
                     imgurl = node.attr("imgurl");
                     //console.log("imgurl:"+imgurl);
-                    $(".emp-image").attr("src",imgurl);
+                    $(".emp-image").attr("src", imgurl);
                     $(".emp-image-box").show();
-                }else{
+                } else {
                     $(".emp-image-box").hide();
                 }
             });
@@ -709,23 +708,23 @@ $(document).on("ready", function() {
     });
 
     //add new employee
-    $('form#add_employee_form').submit(function (e){
+    $('form#add_employee_form').submit(function(e) {
         e.preventDefault();
         current_form = $(this)
 
         var formData = new FormData(this);
-        var $node  = $("li." + add_to_node + ":not('.temp')");
+        var $node = $("li." + add_to_node + ":not('.temp')");
         $.ajax({
             type: "POST",
-            url: "../employee/",
+            url: chartRestUrlBase + "../employee/",
             cache: false,
             data: formData,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             success: function(respose, text, xhr) {
-                console.log("AddEmployee>POST>AddNode.do:"+text+", "+respose);
+                console.log("AddEmployee>POST>AddNode.do:" + text + ", " + respose);
                 empId = respose.id;
-                if(empId>0){
+                if (empId > 0) {
                     current_form[0].reset();
                     $node.attr("id", empId);
                     var $div = $("#chart").find("div." + add_to_node);
@@ -733,16 +732,16 @@ $(document).on("ready", function() {
                     get_emp(empId, $div);
                     reset_forms();
                     $.fancybox.close();
-                }else{
-                    console.log("ERROR: AddEmployee> empId"+empId);
-                    alert("ERROR happened while AddEmployee: empId"+empId);
+                } else {
+                    console.log("ERROR: AddEmployee> empId" + empId);
+                    alert("ERROR happened while AddEmployee: empId" + empId);
                 }
             },
             error: function(xhr, textstatus, ethrown) {
-                alert(textstatus+", "+ethrown +xhr.status);
+                alert(textstatus + ", " + ethrown + xhr.status);
             }
         })
-        
+
 
         //return false;
     });
@@ -759,27 +758,27 @@ $(document).on("ready", function() {
     });
 
     //edit employee
-    $('form#edit_employee_form').submit(function (e){
+    $('form#edit_employee_form').submit(function(e) {
         e.preventDefault();
 
         var formData = new FormData(this);
-        var $node  = $("li." + add_to_node + ":not('.temp')");
+        var $node = $("li." + add_to_node + ":not('.temp')");
         empId = $node.attr("id");
         formData.append("emp_Id", empId);
         $.ajax({
             type: "PUT",
-            url: "../employee/",
+            url: chartRestUrlBase + "../employee/",
             cache: false,
             data: formData,
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             success: function(respose, text, xhr) {
-                console.log("EditEmployee>POST>EditNode.do:"+text+", "+respose);
+                console.log("EditEmployee>POST>EditNode.do:" + text + ", " + respose);
                 var $div = $("#chart").find("div." + add_to_node);
                 get_emp(empId, $div);
             },
             error: function(xhr, textstatus, ethrown) {
-                alert(textstatus+", "+ethrown +xhr.status);
+                alert(textstatus + ", " + ethrown + xhr.status);
             }
         })
 
@@ -870,52 +869,62 @@ $(document).on("ready", function() {
     $("#update_button").click(function() {
         var updatestrg = $('#org').html();
         $.ajax({
-          type: 'Post',
-          dataType: 'text',
-          data: {
-            chartid: chartid,
-            UptString: updatestrg
-          },
-          url: '../chart/xml/',
-          success: function(respose, text, xhr) {
-            alert("Successfully Saved");
-            //location.reload();
-          },
-          error: function(msg) {
-              alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
-          }
+            type: 'Post',
+            dataType: 'text',
+            data: {
+                chartid: chartid,
+                UptString: updatestrg
+            },
+            url: chartRestUrlBase + '../chart/xml/',
+            success: function(respose, text, xhr) {
+                alert("Successfully Saved");
+                //location.reload();
+            },
+            error: function(msg) {
+                alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+            }
         });
     });
 
-  
+
     // Enable edit button
     $("#editSwitch").bootstrapSwitch();
-    $("#editSwitch").on('switch-change', function (e, data) {
-      var $element = $(data.el),
-      value = data.value;
-      if(value===true){
-        function ajaxRequestPermission() {
-          return $.ajax({
+    $("#editSwitch").on('switch-change', function(e, data) {
+        // alert("now");
+        // e.preventDefault();
+        var $element = $(data.el),
+            value = data.value;
+        if (value === true) {
+            ajaxRequestPermission("enable");
+        } else if (value === false) {
+            ajaxRequestPermission("disable");
+        } else {
+            console.log("#editSwitch ERROR: " + e, $element, value);
+        }
+    });
+
+    //editString is either "enable" or "disable"
+    function ajaxRequestPermission(editString) {
+        $("#editSwitch").bootstrapSwitch('setDisabled', true);
+        return $.ajax({
             type: "GET",
             data: {
-                edit: "enable",
-                chartid: chartid
+                edit: editString
             },
-            url: "../chart/edit/",
+            url: chartRestUrlBase + "../chart/edit/" + chartid,
             success: function(respose, text, xhr) {
-                //alert(text+","+respose);
+                $("#editSwitch").bootstrapSwitch('setDisabled', false);
+                if (editString === "enable") {
+                    $("#editSwitch").bootstrapSwitch('state', true);
+                } else if (editString === "disable") {
+                    $("#editSwitch").bootstrapSwitch('state', false);
+                }
             },
             error: function(xhr, textstatus, ethrown) {
                 alert(textstatus + ", " + ethrown + xhr.status);
                 //location.reload();
             }
-          });
-        }
-      }else if(value===false){
-
-      }else{
-        console.log("#editSwitch ERROR: "+e, $element, value);
-      }
-    });
+        });
+    }
 
 });

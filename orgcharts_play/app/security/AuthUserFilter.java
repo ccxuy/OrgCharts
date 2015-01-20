@@ -37,8 +37,8 @@ public class AuthUserFilter implements EssentialFilter {
 //				request.cookies()
 //				Session session = (Session) Session.decodeFromCookie(request
 //						.headers().get(HeaderNames.COOKIE));
-                Session session = request.session();
-				Logger.info("AuthUserFilter@apply<<AuthAction@apply session.data="+session.data().toString());
+//                Session session = request.session();
+//				Logger.info("AuthUserFilter@apply<<AuthAction@apply session.data="+session.data().toString());
 				// Try to print details of cookies
 //				System.out.println("AuthUserFilter:cookies().mkString()="+request.cookies().mkString());
 //				System.out.println("request.getQueryString(\"role\")="+request.getQueryString("role"));

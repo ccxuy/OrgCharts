@@ -121,24 +121,18 @@ public class EmployeeCtrl extends Controller {
 		// Read XML from storage
 		String input = "";
 		if (Setting.STORAGE == StorageSetting.HIBERNATE) {
-			String chartId = request().getQueryString("chartid");
-			if (null == chartId || chartId.equals("")) {
-				chartId = Setting.DefaultData.ChartId_default;
-			}
 			try {
-				System.out.println("Chart@getChart: chartid=" + chartId);
 				HibernateUtilities.getFactory();
-				ChartBean chartBean = HibernateUtilities
-						.searchChartByUUID(chartId);
-				input = chartBean.getXmlString();
+				ProfileBean employee = HibernateUtilities.searchEmployeeById(id);
+				return ok(Json.toJson(employee));
 			} catch (Exception e) {
 				e.printStackTrace();
 				Logger.error("EmployeeCtrl@getEmployee", e);
 				return badRequest();
 			}
 		}
-		session("empchart", "<ul id='org' style='display:none'>" + input
-				+ "</ul>");
+//		session("empchart", "<ul id='org' style='display:none'>" + input
+//				+ "</ul>");
 		return ok(input);
 	}
 

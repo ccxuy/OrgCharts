@@ -181,7 +181,7 @@ public class ChartBean {
 	}
 
 	public String getPermittedUser() {
-		return permittedUser;
+		return null==permittedUser?"":permittedUser;
 	}
 
 	public void setPermittedUser(String permittedUser) {
