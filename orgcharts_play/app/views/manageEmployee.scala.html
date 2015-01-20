@@ -98,7 +98,7 @@
                     <label>Title</label> <input type="text" name="edit_emp_title"><br>
                     <label>Location</label> <input type="text" name="edit_location"><br>
                     <label>Email</label> <input type="text" name="edit_email"><br>
-                    <label>Phone</label> <input type="text" name="edit_phone"><br>
+                    <label>Phone (10 digit)</label> <input type="text" name="edit_phone"><br>
                     <label>Fax</label> <input type="text" name="edit_fax"><br>
 
                     <label for="image">Image</label><input id="new_node_image" type="file" name="image" size="chars"><br>
@@ -250,10 +250,9 @@
                     // var j = respose;
                     // cTableSel.dataTable().fnAddData(j);
                 },
-                error: function(xhr, textstatus, ethrown) {
-                    alert(textstatus+", "+ethrown +xhr.status);
-                    console.log(xhr);
-                }
+                error: function(msg) {
+                alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+            }
             })
         }
 

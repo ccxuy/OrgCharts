@@ -579,7 +579,7 @@ $(document).on("ready", function() {
         }
     });
 
-    // new employee
+    // load employee when click 
     $("input[type=radio][name=employee_type]").click(function() {
         //alert("clicked");
         //alert(node_type);
@@ -636,10 +636,7 @@ $(document).on("ready", function() {
             $(".emp-image").attr("src", "");
             $("#fancy_new_employee").hide();
             $("#fancy_delete_employee").hide();
-            var fn = "";
-            var ln = "";
-            var email = "";
-            var image = "";
+            var empBean;
             node_to_edit = $("li." + add_to_node + ":not('.temp')");
             var empId = node_to_edit.attr("id");
 
@@ -649,31 +646,26 @@ $(document).on("ready", function() {
                     data: {
                         empId: empId
                     },
-                    url: chartRestUrlBase + "../employee/EditData/",
+                    url: chartRestUrlBase + "../employee/"+empId,
                     success: function(respose, text, xhr) {
                         //alert(text+","+respose);
                         //location.reload();
-                        fn = respose.split(',')[0];
-                        ln = respose.split(',')[1];
-                        email = respose.split(',')[2];
-                        image = respose.split(',')[3];
-                        //alert(temp);
+                        empBean = respose;
                     },
-                    error: function(xhr, textstatus, ethrown) {
-                        alert(textstatus + ", " + ethrown + xhr.status);
-                        //location.reload();
+                    error: function(msg) {
+                        alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
                     }
                 });
             }
             $.when(ajax2()).done(function() {
                 $("#fancy_edit_unit").hide();
                 $("#fancy_edit_employee").show();
-                $("#edit_first_name").val(fn);
-                $("#edit_last_name").val(ln);
-                $("#edit_node_title").val(node_to_edit.find("> .label_node[id=title]").text());
-                $("#edit_node_location").val(node_to_edit.find("> .label_node[id=loc]").text());
-                $("#edit_node_email").val(email);
-                $("#edit_node_phone").val(node_to_edit.find("> .label_node[id=phone]").text());
+                $("#edit_first_name").val(empBean['firstName']);
+                $("#edit_last_name").val(empBean['lastName']);
+                $("#edit_node_title").val(empBean['employeeTitle']);
+                $("#edit_node_location").val(empBean['location']);
+                $("#edit_node_email").val(empBean['email']);
+                $("#edit_node_phone").val(empBean['phone']);
                 if (node_to_edit.find("img").length != 0) {
                     $("#edit_node_image").val(image);
                 }
@@ -737,8 +729,8 @@ $(document).on("ready", function() {
                     alert("ERROR happened while AddEmployee: empId" + empId);
                 }
             },
-            error: function(xhr, textstatus, ethrown) {
-                alert(textstatus + ", " + ethrown + xhr.status);
+            error: function(msg) {
+                alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
             }
         })
 
@@ -777,8 +769,8 @@ $(document).on("ready", function() {
                 var $div = $("#chart").find("div." + add_to_node);
                 get_emp(empId, $div);
             },
-            error: function(xhr, textstatus, ethrown) {
-                alert(textstatus + ", " + ethrown + xhr.status);
+            error: function(msg) {
+                alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
             }
         })
 

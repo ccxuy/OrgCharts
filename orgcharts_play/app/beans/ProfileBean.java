@@ -19,6 +19,7 @@ import org.hibernate.internal.util.io.StreamCopier;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import play.Logger;
 import utilities.ClobConverter;
 
 @Entity
@@ -82,8 +83,8 @@ public class ProfileBean {
 	/**
 	 * Constructor for add new employee ProfileBean.
 	 * 
-	 * @param first_name
-	 * @param last_name
+	 * @param firstName
+	 * @param lastName
 	 */
 	public ProfileBean(String firstName, String lastName) {
 		this.firstName = firstName;
@@ -240,10 +241,35 @@ public class ProfileBean {
 		return this.getFirstName() + " " + this.getLastName();
 	}
 
+	@JsonIgnore
+	private static final String EMAIL_PATTERN =
+			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+					+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+	@JsonIgnore
+	private static final String PHONE_PATTERN =
+			"^[0-9]{0,10}$";
 	public boolean isValid() {
-		return this.id < 0 || this.firstName == null
+
+		if( this.id < 0 || this.firstName == null
 				|| this.firstName.equals("") || this.lastName == null
-				|| this.lastName.equals("") ? false : true;
+				|| this.lastName.equals("") ){
+			Logger.debug(this.toString());
+			return false;
+		}
+
+		if( null!=email
+				&& (false == this.email.matches(EMAIL_PATTERN) || email.equals("")) ){
+			return false;
+		}
+
+		if( null!=phone
+				&& (false == this.phone.matches(PHONE_PATTERN) || phone.equals("")) ){
+			return false;
+		}
+
+
+		return true;
 	}
 
 }

@@ -191,6 +191,10 @@ public class EmployeeCtrl extends Controller {
 			
 			System.out.println("@createEmployee: "+employeeProfileBean);
 
+			if(false == employeeProfileBean.isValid()){
+				return badRequest("invalid employee");
+			}
+
 			int ret = HibernateUtilities
 					.saveOrUpdateEmployee(employeeProfileBean);
 			if (ret > 0) {
@@ -237,7 +241,7 @@ public class EmployeeCtrl extends Controller {
 					HibernateUtilities.editNode(employeeProfileBean);
 					return ok(parseEmployeeBeanToJsonObjectNode(employeeProfileBean));
 				}else{
-					return badRequest();
+					return badRequest("Invalid employee information, please check your input.");
 				}
 			}
 			// This is the old way..

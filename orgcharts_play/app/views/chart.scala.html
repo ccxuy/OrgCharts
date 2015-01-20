@@ -42,12 +42,12 @@
 <body onload="prettyPrint();">
   <div class="topbar">
     <div class="topbar-inner">
-      <div class="container" style="width: auto;">
+      <div class="container" style="width: auto;padding-right: 10px;">
         <ul class="nav">
           <li><a href="@routes.Application.ocsCharts()" class="pull-left">Back</a></li>
           <li class="divider-vertical"></li>
         </ul>
-        <a class="brand" href="#"><!-- <%=chartBean.getChartName()%> --></a>
+        <a class="brand" href="#">@chartBean.getChartName()</a>
         <div class="pull-right">
           <div class="alert-message info" id="update_button">Save Chart</div>
         </div>
