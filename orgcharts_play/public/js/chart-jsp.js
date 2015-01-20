@@ -895,7 +895,7 @@ $(document).on("ready", function() {
         }
     });
 
-    //editString is either "enable" or "disable"
+    //editString is "enable" or "disable" or other specified in server side.
     function ajaxRequestPermission(editString) {
         $("#editSwitch").bootstrapSwitch('setDisabled', true);
         return $.ajax({
@@ -908,8 +908,12 @@ $(document).on("ready", function() {
                 $("#editSwitch").bootstrapSwitch('setDisabled', false);
                 if (editString === "enable") {
                     $("#editSwitch").bootstrapSwitch('state', true);
+                    $("#update_button").attr('disabled', false);
+                    $('#update_button').removeClass("disabled");
                 } else if (editString === "disable") {
                     $("#editSwitch").bootstrapSwitch('state', false);
+                    $("#update_button").attr('disabled', true);
+                    $('#update_button').addClass("disabled");
                 }
             },
             error: function(xhr, textstatus, ethrown) {

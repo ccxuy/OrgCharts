@@ -413,7 +413,9 @@ public class ChartCtrl extends Controller {
                 }
 
                 OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
-                if (isUserWriteChartAllowed(cb, ocu)) {
+                // change chart information is fast, is user can lock, it can write.
+                if (isUserGetChartLockAllowed(cb, ocu)
+                        ||isUserGetChartLockAllowed(cb, ocu)) {
                     cb.setChartName(chart_name);
                     cb.setOwnerID(chart_ownerid);
                     cb.setPermission(chart_permission);
@@ -456,6 +458,8 @@ public class ChartCtrl extends Controller {
                     chartBean.setTimeLastModifiedNow();
                     HibernateUtilities.saveOrUpdateChart(chartBean);
                     return ok();
+                }else{
+                    return forbidden(" Permission Denied : You need to enter EDIT mode to edit this chart! ");
                 }
             } else {
                 return notFound(chartId);
@@ -466,7 +470,7 @@ public class ChartCtrl extends Controller {
             return internalServerError("ChartCtrl@updateChartXML\n"
                     + form.get().toString());
         }
-        return forbidden(" Permission Denied : You don't have permission to edit this chart! ");
+//        return forbidden(" Permission Denied : You need to enter EDIT mode to edit this chart! ");
     }
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER)})
