@@ -209,6 +209,9 @@
                     if (data["uuid"] != "") {
                         $('td:eq(0)', row).html('<a href="@routes.ChartCtrl.showChart()?chartid=' + data["uuid"] + '">' + data["chartName"] + '</a>');
                     }
+                    if (data["timeLastModified"] != "") {
+                        $('td:eq(3)', row).html(data["timeLastModified"].substring(0, data["timeLastModified"].length - 4));
+                    }
                 }
                 // ,
                 // tableTools: {

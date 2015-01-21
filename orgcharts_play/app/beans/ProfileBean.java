@@ -259,12 +259,15 @@ public class ProfileBean {
 		}
 
 		if( null!=email
-				&& (false == this.email.matches(EMAIL_PATTERN) || email.equals("")) ){
+				&& (false == this.email.trim().equals(""))
+				&& (false == this.email.matches(EMAIL_PATTERN)) ){
+			Logger.debug("invalid email="+email);
 			return false;
 		}
 
 		if( null!=phone
-				&& (false == this.phone.matches(PHONE_PATTERN) || phone.equals("")) ){
+				&& (false == this.phone.matches(PHONE_PATTERN)) ){
+			Logger.debug("invalid phone="+phone);
 			return false;
 		}
 
