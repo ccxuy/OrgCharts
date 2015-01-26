@@ -358,6 +358,32 @@ public class HibernateUtilities {
 	}
 
 	/**
+	 * Count how many ProfileBean
+	 * If name=null specified, it return all chart count.
+	 * @return how many Employee or -1 for failed.
+	 */
+	public static long countEmployee(){
+		Session session = sessfactory.openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+
+			// Quereis
+			Criteria crit = session.createCriteria(ProfileBean.class);
+			crit.setProjection(Projections.rowCount());
+			Long result=(Long)crit.uniqueResult();
+			return result;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return -1;
+	}
+
+	/**
 	 * @return
 	 */
 	public static List<ProfileBean> getAllEmployee(){

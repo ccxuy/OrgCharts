@@ -1,6 +1,7 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import beans.ChartBean;
 import com.feth.play.module.pa.PlayAuthenticate;
 
 import be.objectify.deadbolt.java.actions.Group;
@@ -16,6 +17,7 @@ import scala.reflect.internal.Trees.This;
 import security.OrgChartDeadboltHandler;
 import security.OrgChartRoleType;
 import security.OrgChartUser;
+import utilities.HibernateUtilities;
 import views.html.*;
 
 public class Application extends Controller {
@@ -33,9 +35,16 @@ public class Application extends Controller {
 
     @SubjectPresent
     public static Result ocsDashboard() {
-        int numCharts = 0;
-        int numEmployees = 0;
-        return ok(views.html.manageIndex.render());
+        Long numCharts = 0L;
+        Long numEmployees = 0L;
+        try {
+            HibernateUtilities.getFactory();
+            numCharts = HibernateUtilities.countCharBytName(null);
+            numEmployees = HibernateUtilities.countEmployee();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ok(views.html.manageIndex.render(numCharts.toString(), numEmployees.toString()));
     }
 
     @SubjectPresent

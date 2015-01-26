@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import model.MessageCommon;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -17,7 +19,9 @@ import play.mvc.BodyParser;
 import play.mvc.Controller;
 import play.mvc.Http.MultipartFormData;
 import play.mvc.Result;
+import security.OrgChartDeadboltHandler;
 import security.OrgChartRoleType;
+import security.OrgChartUser;
 import utilities.HibernateUtilities;
 import beans.ChartBean;
 import beans.ProfileBean;
@@ -121,6 +125,10 @@ public class EmployeeCtrl extends Controller {
 
 	@SubjectPresent
 	public static Result getEmployee(String id) {
+		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+		MessageCommon msg = new MessageCommon();
+		msg.fromMethod = "getEmployee";
+		msg.fromUserId = ocu.getIdentifier();
 		// Read XML from storage
 		String input = "";
 		if (Setting.STORAGE == StorageSetting.HIBERNATE) {
@@ -131,7 +139,8 @@ public class EmployeeCtrl extends Controller {
 			} catch (Exception e) {
 				e.printStackTrace();
 				Logger.error("EmployeeCtrl@getEmployee", e);
-				return badRequest();
+				msg.msg = "Unable to get employee with id="+id+". It may already got deleted.";
+				return badRequest(Json.toJson(msg));
 			}
 		}
 //		session("empchart", "<ul id='org' style='display:none'>" + input

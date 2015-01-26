@@ -1,4 +1,4 @@
-
+@(numChart: String, numEmployee: String)
 @managePageTemplate{
     <div class="container-fluid">
         <div class="row">
@@ -17,7 +17,7 @@
                                 <i class="fa fa-tasks fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge">12</div>
+                                <div class="huge">@numChart</div>
                                 <div>Total Charts</div>
                             </div>
                         </div>
@@ -39,7 +39,7 @@
                                 <i class="fa fa-child fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge">95</div>
+                                <div class="huge">@numEmployee</div>
                                 <div>Total Employee</div>
                             </div>
                         </div>

@@ -94,6 +94,8 @@ function reset_forms() {
     $("input[type=radio][name=change]").attr('checked', false);
     $("#add_curr").attr("disabled", true);
     $("#employees").val("");
+    $(".cform textarea").val("");
+    $("#btn_remove_all_field_extra").click();
     console.log("reset_forms");
 }
 
@@ -654,7 +656,7 @@ $(document).on("ready", function() {
                         empBean = respose;
                     },
                     error: function(msg) {
-                        alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+                        onErrorMessage(msg);
                     }
                 });
             }
@@ -789,7 +791,7 @@ $(document).on("ready", function() {
                 get_emp(empId, $div);
             },
             error: function(msg) {
-                alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+                onErrorMessage(msg);
             }
         })
 
