@@ -34,7 +34,7 @@
                                         <th>Chart Name</th>
                                         <th>Owner ID</th>
                                         <th>Owner Name</th>
-                                        <th>Version</th>
+                                        <th>Edit Count</th>
                                         <th>Last Modified</th>
                                         <th>Current Edit User</th>
                                         <th>Edit User</th>
@@ -129,7 +129,7 @@
 
                         <div class="action_btns centered">
                             <div class="">
-                                <input type=button id="submit_delete_chart" name="submit_delete_chart" class="btn btn-danger" value="Delete Chart">
+                                <input type=button id="submit_delete_chart" name="submit_delete_chart" class="btn btn-danger" data-toggle="confirmation" value="Delete Chart">
                                 <input type=submit id="submit_edit_chart" name="submit_edit_chart" class="btn btn-warning" value="Modifiy Chart">
                             </div>
                         </div>
@@ -160,6 +160,13 @@
 
     <!-- jquery.leanmodal -->
     <script type="text/javascript" src="@routes.Assets.at("js/jquery.leanModal.min.js")"></script>
+
+    <!-- bootbox.js -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.3.0/bootbox.js"></script>
+    <!-- Bootstrap Confirmation -->
+    <script type="text/javascript" src="@routes.Assets.at("js/bootstrap-tooltip.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("js/bootstrap-confirmation.js")"></script>
+
 
     <!-- Custom Theme JavaScript -->
     <script src="@routes.Assets.at("js/sb-admin-2.js")"></script>
@@ -303,12 +310,12 @@
         });
 
         $("#btn_new_chart").leanModal({
-            top: 200,
+            top: 100,
             overlay: 0.6,
             closeButton: ".modal_close"
         });
         $("#btn_edit_chart").leanModal({
-            top: 200,
+            top: 100,
             overlay: 0.6,
             closeButton: ".modal_close"
         });
@@ -335,16 +342,37 @@
             $(this)[0].reset();
         });
 
-        $('#submit_delete_chart').click(function() {
-            var chartid = $('form#form_edit_chart #chartid').val()
-            var formData = new FormData($('form#form_edit_chart'));
-            var submitSuccessCallbackFn = function(i) {
-                var pos = cTableSel.dataTable().fnGetPosition(editRow);
-                cTableSel.dataTable().fnDeleteRow(pos);
+        $('[data-toggle="confirmation"]').confirmation({
+            "singleton" : true,
+            "popout" : true,
+            "onConfirm" : function(){
+                var chartid = $('form#form_edit_chart #chartid').val()
+                var formData = new FormData($('form#form_edit_chart'));
+                var submitSuccessCallbackFn = function(i) {
+                    var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                    cTableSel.dataTable().fnDeleteRow(pos);
+                }
+                submitFunc(null, "../chart/" + chartid, formData, "DELETE", submitSuccessCallbackFn);
+                $('form#form_edit_chart')[0].reset();
             }
-            submitFunc(null, "../chart/" + chartid, formData, "DELETE", submitSuccessCallbackFn);
-            $('form#form_edit_chart')[0].reset();
         });
+
+        // $('#submit_delete_chart').click(function() {
+        //     var chartid = $('form#form_edit_chart #chartid').val()
+        //     var formData = new FormData($('form#form_edit_chart'));
+        //     var submitSuccessCallbackFn = function(i) {
+        //         var pos = cTableSel.dataTable().fnGetPosition(editRow);
+        //         cTableSel.dataTable().fnDeleteRow(pos);
+        //     }
+        //     bootbox.confirm("Are you sure?", function(result) {
+        //         console.log(result===true);
+        //         if(true==result){
+        //             submitFunc(null, "../chart/" + chartid, formData, "DELETE", submitSuccessCallbackFn);
+        //             $('form#form_edit_chart')[0].reset();
+        //         }
+        //     }); 
+            
+        // });
 
         var submitFunc = function(e, url, formData, submitMethod, successCallback) {
             if (e != null) {

@@ -242,25 +242,32 @@ public class ProfileBean {
 	}
 
 	@JsonIgnore
+	private static final String NAME_PATTERN =
+			"^[A-Za-z0-9]{1,}$";
+	@JsonIgnore
 	private static final String EMAIL_PATTERN =
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 					+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
 	@JsonIgnore
 	private static final String PHONE_PATTERN =
 			"^[0-9]{0,10}$";
 	public boolean isValid() {
 
-		if( this.id < 0 || this.firstName == null
-				|| this.firstName.equals("") || this.lastName == null
-				|| this.lastName.equals("") ){
-			Logger.debug(this.toString());
+		if( this.id < 0){
+			return false;
+		}
+
+		if(this.firstName == null
+				|| false == this.firstName.matches(NAME_PATTERN)
+				|| this.lastName == null
+				|| false == this.lastName.matches(NAME_PATTERN) ){
+			Logger.debug("invalid name="+this.getWholeName());
 			return false;
 		}
 
 		if( null!=email
 				&& (false == this.email.trim().equals(""))
-				&& (false == this.email.matches(EMAIL_PATTERN)) ){
+				&& ( false == this.email.matches(EMAIL_PATTERN)) ){
 			Logger.debug("invalid email="+email);
 			return false;
 		}
