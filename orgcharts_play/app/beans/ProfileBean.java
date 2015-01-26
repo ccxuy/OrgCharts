@@ -200,7 +200,7 @@ public class ProfileBean {
 		return "ProfileBean [id=" + id + ", firstName=" + firstName
 				+ ", lastName=" + lastName + ", email=" + email
 				+ ", employeeTitle=" + employeeTitle + ", location=" + location
-				+ ", phone=" + phone + ", fax=" + fax + ", extra=" + extra
+				+ ", phone=" + phone + ", fax=" + fax + ", extra=" + getExtraString()
 				+ ", img.length()=" + imgLength + "]";
 	}
 

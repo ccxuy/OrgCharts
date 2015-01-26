@@ -4,412 +4,440 @@
 <html>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Interactive Organization Chart Demo</title>
-  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
-  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  
-  <link rel="stylesheet" href="@routes.Assets.at("css/chart-bootstrap.min.css")" />
-  <link rel="stylesheet" href="@routes.Assets.at("css/chart-jquery.jOrgChart.css")" />
-  <link rel="stylesheet" href="@routes.Assets.at("css/chart-custom.css")" />
-  <link href="@routes.Assets.at("css/chart-prettify.css")" type="text/css" rel="stylesheet" />
-  <link rel="stylesheet" href="@routes.Assets.at("fancybox/jquery.fancybox.css")" type="text/css" />
-  <link rel="stylesheet" type="text/css" href="@routes.Assets.at("css/chart-custom.form.css")" media="all" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Interactive Organization Chart Demo</title>
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="@routes.Assets.at("css/chart-bootstrap.min.css")" />
+    <link rel="stylesheet" href="@routes.Assets.at("css/chart-jquery.jOrgChart.css")" />
+    <link rel="stylesheet" href="@routes.Assets.at("css/chart-custom.css")" />
+    <link href="@routes.Assets.at("css/chart-prettify.css")" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="@routes.Assets.at("fancybox/jquery.fancybox.css")" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="@routes.Assets.at("css/chart-custom.form.css")" media="all" />
 
 
-  <!-- jQuery includes -->
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.js"></script>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-  <!-- jQuery autocomplete stylesheet -->
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
-  <!-- Bootstrap switch -->
-  <link rel="stylesheet" href="@routes.Assets.at("css/bootstrap-switch.css")">
-  <script type="text/javascript" src="@routes.Assets.at("js/bootstrap-switch.js")"></script>
-  <!-- Knockout.js -->
-  <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.2.0.js'></script>
+    <!-- jQuery includes -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <!-- jQuery autocomplete stylesheet -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <!-- Bootstrap switch -->
+    <link rel="stylesheet" href="@routes.Assets.at("css/bootstrap-switch.css")">
+    <script type="text/javascript" src="@routes.Assets.at("js/bootstrap-switch.js")"></script>
+    <!-- Knockout.js -->
+    <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.2.0.js'></script>
+    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js'></script>
 
-  <script type="text/javascript" src="@routes.Assets.at("js/chart-prettify.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("js/chart-prettify.js")"></script>
 
 
-  <!-- <script type="text/javascript" src="js/bootstrap-switch.js"></script> -->
-  <!-- jQuery Form Plugin -->
-  <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
-  <script type="text/javascript" src="@routes.Assets.at("fancybox/jquery.fancybox.js")"></script>
-  <script src="@routes.Assets.at("js/chart-jquery.jOrgChart.js")"></script>
-  <script src="@routes.Assets.at("js/chart-jsp.js")"></script>
+    <!-- <script type="text/javascript" src="js/bootstrap-switch.js"></script> -->
+    <!-- jQuery Form Plugin -->
+    <!-- <script src="//oss.maxcdn.com/jquery.form/3.50/jquery.form.min.js"></script> -->
+    <script type="text/javascript" src="@routes.Assets.at("fancybox/jquery.fancybox.js")"></script>
+    <script src="@routes.Assets.at("js/chart-jquery.jOrgChart.js")"></script>
+    <script src="@routes.Assets.at("js/chart-jsp.js")"></script>
 </head>
 
 <body onload="prettyPrint();">
-  <div class="topbar">
-    <div class="topbar-inner">
-      <div class="container" style="width: auto;padding-right: 10px;">
-        <ul class="nav">
-          <li><a href="@routes.Application.ocsCharts()" class="pull-left">Back</a></li>
-          <li class="divider-vertical"></li>
-        </ul>
-        <a class="brand" href="#">@chartBean.getChartName()</a>
-        <div class="pull-right">
-          <div class="alert-message info btn disabled" id="update_button" disabled>Save Chart</div>
+    <div class="topbar">
+        <div class="topbar-inner">
+            <div class="container" style="width: auto;padding-right: 10px;">
+                <ul class="nav">
+                    <li><a href="@routes.Application.ocsCharts()" class="pull-left">Back</a>
+                    </li>
+                    <li class="divider-vertical"></li>
+                </ul>
+                <a class="brand" href="#">@chartBean.getChartName()</a>
+                <div class="pull-right">
+                    <div class="alert-message info btn disabled" id="update_button" disabled>Save Chart</div>
+                </div>
+                <div></div>
+                <div class="pull-right">
+                    <div class="alert-message info btn" id="show-list">XML</div>
+                    <pre class="prettyprint lang-html" id="list-html" style="display:none"></pre>
+                </div>
+                <div></div>
+                <div style="margin-top: 4px;" class="pull-right">
+                    <input id="editSwitch" data-on="success" data-off="danger" type="checkbox" name="edit-checkbox" data-text-label="EDIT">
+                </div>
+            </div>
         </div>
-        <div></div>
-        <div class="pull-right">
-          <div class="alert-message info btn" id="show-list">XML</div>
-          <pre class="prettyprint lang-html" id="list-html" style="display:none"></pre> 
+    </div>
+
+
+    <!-- Display chart -->
+    <ul id="org" style="display:none" chartid="">
+    </ul>
+    <div id="chart" class="orgChart"></div>
+
+    <!-- Edit node Form -->
+    <div id="fancy_edit" class="hidden">
+        <div id="fancy_edit_unit" class="cform">
+            <h1>Edit Unit Profile</h1>
+            <form id="edit_unit_form" method="GET" action=".">
+
+                <p class="contact">
+                    <label for="unit name">Unit Name</label>
+                </p>
+                <input type="text" placeholder="Unit Name" name="edit_unit_name" id="edit_unit_name" required/>
+                <br>
+                <br>
+
+                <p class="contact">
+                    <label for="unit discription">Unit Description</label>
+                </p>
+                <input type="text" placeholder="Unit Description" name="edit_unit_description" id="edit_unit_description" />
+                <br>
+                <input id="edit_node" class="buttom" type="button" value="Save" />
+            </form>
         </div>
-        <div></div>
-        <div style="margin-top: 4px;" class="pull-right">
-          <input id="editSwitch" data-on="success" data-off="danger"type="checkbox" name="edit-checkbox" data-text-label="EDIT">
+        <div id="fancy_edit_position" class="cform">
+            <h1>Edit Position Profile</h1>
+            <form id="edit_unit_form" method="GET" action=".">
+
+                <p class="contact">
+                    <label for="position name">Position Name</label>
+                </p>
+                <input type="text" placeholder="Position Name" name="edit_position_name" id="edit_position_name" required/>
+                <br>
+                <br>
+
+                <p class="contact">
+                    <label for="position discription">Position Description</label>
+                </p>
+                <input type="text" placeholder="Position Description" name="edit_position_description" id="edit_position_description" />
+                <br>
+                <input id="edit_node" class="buttom" type="button" value="Save" />
+            </form>
         </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- Display chart -->
-  <ul id="org" style="display:none" chartid="">
-  </ul>
-  <div id="chart" class="orgChart"></div>
-
-  <!-- Edit node Form -->
-  <div id="fancy_edit" class="hidden">
-    <div id="fancy_edit_unit" class="cform">
-      <h1>Edit Unit Profile</h1>
-      <form id="edit_unit_form" method="GET" action=".">
-
-        <p class="contact">
-          <label for="unit name">Unit Name</label>
-        </p>
-        <input type="text" placeholder="Unit Name" name="edit_unit_name" id="edit_unit_name" required/>
-        <br>
-        <br>
-
-        <p class="contact">
-          <label for="unit discription">Unit Description</label>
-        </p>
-        <input type="text" placeholder="Unit Description" name="edit_unit_description" id="edit_unit_description" />
-        <br>
-        <input id="edit_node" class="buttom" type="button" value="Save" />
-      </form>
-    </div>
-    <div id="fancy_edit_position" class="cform">
-      <h1>Edit Position Profile</h1>
-      <form id="edit_unit_form" method="GET" action=".">
-
-        <p class="contact">
-          <label for="position name">Position Name</label>
-        </p>
-        <input type="text" placeholder="Position Name" name="edit_position_name" id="edit_position_name" required/>
-        <br>
-        <br>
-
-        <p class="contact">
-          <label for="position discription">Position Description</label>
-        </p>
-        <input type="text" placeholder="Position Description" name="edit_position_description" id="edit_position_description" />
-        <br>
-        <input id="edit_node" class="buttom" type="button" value="Save" />
-      </form>
-    </div>
-  </div>
-
-  <!-- Add new Unit or Position Form -->
-  <div id="fancy" class="hidden">
-    <div class="cform">
-      <h1>Add Unit/Position</h1>
-      <form id="add_node_form" method="GET" action=".">
-        <p class="contact">
-          <label for="chart_type">Chart Type</label>
-        </p>
-        <label for="unit">
-          <input type="radio" class="chart_type" id="unit" name="chart_type" value="unit" />unit</label>
-        <label for="position">
-          <input type="radio" class="chart_type" id="position" name="chart_type" value="position" />position</label>
-        <br>
-      </form>
-    </div>
-    <div id="fancy_unit" class="cform">
-      <!--        <h1>New Unit/Position Profile</h1>       -->
-      <form id="add_unit_form" method="GET" action=".">
-
-        <p class="contact">
-          <label for="unit name">Unit Name</label>
-        </p>
-        <input type="text" placeholder="Unit Name" name="new_unit_name" id="new_unit_name" required/>
-        <br>
-        <br>
-
-        <p class="contact">
-          <label for="unit discription">Unit Description</label>
-        </p>
-        <input type="text" placeholder="Unit Description" name="new_unit_description" id="new_unit_description" />
-        <br>
-        <input id="add_node" class="buttom" type="button" value="Add" />
-      </form>
-    </div>
-    <div id="fancy_position" class="cform">
-      <!--        <h1>New Unit/Position Profile</h1>       -->
-      <form id="add_position_form" method="GET" action=".">
-
-        <p class="contact">
-          <label for="Position name">Position Name</label>
-        </p>
-        <input type="text" placeholder="Position Name" name="new_position_name" id="new_position_name" required/>
-        <br>
-        <br>
-
-        <p class="contact">
-          <label for="Position discription">Position Description</label>
-        </p>
-        <input type="text" placeholder="Position Description" name="new_position_description" id="new_position_description" />
-        <br>
-        <input id="add_node" class="buttom" type="button" value="Add" />
-      </form>
-    </div>
-  </div>
-
-  <!-- Add/edit employee Form -->
-  <div id="fancy_employee" class="hidden">
-    <div id="add_employee" class="cform">
-      <h1>Add Employee</h1>
-      <form id="add_employee_form" method="GET" action=".">
-        <p class="contact">
-          <label for="chart_type">Employee Type</label>
-        </p>
-        <label>
-          <input type="radio" class="employee_type" id="new_employee" name="employee_type" value="new_employee" />new employee</label>
-        <label>
-          <input type="radio" class="employee_type" id="curr_employee" name="employee_type" value="curr_employee" />current employee</label>
-
-      </form>
-    </div>
-    <div id="edit_employee" class="cform">
-      <h1>edit/delete Employee</h1>
-      <form id="edit_employee_option_form" method="GET" action=".">
-        <p class="contact">
-          <label for="chart_type">edit/delete</label>
-        </p>
-        <label>
-          <input type="radio" class="action" id="edit_employee_radio" name="change" value="edit_employee" />edit employee</label>
-        <label>
-          <input type="radio" class="action" id="delete_employee_radio" name="change" value="delete_employee" />delete employee</label>
-        <br>
-      </form>
     </div>
 
-    <div id="fancy_new_employee" class="cform">
-      <!--        <h1>New Employee Profile</h1>       -->
-      <form id="add_employee_form" method="GET" action=".">
-        <p class="contact">
-          <label for="name">First Name<span style="color:red;">*</span></label>
-        </p>
-        <input type="text" placeholder="First name" name="new_first_name" id="new_first_name" required/>
+    <!-- Add new Unit or Position Form -->
+    <div id="fancy" class="hidden">
+        <div class="cform">
+            <h1>Add Unit/Position</h1>
+            <form id="add_node_form" method="GET" action=".">
+                <p class="contact">
+                    <label for="chart_type">Chart Type</label>
+                </p>
+                <label for="unit">
+                    <input type="radio" class="chart_type" id="unit" name="chart_type" value="unit" />unit</label>
+                <label for="position">
+                    <input type="radio" class="chart_type" id="position" name="chart_type" value="position" />position</label>
+                <br>
+            </form>
+        </div>
+        <div id="fancy_unit" class="cform">
+            <!--        <h1>New Unit/Position Profile</h1>       -->
+            <form id="add_unit_form" method="GET" action=".">
 
-        <p class="contact">
-          <label for="name">Last Name<span style="color:red;">*</span></label>
-        </p>
-        <input type="text" placeholder="Last name" name="new_last_name" id="new_last_name" required/>
+                <p class="contact">
+                    <label for="unit name">Unit Name</label>
+                </p>
+                <input type="text" placeholder="Unit Name" name="new_unit_name" id="new_unit_name" required/>
+                <br>
+                <br>
 
-        <p class="contact">
-          <label for="employee title">Employee Title</label>
-        </p>
-        <input type="text" placeholder="Employee Title" name="new_title" id="new_node_title" />
+                <p class="contact">
+                    <label for="unit discription">Unit Description</label>
+                </p>
+                <input type="text" placeholder="Unit Description" name="new_unit_description" id="new_unit_description" />
+                <br>
+                <input id="add_node" class="buttom" type="button" value="Add" />
+            </form>
+        </div>
+        <div id="fancy_position" class="cform">
+            <!--        <h1>New Unit/Position Profile</h1>       -->
+            <form id="add_position_form" method="GET" action=".">
 
-        <p class="contact">
-          <label for="location">Location</label>
-        </p>
-        <input type="text" placeholder="Location Name" name="new_location" id="new_node_location" />
-        <br>
+                <p class="contact">
+                    <label for="Position name">Position Name</label>
+                </p>
+                <input type="text" placeholder="Position Name" name="new_position_name" id="new_position_name" required/>
+                <br>
+                <br>
 
-        <p class="contact">
-          <label for="email">Email</label>
-        </p>
-        <input type="text" placeholder="Email Name" name="new_email" id="new_node_email" />
-        <br>
-
-        <p class="contact">
-          <label for="phone">Phone Number</label>
-        </p>
-        <input type="text" placeholder="Phone Number" name="new_phone" id="new_node_phone" />
-        <br>
-
-        <p class="contact">
-          <label for="phone">Fax Number</label>
-        </p>
-        <input type="text" placeholder="Fax Number" name="new_fax" id="new_node_fax" />
-        <br>
-
-        <p class="contact">
-          <label for="phone">Extra fields</label>
-        </p>
-        <br style="margin-top:10px">
-        <table style="margin-top:10px">
-            <tbody data-bind="foreach: extrafields">
-                <tr>
-                    <td><input data-bind='value: type' /></td>
-                    <td><input data-bind='value: text' /></td>
-                    <td><a href='#' data-bind='click: $root.removeExtraField'>Delete</a></td>
-                </tr>
-            </tbody>
-        </table>
-        <a href='#' data-bind='click: $root.addExtraField'>Add Extra field</a>
-        <br>
-
-        <p>
-            <button type=button data-bind='click: save, enable: extrafields().length > 0'>
-              Save to JSON
-            </button>
-        </p>
-         
-        <textarea style="margin-top:10px" data-bind='value: lastSavedJson' rows='5' cols='60' disabled='disabled'name="new_extra" > </textarea>
-
-        <p class="contact">
-          <label for="image">Image</label>
-        </p>
-        <input id="new_node_image" type="file" name="new_image" size="chars">
-        <br>
-        <input id="add_employee" class="buttom" type=submit value="Add" />
-      </form>
+                <p class="contact">
+                    <label for="Position discription">Position Description</label>
+                </p>
+                <input type="text" placeholder="Position Description" name="new_position_description" id="new_position_description" />
+                <br>
+                <input id="add_node" class="buttom" type="button" value="Add" />
+            </form>
+        </div>
     </div>
 
-    <div id="fancy_edit_employee" class="cform">
-      <!--         <h1>Edit Employee Profile</h1>       -->
-      <form id="edit_employee_form" action="EditNode.do" method="post" enctype="multipart/form-data">
+    <!-- Add/edit employee Form -->
+    <div id="fancy_employee" class="hidden">
+        <div id="add_employee" class="cform">
+            <h1>Add Employee</h1>
+            <form id="add_employee_form" method="GET" action=".">
+                <p class="contact">
+                    <label for="chart_type">Employee Type</label>
+                </p>
+                <label>
+                    <input type="radio" class="employee_type" id="new_employee" name="employee_type" value="new_employee" />new employee</label>
+                <label>
+                    <input type="radio" class="employee_type" id="curr_employee" name="employee_type" value="curr_employee" />current employee</label>
 
-        <div class="cform emp-image-box" name="emp_image_box">
-          <img class="cform emp-image"  name="emp_image"></img>
+            </form>
+        </div>
+        <div id="edit_employee" class="cform">
+            <h1>edit/delete Employee</h1>
+            <form id="edit_employee_option_form" method="GET" action=".">
+                <p class="contact">
+                    <label for="chart_type">edit/delete</label>
+                </p>
+                <label>
+                    <input type="radio" class="action" id="edit_employee_radio" name="change" value="edit_employee" />edit employee</label>
+                <label>
+                    <input type="radio" class="action" id="delete_employee_radio" name="change" value="delete_employee" />delete employee</label>
+                <br>
+            </form>
         </div>
 
-        <p class="contact">
-          <label for="edit_first_name">First Name<span style="color:red;">*</span></label>
-        </p>
-        <input type="text" placeholder="First name" name="edit_first_name" id="edit_first_name" required/><br>
+        <div id="fancy_new_employee" class="cform">
+            <!--        <h1>New Employee Profile</h1>       -->
+            <form id="add_employee_form" method="GET" action=".">
+                <p class="contact">
+                    <label for="new_first_name">First Name<span style="color:red;">*</span>
+                    </label>
+                </p>
+                <input type="text" placeholder="First name" name="new_first_name" id="new_first_name" required/>
 
-        <p class="contact">
-          <label for="edit_last_name">Last Name<span style="color:red;">*</span></label>
-        </p>
-        <input type="text" placeholder="Last name" name="edit_last_name" id="edit_last_name" required/><br>
+                <p class="contact">
+                    <label for="new_last_name">Last Name<span style="color:red;">*</span>
+                    </label>
+                </p>
+                <input type="text" placeholder="Last name" name="new_last_name" id="new_last_name" required/>
+
+                <p class="contact">
+                    <label for="new_title">Employee Title</label>
+                </p>
+                <input type="text" placeholder="Employee Title" name="new_title" id="new_node_title" />
+
+                <p class="contact">
+                    <label for="new_location">Location</label>
+                </p>
+                <input type="text" placeholder="Location Name" name="new_location" id="new_node_location" />
+                <br>
+
+                <p class="contact">
+                    <label for="new_email">Email</label>
+                </p>
+                <input type="text" placeholder="Email Name" name="new_email" id="new_node_email" />
+                <br>
+
+                <p class="contact">
+                    <label for="new_phone">Phone Number</label>
+                </p>
+                <input type="text" placeholder="Phone Number" name="new_phone" id="new_node_phone" />
+                <br>
+
+                <p class="contact">
+                    <label for="new_fax">Fax Number</label>
+                </p>
+                <input type="text" placeholder="Fax Number" name="new_fax" id="new_node_fax" />
+                <br>
+
+                <p class="contact">
+                    <label for="">Extra fields:</label>
+                </p>
+                <br style="margin-top:10px">
+                <table style="margin-top:10px">
+                    <tbody data-bind="foreach: extrafields">
+                        <tr>
+                            <td>
+                                <input data-bind='value: type' />
+                            </td>
+                            <td>
+                                <input data-bind='value: text' />
+                            </td>
+                            <td><a href='#' data-bind='click: $root.removeExtraField'>Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href='#' data-bind='click: $root.addExtraField'>Add Extra field</a>
+                <br>
+
+                <p class="hidden">
+                    <button id="btn_new_save_extra" type=button data-bind='click: save, enable: extrafields().length > 0'>
+                        Save to JSON
+                    </button>
+                    <button id="btn_remove_all_field_extra" class="resetExtraField" type=button data-bind='click: removeAll'>
+                        Remove All
+                    </button>
+                </p>
+
+                <textarea id="new_extra" name="new_extra" class="hidden" form="add_employee_form" style="margin-top:10px" data-bind='value: lastSavedJson' rows='5' cols='60' disabled='disabled'> a</textarea>
+
+                <p class="contact">
+                    <label for="image">Image</label>
+                </p>
+                <input id="new_node_image" type="file" name="new_image" size="chars">
+                <br>
+                <input id="add_employee" class="buttom" type=submit value="Add" />
+            </form>
+        </div>
+
+        <div id="fancy_edit_employee" class="cform">
+            <!--         <h1>Edit Employee Profile</h1>       -->
+            <form id="edit_employee_form" action="EditNode.do" method="post" enctype="multipart/form-data">
+
+                <div class="cform emp-image-box" name="emp_image_box">
+                    <img class="cform emp-image" name="emp_image"></img>
+                </div>
+
+                <p class="contact">
+                    <label for="edit_first_name">First Name<span style="color:red;">*</span>
+                    </label>
+                </p>
+                <input type="text" placeholder="First name" name="edit_first_name" id="edit_first_name" required/>
+                <br>
+
+                <p class="contact">
+                    <label for="edit_last_name">Last Name<span style="color:red;">*</span>
+                    </label>
+                </p>
+                <input type="text" placeholder="Last name" name="edit_last_name" id="edit_last_name" required/>
+                <br>
 
 
-        <p class="contact">
-          <label for="edit_node_title">Employee Title</label>
-        </p>
-        <input type="text" placeholder="Employee Title" name="edit_emp_title" id="edit_node_title" />
-        <br>
+                <p class="contact">
+                    <label for="edit_node_title">Employee Title</label>
+                </p>
+                <input type="text" placeholder="Employee Title" name="edit_emp_title" id="edit_node_title" />
+                <br>
 
 
-        <p class="contact">
-          <label for="edit_node_location">Location</label>
-        </p>
-        <input type="text" placeholder="Location" name="edit_location" id="edit_node_location" />
-        <br>
+                <p class="contact">
+                    <label for="edit_node_location">Location</label>
+                </p>
+                <input type="text" placeholder="Location" name="edit_location" id="edit_node_location" />
+                <br>
 
-        <p class="contact">
-          <label for="edit_node_email">Email</label>
-        </p>
-        <input type="text" placeholder="Email Name" name="edit_email" id="edit_node_email" />
-        <br>
+                <p class="contact">
+                    <label for="edit_node_email">Email</label>
+                </p>
+                <input type="text" placeholder="Email Name" name="edit_email" id="edit_node_email" />
+                <br>
 
-        <p class="contact">
-          <label for="edit_node_phone">Phone Number</label>
-        </p>
-        <input type="text" placeholder="Phone Number" name="edit_phone" id="edit_node_phone" />
-        <br>
+                <p class="contact">
+                    <label for="edit_node_phone">Phone Number</label>
+                </p>
+                <input type="text" placeholder="Phone Number" name="edit_phone" id="edit_node_phone" />
+                <br>
 
-        <p class="contact">
-          <label for="phone">Fax Number</label>
-        </p>
-        <input type="text" placeholder="Fax Number" name="edit_fax" id="edit_node_fax" />
-        <br>
+                <p class="contact">
+                    <label for="phone">Fax Number</label>
+                </p>
+                <input type="text" placeholder="Fax Number" name="edit_fax" id="edit_node_fax" />
+                <br>
 
-        <p class="contact">
-          <label for="edit_node_image">Image</label>
-        </p>
-        <input id="edit_node_image" type="file" name="image" size="chars">
-        <br>
+                <p class="contact">
+                    <label for="">Extra fields:</label>
+                </p>
+                <br>
+                <table style="margin-top:20px">
+                    <tbody data-bind="foreach: extrafields">
+                        <tr>
+                            <td>
+                                <input data-bind='value: type' />
+                            </td>
+                            <td>
+                                <input data-bind='value: text' />
+                            </td>
+                            <td><a href='#' data-bind='click: $root.removeExtraField'>Delete</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href='#' data-bind='click: $root.addExtraField'>Add Extra field</a>
 
-        <input id="edit_emp" class="buttom" type=submit value="Save" />
-        <br>
-        <div id="output"></div>
+                <br>
 
-      </form>
+                <p class="hidden">
+                    <button id="btn_edit_save_extra" type=button data-bind='click: save, enable: extrafields().length > 0'>
+                        Save to JSON
+                    </button>
+                    <button id="btn_update_field_from_extra" type=button data-bind='click: updateFromField'>
+                        Update
+                    </button>
+                    <button id="btn_remove_all_field_extra" class="resetExtraField" type=button data-bind='click: removeAll'>
+                        Remove All
+                    </button>
+                </p>
+
+                <textarea id="edit_extra" name="edit_extra" class="hidden" form="edit_employee_form" style="margin-top:10px" data-bind='value: lastSavedJson' rows='5' cols='60' disabled='disabled'> a</textarea>
+
+                <p class="contact">
+                    <label for="edit_node_image">Image</label>
+                </p>
+                <input id="edit_node_image" type="file" name="image" size="chars">
+                <br>
+
+                <input id="edit_emp" class="buttom" type=submit value="Save" />
+                <br>
+                <div id="output"></div>
+
+            </form>
+        </div>
+        <!-- END OF #fancy_edit_employee -->
+        <div id="fancy_delete_employee" class="cform">
+            <!--         <h1>Edit Employee Profile</h1>       -->
+            <form id="delete_employee_form" method="GET" action=".">
+                <input id="delete_emp" class="buttom" type="button" value="Delete" />
+            </form>
+        </div>
+        <div id="fancy_curr_employee" class="cform">
+            <!--         <h1>Edit Employee Profile</h1>       -->
+            <form id="add_curr_employee_form" method="GET" action=".">
+                <p class="contact">
+                    <label for="curr_emp">Employee Name</label>
+                </p>
+                <input id="employees" />
+                <input id="add_curr" class="buttom" type="button" value="Add" disabled/>
+            </form>
+        </div>
     </div>
-    <div id="fancy_delete_employee" class="cform">
-      <!--         <h1>Edit Employee Profile</h1>       -->
-      <form id="delete_employee_form" method="GET" action=".">
-        <input id="delete_emp" class="buttom" type="button" value="Delete" />
-      </form>
-    </div>
-    <div id="fancy_curr_employee" class="cform">
-      <!--         <h1>Edit Employee Profile</h1>       -->
-      <form id="add_curr_employee_form" method="GET" action=".">
-        <p class="contact">
-          <label for="curr_emp">Employee Name</label>
-        </p>
-        <input id="employees" />
-        <input id="add_curr" class="buttom" type="button" value="Add" disabled/>
-      </form>
-    </div>
-  </div>
-  
 
-  <script>
-  jQuery(document).ready(function() {
-    // Enable edit button
-    // $("[name='edit-checkbox']").bootstrapSwitch();
 
-    /* Custom jQuery */
-    $("#show-list").click(function(e) {
-      e.preventDefault();
+    <script>
+    jQuery(document).ready(function() {
+        // Enable edit button
+        // $("[name='edit-checkbox']").bootstrapSwitch();
 
-      $('#list-html').toggle('fast', function() {
-        if ($(this).is(':visible')) {
-          $('#show-list').text('Hide List');
-          $(".topbar").fadeTo('fast', 0.9);
-        } else {
-          $('#show-list').text('Show List ');
-          $(".topbar").fadeTo('fast', 1);
-        }
-      });
-    });
+        /* Custom jQuery */
+        $("#show-list").click(function(e) {
+            e.preventDefault();
 
-    $('#list-html').text($('#org').html());
-
-    $("#org").bind("DOMSubtreeModified", function() {
-      $('#list-html').text('');
-
-      $('#list-html').text($('#org').html());
-
-      prettyPrint();
-    });
-
-    var initialData = [
-      {type:"type1", text:"text1"}
-    ];
-    var ExtrafieldsModel = function(extrafields) {
-      var self = this;
-      self.extrafields = ko.observableArray(ko.utils.arrayMap(extrafields, function(extrafield) {
-        return { type: extrafield.type, text: extrafield.text };
-      }));
-      self.addExtraField = function() {
-        self.extrafields.push({
-          type: "",
-          text: ""
+            $('#list-html').toggle('fast', function() {
+                if ($(this).is(':visible')) {
+                    $('#show-list').text('Hide List');
+                    $(".topbar").fadeTo('fast', 0.9);
+                } else {
+                    $('#show-list').text('Show List ');
+                    $(".topbar").fadeTo('fast', 1);
+                }
+            });
         });
-      };
-      self.removeExtraField = function(extrafield) {
-        self.extrafields.remove(extrafield);
-      };
-      self.save = function() {
-        self.lastSavedJson(JSON.stringify(ko.toJS(self.extrafields), null, 2));
-      };
-      self.lastSavedJson = ko.observable("")
-    };
-    ko.applyBindings(new ExtrafieldsModel(initialData));
-    
-  });
-  // END jQuery(document).ready
 
-  </script>
+        $('#list-html').text($('#org').html());
+
+        $("#org").bind("DOMSubtreeModified", function() {
+            $('#list-html').text('');
+
+            $('#list-html').text($('#org').html());
+
+            prettyPrint();
+        });
+
+    });
+    // END jQuery(document).ready
+    </script>
 
 
 </body>

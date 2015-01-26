@@ -647,7 +647,7 @@ $(document).on("ready", function() {
                     data: {
                         empId: empId
                     },
-                    url: chartRestUrlBase + "../employee/"+empId,
+                    url: chartRestUrlBase + "../employee/" + empId,
                     success: function(respose, text, xhr) {
                         //alert(text+","+respose);
                         //location.reload();
@@ -659,6 +659,7 @@ $(document).on("ready", function() {
                 });
             }
             $.when(ajax2()).done(function() {
+                reset_extrafields();
                 $("#fancy_edit_unit").hide();
                 $("#fancy_edit_employee").show();
                 $("#edit_first_name").val(empBean['firstName']);
@@ -678,6 +679,16 @@ $(document).on("ready", function() {
                     $(".emp-image-box").show();
                 } else {
                     $(".emp-image-box").hide();
+                }
+                if ("undefined" != empBean['extraString']) {
+                    $("#edit_extra").val(empBean['extraString']);
+                    $("#btn_update_field_from_extra").click();
+                    // ko.mapping.fromJS(JSON.parse(empBean['extraString']),ExtrafieldsModel);
+                    // ExtrafieldsModel.extrafields(empBean['extraString']);
+                    // ko.mapping.fromJSON(empBean['extraString'],null,ExtrafieldsModel.extrafields);
+                    // ExtrafieldsModel.extrafields = empBean['extraString'];
+                    // ExtrafieldsModel(JSON.parse(empBean['extraString']));
+                    // console.log(ExtrafieldsModel.extrafields);
                 }
             });
             $("#fancy_edit_employee").show();
@@ -703,9 +714,13 @@ $(document).on("ready", function() {
     //add new employee
     $('form#add_employee_form').submit(function(e) {
         e.preventDefault();
-        current_form = $(this)
+        current_form = $(this);
 
+        $("#btn_new_save_extra").click();
         var formData = new FormData(this);
+        //ko.toJSON(ExtrafieldsModel)
+        formData.append("new_extra", $('textarea#new_extra').val());
+        console.log(formData);
         var $node = $("li." + add_to_node + ":not('.temp')");
         $.ajax({
             type: "POST",
@@ -754,7 +769,10 @@ $(document).on("ready", function() {
     $('form#edit_employee_form').submit(function(e) {
         e.preventDefault();
 
+        $("#btn_edit_save_extra").click();
+        $("#btn_remove_all_field_extra").click();
         var formData = new FormData(this);
+        formData.append("edit_extra", $('textarea#edit_extra').val());
         var $node = $("li." + add_to_node + ":not('.temp')");
         empId = $node.attr("id");
         formData.append("emp_Id", empId);
@@ -915,6 +933,8 @@ $(document).on("ready", function() {
             console.log("#editSwitch ERROR: " + e, $element, value);
         }
     });
+    ajaxRequestPermission("status");
+
 
     //editString is "enable" or "disable" or other specified in server side.
     function ajaxRequestPermission(editString) {
@@ -928,20 +948,86 @@ $(document).on("ready", function() {
             success: function(respose, text, xhr) {
                 $("#editSwitch").bootstrapSwitch('setDisabled', false);
                 if (editString === "enable") {
-                    $("#editSwitch").bootstrapSwitch('state', true);
+                    $("#editSwitch").bootstrapSwitch('setState', true);
                     $("#update_button").attr('disabled', false);
                     $('#update_button').removeClass("disabled");
                 } else if (editString === "disable") {
-                    $("#editSwitch").bootstrapSwitch('state', false);
+                    $("#editSwitch").bootstrapSwitch('setState', false);
                     $("#update_button").attr('disabled', true);
                     $('#update_button').addClass("disabled");
+                } else if (editString === "status") {
+                    if(respose['isLocked']==="true" && respose['isOwner']==="true"){
+                        $("#editSwitch").bootstrapSwitch('setState', true);
+                        $("#update_button").attr('disabled', false);
+                        $('#update_button').removeClass("disabled");
+                    }
                 }
             },
-            error: function(xhr, textstatus, ethrown) {
-                alert(textstatus + ", " + ethrown + xhr.status);
+            error: function(msg) {
+                onErrorMessage(msg);
                 //location.reload();
             }
         });
     }
+
+    function onErrorMessage(msg) {
+        console.log(msg);
+        if (msg.responseText.match("^{")) {
+            var responseJson = JSON.parse(msg.responseText);
+            if (undefined === responseJson['lock'] || null === responseJson['lock']) {
+                alert(responseJson['msg']);
+            } else {
+                alert(responseJson['msg'] + " Lock by: " + responseJson['lock']['userId']);
+            }
+        } else {
+            alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+        }
+    }
+
+
+
+    var initialData = [{
+        type: "",
+        text: ""
+    }];
+
+    var ExtrafieldsModel = function(extrafields) {
+        var self = this;
+        self.extrafields = ko.observableArray(ko.utils.arrayMap(extrafields, function(extrafield) {
+            return {
+                type: extrafield.type,
+                text: extrafield.text
+            };
+        }));
+        self.addExtraField = function() {
+            self.extrafields.push({
+                type: "",
+                text: ""
+            });
+        };
+        self.removeExtraField = function(extrafield) {
+            self.extrafields.remove(extrafield);
+        };
+        self.updateFromField = function() {
+            self.extrafields(
+                JSON.parse($("#edit_extra").val())
+            );
+        };
+        self.removeAll = function() {
+            self.extrafields.removeAll();
+            self.addExtraField();
+        };
+        self.save = function() {
+            self.lastSavedJson(JSON.stringify(ko.toJS(self.extrafields), null, 2));
+        };
+        self.lastSavedJson = ko.observable("");
+    };
+    ko.applyBindings(new ExtrafieldsModel(initialData));
+
+    function reset_extrafields() {
+        $(".cform textarea").val("");
+        // $(".resetExtraField").click();
+        $("#btn_remove_all_field_extra").click();
+    };
 
 });

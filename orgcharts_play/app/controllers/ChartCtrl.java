@@ -14,13 +14,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import play.Logger;
 import play.api.mvc.Codec;
-import play.api.mvc.Results;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
-import security.ChartLock;
+import model.ChartLock;
 import security.OrgChartDeadboltHandler;
 import security.OrgChartRoleType;
 import security.OrgChartUser;
@@ -29,6 +28,7 @@ import utilities.HibernateUtilities;
 import java.util.*;
 
 public class ChartCtrl extends Controller {
+    // This is only for record lock information, to judge a chart is lock or not, please ask database.
     public static HashMap<String, ChartLock> chartidToChartLockMap = new HashMap<String, ChartLock>();
 
     public static Result index() {
@@ -40,10 +40,7 @@ public class ChartCtrl extends Controller {
     public static Result getAllChart() {
         // Change to use session later...
         String ownerId = null;
-        try {
-            ownerId = request().getQueryString(Setting.ChartAlias.Chart_Owner);
-        } catch (NumberFormatException e) {
-        }
+//        ownerId = request().getQueryString(Setting.ChartAlias.Chart_Owner);
 
         try {
             HibernateUtilities.getFactory();
@@ -51,44 +48,7 @@ public class ChartCtrl extends Controller {
                     .getAllChartByOwnerId((ownerId));
             JSONArray chartsJson = new JSONArray();
             for (ChartBean cb : cbList) {
-                // TODO: change it to Gson or Jackson code to avoid hardcode
-                // name.
-//				JSONObject cbj = new JSONObject();
-//				cbj.put("DT_RowId", cb.getUuid());
-//				cbj.put("uuid", cb.getUuid());
-//				cbj.put("chartName", cb.getChartName());
-//				cbj.put("ownerID", cb.getOwnerID());
-//				cbj.put("permission", cb.getPermission());
-//				cbj.put("permittedUser", cb.getPermittedUser());
-//				cbj.put("permissionDisplay", cb.getPermissionDisplay());
-//				//TODO: change to get user from cookies db?
-//				ProfileBean owner = null;
-//				if(null!=cb.getOwnerID())owner = HibernateUtilities.searchEmployeeById(cb
-//						.getOwnerID());
-//				cbj.put("OwnerName",
-//						null == owner ? "(UNKNOWN USER)" : owner.getWholeName());
-//				cbj.put("version",
-//						cb.getVersion() == null ? "n/a" : String.valueOf(cb
-//								.getVersion()));
-//				if (null == cb.getTimeLastModified()) {
-//					cbj.put("timeLastModified", "n/a");
-//				} else {
-//					cbj.put("timeLastModified", cb.getTimeLastModified()
-//							.toString());
-//				}
-//
-//				if (null == cb.getEditUserId()) {
-//					cbj.put("editUser", " ");
-//					cbj.put("CUName", " ");
-//				} else {
-//					ProfileBean cu = null;
-//					if(null!=cb.getEditUserId())cu = HibernateUtilities.searchEmployeeById(cb
-//							.getEditUserId());
-//					cbj.put("editUser", String.valueOf(cb.getEditUserId()));
-//					cbj.put("CUName",
-//							null == cu ? "(UNKNOWN USER)" : cu.getWholeName());
-//				}
-//				chartsJson.add(cbj);
+                // TODO: change it to Gson or Jackson code to avoid hardcode name.
                 chartsJson.add(parseChartbeanToJsonObjectNode(cb));
             }
             JSONObject resultJson = new JSONObject();
@@ -133,7 +93,7 @@ public class ChartCtrl extends Controller {
             return internalServerError("Database setting error.");
         }
         return forbidden("Permission denied, you don't have permission to access this chart." +
-                " Please contact administrator or chart owner for help");
+                " Please contact administrator or chart owner for help.");
     }
 
     @SubjectPresent
@@ -186,14 +146,19 @@ public class ChartCtrl extends Controller {
 
             if ("disable".equals(editReq.trim())) {
                 Logger.debug("chartidToChartLockMap=" + chartidToChartLockMap);
+
+                if(false==chartidToChartLockMap.containsKey(id)){
+                    // If server down, reload lock.
+                    if(null!=chartBean.getEditUserId()
+                            && false==chartBean.getEditUserId().equals("")){
+                        ChartLock lock = new ChartLock(chartBean.getEditUserId());
+                        chartidToChartLockMap.put(id, lock);
+                    }
+                }
+
                 if (chartidToChartLockMap.containsKey(id)) {
                     ChartLock lock = chartidToChartLockMap.get(id);
-                    if (ocu.isAdmin()) {
-                        chartidToChartLockMap.remove(id);
-                        msg.status = MessageChartStatus.STATUS_SUCCESS;
-                        msg.msg = "Admin has unlocked this chart.";
-                        return ok(Json.toJson(msg));
-                    }else if(ocu.getIdentifier().equals(lock.getUserId())){
+                    if(ocu.getIdentifier().equals(lock.getUserId())){
                         chartidToChartLockMap.remove(id);
                         chartBean.setEditUserId(null);
                         HibernateUtilities.saveOrUpdateChart(chartBean);
@@ -208,6 +173,13 @@ public class ChartCtrl extends Controller {
 
                         msg.status = MessageChartStatus.STATUS_SUCCESS;
                         msg.msg = "Lock fetch from database released.";
+                        return ok(Json.toJson(msg));
+                    }else if (ocu.isAdmin()) {
+                        chartidToChartLockMap.remove(id);
+                        chartBean.setEditUserId(null);
+                        HibernateUtilities.saveOrUpdateChart(chartBean);
+                        msg.status = MessageChartStatus.STATUS_SUCCESS;
+                        msg.msg = "Admin has unlocked this chart.";
                         return ok(Json.toJson(msg));
                     }else{
                         msg.status = MessageChartStatus.STATUS_DENIED;
@@ -252,7 +224,7 @@ public class ChartCtrl extends Controller {
                     return forbidden(Json.toJson(msg));
                 }
                 //clear all chart lock for this user.
-            } else if ("clearUserLock".equals(editReq.trim())) {
+            } else if ("clearUserMemoryLock".equals(editReq.trim())) {
                 ArrayList<String> chartsToUnlock = new ArrayList<String>();
                 for (String chartId : chartidToChartLockMap.keySet()) {
                     ChartLock lock = chartidToChartLockMap.get(chartId);
@@ -273,13 +245,29 @@ public class ChartCtrl extends Controller {
             } else if ("status".equals(editReq.trim())) {
                 boolean isLocked = false;
                 msg.isLocked = MessageChartStatus.IS_LOCKED_FALSE;
+
+                // check database records.
+                if(false==chartidToChartLockMap.containsKey(id)){
+                    // If server down, reload lock.
+                    if(null!=chartBean.getEditUserId()
+                            && false==chartBean.getEditUserId().equals("")){
+                        ChartLock lock = new ChartLock(chartBean.getEditUserId());
+                        chartidToChartLockMap.put(id, lock);
+                    }
+                }
+
                 if (chartidToChartLockMap.containsKey(id)) {
                     msg.isLocked = MessageChartStatus.IS_LOCKED_TRUE;
                     msg.lock = chartidToChartLockMap.get(id);
+                    if(msg.lock.getUserId().equals(ocu.getIdentifier())){
+                        msg.isOwner = MessageChartStatus.IS_OWNER_TRUE;
+                    }else{
+                        msg.isOwner = MessageChartStatus.IS_OWNER_FALSE;
+                    }
                 }
-                //TODO: check database records.
+
                 return ok(Json.toJson(msg));
-            } else if ("forceReleaseAllLock".equals(editReq.trim())){
+            } else if ("forceReleaseAllMemoryLock".equals(editReq.trim())){
                 if(ocu.isAdmin()){
                     msg.msg = "All charts lock released: size="+chartidToChartLockMap.size();
                     //TODO: Perform database operation.

@@ -95,6 +95,9 @@ public class EmployeeCtrl extends Controller {
 			HibernateUtilities.getFactory();
 			@SuppressWarnings("unchecked")
 			List mylist = HibernateUtilities.getEditedData(empId);
+			if(null==mylist){
+				return internalServerError();
+			}
 			String temp = "";
 			String tmp0 = "";
 			if (null != mylist.get(0))

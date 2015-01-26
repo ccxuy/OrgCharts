@@ -6,8 +6,6 @@ import java.sql.Blob;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -26,11 +24,10 @@ import org.hibernate.service.ServiceRegistry;
 import config.Setting;
 import beans.ChartBean;
 import beans.ProfileBean;
+import play.Logger;
 
 //import org.json.simple.JSONObject;
 public class HibernateUtilities {
-	private static final Logger log = LoggerFactory
-			.getLogger(HibernateUtilities.class);
 
 	private static SessionFactory sessfactory;
 	private static ServiceRegistry serviceRegistry;
@@ -47,7 +44,7 @@ public class HibernateUtilities {
 			            configuration.getProperties()).build();
 			    sessfactory = configuration.buildSessionFactory(serviceRegistry);
 			} catch (Exception e) {
-				log.error("Initial SessionFactory creation failed." + e);
+				Logger.error("Initial SessionFactory creation failed." + e);
 				throw new IllegalStateException(
 						"Initial Session Factory creation failed.");
 			} catch (Throwable ex) {
@@ -289,6 +286,8 @@ public class HibernateUtilities {
 			data.add(query4.list());
 
 			tx.commit();
+		}catch(NumberFormatException e){
+			Logger.debug("HibernateUtilities@getEditedData NumberFormatException id="+id);
 		} catch (HibernateException e) {
 			if (tx != null)
 				tx.rollback();

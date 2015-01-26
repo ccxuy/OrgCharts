@@ -1,4 +1,4 @@
-package security;
+package model;
 
 import org.joda.time.DateTime;
 
