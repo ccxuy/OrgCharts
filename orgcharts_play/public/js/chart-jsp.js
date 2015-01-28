@@ -274,6 +274,17 @@ function get_emp(id, node) {
     });
 }
 
+function setUpdateXMLButtonOn(){
+    $("#update_button").attr('disabled', true);
+    $('#update_button').addClass("disabled");
+}
+
+function setUpdateXMLButtonOff(){
+    $("#update_button").attr('disabled', false);
+    $('#update_button').removeClass("disabled");
+}
+setUpdateXMLButtonOff();
+
 var click_flag = true;
 var node_to_edit;
 
@@ -903,8 +914,7 @@ $(document).on("ready", function() {
         if("disabled"===$("#update_button").attr("disabled")){
             return;
         }
-        $("#update_button").attr('disabled', true);
-        $('#update_button').addClass("disabled");
+        setUpdateXMLButtonOn();
         var updatestrg = $('#org').html();
         $.ajax({
             type: 'Post',
@@ -916,25 +926,32 @@ $(document).on("ready", function() {
             url: chartRestUrlBase + '../chart/xml/',
             success: function(respose, text, xhr) {
                 alert("Successfully Saved");
-                $("#update_button").attr('disabled', false);
-                $('#update_button').removeClass("disabled");
+                setUpdateXMLButtonOff();
             },
             error: function(msg) {
                 alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
-                $("#update_button").attr('disabled', false);
-                $('#update_button').removeClass("disabled");
+                setUpdateXMLButtonOff();
             }
         });
     });
 
 
     // Enable edit button
+    var editSwitchState = null;
+    var isRollbackSwitchState = false;
     $("#editSwitch").bootstrapSwitch();
     $("#editSwitch").on('switch-change', function(e, data) {
         // alert("now");
         // e.preventDefault();
-        var $element = $(data.el),
-            value = data.value;
+        console.log("isRollbackSwitchState="+isRollbackSwitchState);
+        editSwitchState = !$("#editSwitch").bootstrapSwitch('state');
+        if(true===isRollbackSwitchState){
+            editSwitchState = null;
+            isRollbackSwitchState = false;
+            return;
+        }
+        var $element = $(data.el);
+        value = data.value;
         if (value === true) {
             ajaxRequestPermission("enable");
         } else if (value === false) {
@@ -959,29 +976,30 @@ $(document).on("ready", function() {
                 $("#editSwitch").bootstrapSwitch('setDisabled', false);
                 if (editString === "enable") {
                     $("#editSwitch").bootstrapSwitch('setState', true);
-                    $("#update_button").attr('disabled', false);
-                    $('#update_button').removeClass("disabled");
+                    setUpdateXMLButtonOff();
                 } else if (editString === "disable") {
                     $("#editSwitch").bootstrapSwitch('setState', false);
-                    $("#update_button").attr('disabled', true);
-                    $('#update_button').addClass("disabled");
+                    setUpdateXMLButtonOn();
                 } else if (editString === "status") {
                     if(respose['isLocked']==="true" && respose['isOwner']==="true"){
                         $("#editSwitch").bootstrapSwitch('setState', true);
-                        $("#update_button").attr('disabled', false);
-                        $('#update_button').removeClass("disabled");
+                        setUpdateXMLButtonOff();
                     }
                 }
             },
             error: function(msg) {
                 onErrorMessage(msg);
-                //location.reload();
+                console.log("editSwitchState="+editSwitchState);
+                if(null!=editSwitchState){
+                    isRollbackSwitchState = true;
+                    $("#editSwitch").bootstrapSwitch('setState', editSwitchState);
+                    $("#editSwitch").bootstrapSwitch('setDisabled', false);
+                }
             }
         });
     }
 
     function onErrorMessage(msg) {
-        console.log(msg);
         if (msg.responseText.match("^{")) {
             var responseJson = JSON.parse(msg.responseText);
             if (undefined === responseJson['lock'] || null === responseJson['lock']) {
