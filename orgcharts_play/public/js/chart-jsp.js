@@ -900,6 +900,11 @@ $(document).on("ready", function() {
 
     // Update Chart
     $("#update_button").click(function() {
+        if("disabled"===$("#update_button").attr("disabled")){
+            return;
+        }
+        $("#update_button").attr('disabled', true);
+        $('#update_button').addClass("disabled");
         var updatestrg = $('#org').html();
         $.ajax({
             type: 'Post',
@@ -911,10 +916,13 @@ $(document).on("ready", function() {
             url: chartRestUrlBase + '../chart/xml/',
             success: function(respose, text, xhr) {
                 alert("Successfully Saved");
-                //location.reload();
+                $("#update_button").attr('disabled', false);
+                $('#update_button').removeClass("disabled");
             },
             error: function(msg) {
                 alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
+                $("#update_button").attr('disabled', false);
+                $('#update_button').removeClass("disabled");
             }
         });
     });

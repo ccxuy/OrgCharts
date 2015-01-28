@@ -352,7 +352,7 @@ public class HibernateUtilities {
 			return searchEmployeeById(Integer.parseInt(id));
 		} catch (NumberFormatException e) {
 			System.err.println("searchEmployeeById: input not an integer!");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		return null;
 	}

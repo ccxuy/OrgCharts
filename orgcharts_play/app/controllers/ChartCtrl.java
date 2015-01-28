@@ -140,7 +140,7 @@ public class ChartCtrl extends Controller {
                     .searchChartByUUID(id);
             if (null == chartBean) {
                 msg.status = MessageChartStatus.STATUS_NOT_FOUND;
-                msg.msg = "Chart not exist.";
+                msg.msg = "Unable to retrieve chart data. Maybe chart not exist or database error.";
                 return notFound(Json.toJson(msg));
             }
 
@@ -206,7 +206,7 @@ public class ChartCtrl extends Controller {
                 }
                 if (isUserWriteChartAllowed(chartBean, ocu)
                         ||isUserGetChartLockAllowed(chartBean, ocu)) {
-                    //TODO: check database records.
+                    // check database records.
                     chartBean.setEditUserId(ocu.getIdentifier());
                     HibernateUtilities.saveOrUpdateChart(chartBean);
                     ChartLock lock = new ChartLock(ocu.getIdentifier());
@@ -218,7 +218,7 @@ public class ChartCtrl extends Controller {
                     msg.isLocked = MessageChartStatus.IS_LOCKED_TRUE;
                     return ok(Json.toJson(msg));
                 }  else {
-                    msg.fromMethod = "@isUserWriteChartAllowed";
+                    msg.fromMethod = "@isUserWriteChartAllowed||isUserGetChartLockAllowed";
                     msg.status = MessageChartStatus.STATUS_DENIED;
                     msg.msg = "Permission denied, unable to edit this chart.";
                     return forbidden(Json.toJson(msg));
@@ -431,7 +431,7 @@ public class ChartCtrl extends Controller {
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER)})
     public static Result updateChartXML() {
-        System.out.println("ChartCtrl@updateChartXML>>");
+        Logger.debug("ChartCtrl@updateChartXML>>");
         DynamicForm form = Form.form().bindFromRequest();
         String chartId = form.get("chartid");
         String update_str = form.get("UptString");
@@ -441,6 +441,7 @@ public class ChartCtrl extends Controller {
             if (null != chartBean && null != update_str) {
                 OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
                 if (isUserWriteChartAllowed(chartBean, ocu)) {
+                    Logger.debug("chartBean.getVersion()="+chartBean.getVersion());
                     chartBean.setVersion(chartBean.getVersion() + 1);
                     chartBean.setXmlString(update_str);
                     chartBean.setTimeLastModifiedNow();
@@ -454,16 +455,16 @@ public class ChartCtrl extends Controller {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Logger.error("ChartCtrl@updateChartXML" + form.get().toString(), e);
-            return internalServerError("ChartCtrl@updateChartXML\n"
-                    + form.get().toString());
+            Logger.error("ChartCtrl@updateChartXML form.get().toString().length()" + form.get().toString().length(), e);
+            return internalServerError("ChartCtrl@updateChartXML\nform.get().toString().length()="
+                    + form.get().toString().length());
         }
 //        return forbidden(" Permission Denied : You need to enter EDIT mode to edit this chart! ");
     }
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER)})
     public static Result deleteChart(String id) {
-        System.out.println("ChartCtrl@deleteChart>> id=" + id);
+        Logger.debug("ChartCtrl@deleteChart>> id=" + id);
         DynamicForm form = Form.form().bindFromRequest();
         if (form.hasErrors()) {
             return badRequest(form.get().toString());
@@ -473,7 +474,8 @@ public class ChartCtrl extends Controller {
                 HibernateUtilities.getFactory();
                 ChartBean chartBean = HibernateUtilities.searchChartByUUID(chart_id);
                 OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
-                if (isUserWriteChartAllowed(chartBean, ocu)) {
+                if (isUserWriteChartAllowed(chartBean, ocu)
+                        ||isUserGetChartLockAllowed(chartBean, ocu)) {
                     int ret = HibernateUtilities.deleteChartByUUID(chart_id);
                     switch (ret) {
                         case -1:

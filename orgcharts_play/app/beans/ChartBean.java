@@ -18,7 +18,7 @@ public class ChartBean {
 	@JsonIgnore
 	Clob xml;
 	Timestamp timeLastModified;
-	Integer version;
+	int version;
 	String editUserId;
 
 	@JsonIgnore
@@ -152,7 +152,7 @@ public class ChartBean {
 		this.timeLastModified = new Timestamp(calendar.getTime().getTime());
 	}
 
-	public Integer getVersion() {
+	public int getVersion() {
 		return version;
 	}
 
@@ -161,7 +161,11 @@ public class ChartBean {
 	}
 
 	public void setVersion(Integer version) {
-		this.version = version;
+		if(null==version){
+			this.setVersionDefault();
+		}else{
+			this.version = version;
+		}
 	}
 
 	public String getEditUserId() {
@@ -216,7 +220,7 @@ public class ChartBean {
 				+ Arrays.toString(PERMISSION_OPTIONS) + ", permittedUser="
 				+ permittedUser + ", timeLastModified=" + timeLastModified
 				+ ", version=" + version + ", editUserId=" + editUserId
-				+ ", ownerID=" + ownerID + ", xml=" + getXmlString() + "]";
+				+ ", ownerID=" + ownerID + ", xml.length()=" + getXmlString().length() + "]";
 	}
 
 }
