@@ -78,6 +78,7 @@ a:hover {
     -moz-border-radius: 8px;
     width: inherit;
     min-width: 80px;
+    padding: 3px;
 }
 
 .jOrgChart .node .node-image{
@@ -192,10 +193,13 @@ a:hover {
 .overlay {
     position: absolute;
     top: 50%;
-    left: 15%;
     width: 74px;
     height: 15px;
     z-index: 30;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Keep option text in form in one line*/
