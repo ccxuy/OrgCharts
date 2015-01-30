@@ -24,6 +24,10 @@ libraryDependencies ++= Seq(
   // filters,
   // "org.webjars" %% "webjars-play" % "2.3.0",
   // "org.webjars" % "bootstrap" % "3.2.0",
+  "com.fasterxml.jackson.core" % "jackson-core"        % "2.5.0",
+  "com.fasterxml.jackson.core" % "jackson-databind"    % "2.5.0",
+  "com.fasterxml.jackson.core" % "jackson-annotations" % "2.5.0",
+  "org.perf4j" % "perf4j" % "0.9.16",
   "com.google.code.gson" % "gson" % "2.3.1",
   "org.hibernate" % "hibernate-entitymanager" % "4.3.0.Final"
 )

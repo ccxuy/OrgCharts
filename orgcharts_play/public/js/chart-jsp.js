@@ -222,16 +222,16 @@ function get_emp(id, node) {
         //              if(node.children("div[class=empinfo]").length>0){
         //                node.children("div[class=empinfo]").remove();
         //              }
-        var nodeText = "<div class='empinfo'></span>";
+        var nodeText = "<div class='empinfo'></div>";
 
         //for employee first name
-        var append_first = "<span class='label_node' id='fn'>" + fn + "</span>" + "<br>";
+        var append_first = "<div class='label_node' id='fn'>" + fn + "</div>" + "<br>";
 
         //for employee last name
-        var append_last = "<span class='label_node' id='ln'>" + ln + "</span>" + "<br>";
+        var append_last = "<div class='label_node' id='ln'>" + ln + "</div>" + "<br>";
 
         //for employee email
-        var append_email = "<span class = 'label_node' id='email'>" + email + "</span>" + "<br>";
+        var append_email = "<div class = 'label_node' id='email'>" + email + "</div>" + "<br>";
 
         //for emp image
         var append_image = "<img src = '" + image + "' alt = 'emp_image'>";
@@ -300,6 +300,10 @@ $(document).on("ready", function() {
     init_tree();
     var add_to_node, del_node, classList;
 
+
+    // $(".unclickable").live("click", function(e){
+    //     e.preventDefault();
+    // });
 
     // Edit node icon
     $(".edit").live("click", function(e) {
@@ -472,13 +476,14 @@ $(document).on("ready", function() {
             //for position name
             type_nodo += "child " + add_to_node + "_" + childs;
             var append_text = "<li class='" + type_nodo + " position'>";
-            append_text += "<span class='label_node' id='pn'>" + texto + "</span>" + "<br>";
+            append_text += "<div class='unclickable'></div>"
+            append_text += "<div class='label_node bold' id='pn'>" + texto + "</div>" + "<br>";
 
             //for position discription
-            var append_last = "<span class='label_node' id='pd'>" + last + "</span>" + "<br>";
+            var append_last = "<div class='label_node' id='pd'>" + last + "</div>" + "<br>";
 
             //for node type
-            //append_type="<div id='type'><span class='label_node' id='type'>" + node_type + "</span></div>" + "<br>";
+            //append_type="<div id='type'><div class='label_node' id='type'>" + node_type + "</div></div>" + "<br>";
             if ($node.find("ul").size() == 0) {
                 //unit name
                 append_text = "<ul>" + append_text + "</ul>";
@@ -523,13 +528,13 @@ $(document).on("ready", function() {
             //for unit name
             type_nodo += "child " + add_to_node + "_" + childs;
             var append_text = "<li class='" + type_nodo + " unit'>";
-            append_text += "<span class='label_node' id='un'>" + texto + "</span>" + "<br>";
+            append_text += "<div class='label_node bold' id='un'>" + texto + "</div>" + "<br>";
 
             //for unit discription
-            var append_last = "<span class='label_node' id='ud'>" + last + "</span>" + "<br>";
+            var append_last = "<div class='label_node' id='ud'>" + last + "</div>" + "<br>";
 
             //for node type
-            //append_type="<span class='label_node' id='type'>" + node_type + "</span>" + "<br>";
+            //append_type="<div class='label_node' id='type'>" + node_type + "</div>" + "<br>";
             if ($node.find("ul").size() == 0) {
                 //unit name
                 append_text = "<ul>" + append_text + "</ul>";
@@ -681,6 +686,7 @@ $(document).on("ready", function() {
                 $("#edit_node_location").val(empBean['location']);
                 $("#edit_node_email").val(empBean['email']);
                 $("#edit_node_phone").val(empBean['phone']);
+                $("#edit_node_fax").val(empBean['fax']);
                 if (node_to_edit.find("img").length != 0) {
                     $("#edit_node_image").val(image);
                 }
@@ -851,7 +857,7 @@ $(document).on("ready", function() {
                 adjustChildren($ul, childNum, 0);
             } else {
                 // if node is not leaf node remove all information but keep the actural node
-                // node_to_edit.children("span").remove();
+                // node_to_edit.children("div").remove();
                 // node_to_edit.children("div:not('.opciones')").remove();
                 if (node_type == "unit") {
                     node_to_edit.find("> .label_node[id=un]").text("");
@@ -937,16 +943,25 @@ $(document).on("ready", function() {
 
 
     // Enable edit button
-    var editSwitchState = null;
+    var lastSwitchState = null;
     var isRollbackSwitchState = false;
     $("#editSwitch").bootstrapSwitch();
+    $("#editSwitch").bootstrapSwitch('setReadOnly', true);
+    $("#editSwitch").click(function(){
+        e.preventDefault();
+        $("#editSwitch").bootstrapSwitch('toggleState');
+    });
     $("#editSwitch").on('switch-change', function(e, data) {
-        // alert("now");
-        // e.preventDefault();
-        console.log("isRollbackSwitchState="+isRollbackSwitchState);
-        editSwitchState = !$("#editSwitch").bootstrapSwitch('state');
+        // console.log("isRollbackSwitchState="+isRollbackSwitchState);
+        // console.log(lastSwitchState);
+        // console.log(data);
+        // console.log($("#editSwitch").bootstrapSwitch('state'));
+        if(null == lastSwitchState
+            || lastSwitchState != !$("#editSwitch").bootstrapSwitch('state')){
+            lastSwitchState = !$("#editSwitch").bootstrapSwitch('state');
+        }
         if(true===isRollbackSwitchState){
-            editSwitchState = null;
+            lastSwitchState = null;
             isRollbackSwitchState = false;
             return;
         }
@@ -977,22 +992,27 @@ $(document).on("ready", function() {
                 if (editString === "enable") {
                     $("#editSwitch").bootstrapSwitch('setState', true);
                     setUpdateXMLButtonOff();
+                    ajaxRequestPermission("status");
                 } else if (editString === "disable") {
                     $("#editSwitch").bootstrapSwitch('setState', false);
                     setUpdateXMLButtonOn();
+                    ajaxRequestPermission("status");
                 } else if (editString === "status") {
                     if(respose['isLocked']==="true" && respose['isOwner']==="true"){
                         $("#editSwitch").bootstrapSwitch('setState', true);
                         setUpdateXMLButtonOff();
+                    }else{
+                        $("#editSwitch").bootstrapSwitch('setState', false);
+                        setUpdateXMLButtonOn();
                     }
                 }
             },
             error: function(msg) {
                 onErrorMessage(msg);
-                console.log("editSwitchState="+editSwitchState);
-                if(null!=editSwitchState){
+                // console.log("lastSwitchState="+lastSwitchState);
+                if(null!=lastSwitchState){
                     isRollbackSwitchState = true;
-                    $("#editSwitch").bootstrapSwitch('setState', editSwitchState);
+                    $("#editSwitch").bootstrapSwitch('setState', lastSwitchState);
                     $("#editSwitch").bootstrapSwitch('setDisabled', false);
                 }
             }

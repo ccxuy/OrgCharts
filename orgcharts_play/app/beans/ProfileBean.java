@@ -34,6 +34,7 @@ public class ProfileBean {
 	String location;
 	String phone;
 	String fax;
+	@Basic(fetch = FetchType.LAZY)
 	@JsonIgnore
 	Clob extra;
 	@JsonIgnore
@@ -251,6 +252,7 @@ public class ProfileBean {
 	@JsonIgnore
 	private static final String PHONE_PATTERN =
 			"^[0-9]{0,10}$";
+	@JsonIgnore
 	public boolean isValid() {
 
 		if( this.id < 0){
@@ -277,7 +279,6 @@ public class ProfileBean {
 			Logger.debug("invalid phone="+phone);
 			return false;
 		}
-
 
 		return true;
 	}

@@ -76,7 +76,8 @@ a:hover {
     border: 5px solid black;
     color: #000000;
     -moz-border-radius: 8px;
-    /*overflow: hidden;*/
+    width: inherit;
+    min-width: 80px;
 }
 
 .jOrgChart .node .node-image{
@@ -90,7 +91,19 @@ a:hover {
 
 .jOrgChart .node .label_node{
     background: rgba(255, 255, 255, 0.55);
+    height: 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
 }
+
+.label_node#pn,
+.label_node#un,
+.label_node.bold {
+    font-weight: bold;
+}
+
 
 .node p {
     font-family: tahoma;
@@ -99,24 +112,35 @@ a:hover {
     padding: 2px;
 }
 .jOrgChart .node.unit {
-    position: relative;
-    font-size: 12px;
     background-color: #C7D9FF;
-    border-radius: 8px;
     border: 5px solid rgb(116, 172, 255);
-    color: #000000;
-    -moz-border-radius: 8px;
-    background-blend-mode: darken;
 }
 .jOrgChart .node.position {
+    background-color: #FFD3C7;
+    border: 5px double rgb(255, 95, 86);
+}
+.jOrgChart .node {
     position: relative;
     font-size: 12px;
-    background-color: #FFD3C7;
-    border-radius: 8px;
-    border: 5px double rgb(255, 95, 86);
     color: #000000;
+    border-radius: 8px;
     -moz-border-radius: 8px;
     background-blend-mode: darken;
+    /*pointer-events: none;*/
+}
+.jOrgChart .node-container table {
+    margin: 0 auto;
+}
+.jOrgChart .node-container .unclickable {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+    /*pointer-events: none;*/
+}
+.jOrgChart .node,
+.jOrgChart .node .label_node{
+    max-width: 200px;
 }
 .node .node-image-icon {
     position: absolute;

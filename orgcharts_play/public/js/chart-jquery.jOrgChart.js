@@ -246,7 +246,7 @@
                 } else {
                     $this.css('cursor', 's-resize');
                     $tr.removeClass('expanded').addClass('contracted');
-                    $tr.nextAll("tr").css('visibility', 'hidden');
+                    $tr.nextAll("tr").next().css('visibility', 'hidden');
 
                     $node.addClass('collapsed');
                 }

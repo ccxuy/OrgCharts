@@ -10,7 +10,12 @@ import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import model.MessageCommon;
+import model.ProfileBeanIgnoreFieldsMixIn;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -47,6 +52,7 @@ public class EmployeeCtrl extends Controller {
 			List<ProfileBean> empList = HibernateUtilities.getAllEmployee();
 
 			ObjectMapper mapper = new ObjectMapper();
+//			mapper.addMixIn(ProfileBean.class, ProfileBeanIgnoreFieldsMixIn.class);
 			ArrayNode empArray = mapper.valueToTree(empList);
 			ObjectNode dataNode = mapper.createObjectNode();
 			dataNode.putArray("data").addAll(empArray);
@@ -192,6 +198,7 @@ public class EmployeeCtrl extends Controller {
 			employeeProfileBean.setEmployeeTitle(form.get("new_title"));
 			employeeProfileBean.setLocation(form.get("new_location"));
 			employeeProfileBean.setEmail(form.get("new_email"));
+			employeeProfileBean.setPhone(form.get("new_phone"));
 			employeeProfileBean.setFax(form.get("new_fax"));
 			employeeProfileBean.setExtraString(form.get("new_extra"));
 
