@@ -251,8 +251,8 @@
                     // cTableSel.dataTable().fnAddData(j);
                 },
                 error: function(msg) {
-                alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
-            }
+                    alert(msg.status + ", " + msg.statusText + "\n" + "Failed. Make sure you have permission to do so and check connection to server.");
+                }
             })
         }
 

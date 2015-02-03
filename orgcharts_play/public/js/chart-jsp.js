@@ -68,12 +68,12 @@ function init_tree() {
             $("#org").jOrgChart(opts);
             get_emp_info();
             reset_forms();
-            reset_moreNodesWarning();
         });
     } else {
         $("#chart").html("");
         $("#org").jOrgChart(opts);
         get_emp_info();
+        reset_forms();
     }
     console.log("done with init_tree");
 }
@@ -97,6 +97,7 @@ function reset_forms() {
     $("#employees").val("");
     $(".cform textarea").val("");
     $("#btn_remove_all_field_extra").click();
+    reset_moreNodesWarning();
     console.log("reset_forms");
 }
 
@@ -869,10 +870,14 @@ $(document).on("ready", function() {
                 if (node_type == "unit") {
                     node_to_edit.find("> .label_node[id=un]").text("");
                     node_to_edit.find("> .label_node[id=ud]").text("");
+                    $('.toast').text('More nodes below, only empty current node.')
+                        .fadeIn(400).delay(3000).fadeOut(400);
                 }
                 if (node_type == "position") {
                     node_to_edit.find("> .label_node[id=pn]").text("");
                     node_to_edit.find("> .label_node[id=pd]").text("");
+                    $('.toast').text('More nodes below or employee inside, only empty current node.')
+                        .fadeIn(400).delay(3000).fadeOut(400);
                 }
             }
             init_tree();

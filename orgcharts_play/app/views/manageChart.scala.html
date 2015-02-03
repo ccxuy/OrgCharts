@@ -393,8 +393,8 @@
                     // var j = respose;
                     // cTableSel.dataTable().fnAddData(j);
                 },
-                error: function(xhr, textstatus, ethrown) {
-                    alert(textstatus + ", " + ethrown + xhr.status);
+                error: function(msg) {
+                    alert(msg.status + ", " + msg.statusText + "\n" + "Failed. Make sure you have permission to do so and check connection to server.");
                 }
             })
         }
