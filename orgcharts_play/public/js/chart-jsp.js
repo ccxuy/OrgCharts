@@ -68,6 +68,7 @@ function init_tree() {
             $("#org").jOrgChart(opts);
             get_emp_info();
             reset_forms();
+            reset_moreNodesWarning();
         });
     } else {
         $("#chart").html("");
@@ -274,6 +275,12 @@ function get_emp(id, node) {
     });
 }
 
+function reset_moreNodesWarning(){
+    console.log("reset_moreNodesWarning");
+    $('.contracted').next().addClass('warn-more-nodes');
+    $('.contracted').next().css('visibility', '');
+}
+
 function setUpdateXMLButtonOn(){
     $("#update_button").attr('disabled', true);
     $('#update_button').addClass("disabled");
@@ -301,9 +308,9 @@ $(document).on("ready", function() {
     var add_to_node, del_node, classList;
 
 
-    // $(".unclickable").live("click", function(e){
-    //     e.preventDefault();
-    // });
+    $(".unclickable").live("click", function(e){
+        alert("This should be unclickable...");
+    });
 
     // Edit node icon
     $(".edit").live("click", function(e) {

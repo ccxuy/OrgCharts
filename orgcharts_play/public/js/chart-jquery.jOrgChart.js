@@ -236,17 +236,19 @@
                 var $tr = $this.closest("tr");
 
                 if ($tr.hasClass('contracted')) {
-                    $this.css('cursor', 'n-resize');
+                    // $this.css('cursor', 'n-resize');
                     $tr.removeClass('contracted').addClass('expanded');
                     $tr.nextAll("tr").css('visibility', '');
+                    $tr.next().removeClass("warn-more-nodes");
 
                     // Update the <li> appropriately so that if the tree redraws collapsed/non-collapsed nodes
                     // maintain their appearance
                     $node.removeClass('collapsed');
                 } else {
-                    $this.css('cursor', 's-resize');
+                    // $this.css('cursor', 's-resize');
                     $tr.removeClass('expanded').addClass('contracted');
-                    $tr.nextAll("tr").next().css('visibility', 'hidden');
+                    $tr.next().addClass("warn-more-nodes");
+                    $tr.next().nextAll("tr").css('visibility', 'hidden');
 
                     $node.addClass('collapsed');
                 }
@@ -372,7 +374,7 @@
                     $nodeRow.nextAll('tr').css('visibility', 'hidden');
                     $nodeRow.removeClass('expanded');
                     $nodeRow.addClass('contracted');
-                    $nodeDiv.css('cursor', 's-resize');
+                    // $nodeDiv.css('cursor', 's-resize');
                 } else {
                     $nodeDiv.addClass(item);
                 }
@@ -400,7 +402,7 @@
         $appendTo.append($table);
 
         /* Prevent trees collapsing if a link inside a node is clicked */
-        $nodeDiv.children('a, span').click(function(e) {
+        $nodeDiv.children('a, span,.unclickable').click(function(e) {
             e.stopPropagation();
         });
         clearInterval(build_timer);

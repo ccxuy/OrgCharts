@@ -79,7 +79,12 @@ a:hover {
     width: inherit;
     min-width: 80px;
     padding: 3px;
+    background-blend-mode: darken;
+    cursor: row-resize;
+    /*pointer-events: none;*/
 }
+/*.jOrgChart tr+tr::before{
+}*/
 
 .jOrgChart .node .node-image{
     position: absolute;
@@ -120,35 +125,41 @@ a:hover {
     background-color: #FFD3C7;
     border: 5px double rgb(255, 95, 86);
 }
-.jOrgChart .node {
-    position: relative;
-    font-size: 12px;
-    color: #000000;
-    border-radius: 8px;
-    -moz-border-radius: 8px;
-    background-blend-mode: darken;
-    /*pointer-events: none;*/
-}
 .jOrgChart .node-container table {
     margin: 0 auto;
 }
 .jOrgChart .node-container .unclickable {
     position: absolute;
-    height: 100%;
-    width: 100%;
+    width: 94%;
+    height: 94%;
     z-index: 5;
+    cursor: auto;
     /*pointer-events: none;*/
+}
+.jOrgChart .node::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    content: ' ';
 }
 .jOrgChart .node,
 .jOrgChart .node .label_node{
     max-width: 200px;
 }
-.node .node-image-icon {
+.jOrgChart .node .node-image-icon {
     position: absolute;
     top: -8px;
     left: -8px;
     color: #FF0000;
     background-color: #FFF9F2;
+}
+.jOrgChart .warn-more-nodes td::after { 
+    content: "More nodes";
+    background: #c00;
+    height: 29px;
+    width: 100%;
 }
 
 .hidden {
