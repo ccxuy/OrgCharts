@@ -211,6 +211,7 @@ a:hover {
     right: 0;
     margin-left: auto;
     margin-right: auto;
+    cursor: auto; 
 }
 
 /* Keep option text in form in one line*/
