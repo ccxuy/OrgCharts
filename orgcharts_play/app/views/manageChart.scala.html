@@ -82,7 +82,8 @@
                         <br>
                         <div class="area-specified_user">
                             <label>Permitted User(shortnames seperate by ;)</label>
-                            <textarea type="text" name="new_chart_permitted_user" rows="3"></textarea>
+                            <span style="color: red"></span>
+                            <textarea type="text" name="new_chart_permitted_user" class="shortname-group" rows="3"></textarea>
                             <br>
                         </div>
 
@@ -123,7 +124,7 @@
                         <br>
                         <div class="area-specified_user">
                             <label>Permitted User(shortnames seperate by ;)</label>
-                            <textarea type="text" name="edit_chart_permitted_user" rows="3"></textarea>
+                            <textarea type="text" name="edit_chart_permitted_user" class="shortname-group" rows="3"></textarea>
                             <br>
                         </div>
 
@@ -307,6 +308,12 @@
             $("#popup_form .SectionNewChart").hide();
             $("#popup_form .SectionEditChart").show();
             return false;
+        });
+
+        var re_permitted_user = new RegExp("^[A-Za-z0-9]{0,}?(;[A-Za-z0-9]{1,}){0,}$");
+        $('textarea.shortname-group').keyup(function(){
+            $(this).prev().text(re_permitted_user.test($(this).val()) 
+                ? "":"Invalid input of shortnames(split by ;)");
         });
 
         $("#btn_new_chart").leanModal({

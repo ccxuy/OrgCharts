@@ -65,12 +65,24 @@
         <div class="pop_form">
             <div class="">
                 <form id="form_new_employee" method="POST">
-                    <label>First Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label> <input type="text" name="new_first_name" required><br>
-                    <label>Last Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label> <input type="text" name="new_last_name"><br>
+                    <label>First Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label>
+                    <span style="color: red"></span>
+                    <input type="text" name="new_first_name" class="field-validation name" required><br>
+
+                    <label>Last Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label> 
+                    <span style="color: red"></span>
+                    <input type="text" name="new_last_name" class="field-validation name" required><br>
+
                     <label>Title</label> <input type="text" name="new_title"><br>
                     <label>Location</label> <input type="text" name="new_location"><br>
-                    <label>Email</label> <input type="text" name="new_title"><br>
-                    <label>Phone<span style="color:red;">10 digit max</span></label> <input type="text" name="new_phone"><br>
+                    <label>Email</label> 
+                    <span style="color: red"></span>
+                    <input type="text" name="new_title" class="field-validation email" ><br>
+
+                    <label>Phone<span style="color:red;">10 digit max</span></label> 
+                    <span style="color: red"></span>
+                    <input type="text" name="new_phone" class="field-validation phone" ><br>
+
                     <label>Fax</label> <input type="text" name="new_fax"><br>
 
                     <label for="image">Image</label><input id="new_node_image" type="file" name="new_image" size="chars"><br>
@@ -93,12 +105,23 @@
             <div class="">
                 <form id="form_edit_employee" method="POST">
                     <label>Employee ID<span style="color:red;">*</span></label> <input type="text" name="emp_Id" readonly="readonly" required><br>
-                    <label>First Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label> <input type="text" name="edit_first_name" required><br>
-                    <label>Last Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label> <input type="text" name="edit_last_name"><br>
+                    <label>First Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label> 
+                    <span style="color: red"></span>
+                    <input type="text" name="edit_first_name" class="field-validation name"  required><br>
+
+                    <label>Last Name<span>(alphabets and numbers)</span><span style="color:red;">*</span></label>
+                    <span style="color: red"></span>
+                    <input type="text" name="edit_last_name" class="field-validation name" required><br>
+
                     <label>Title</label> <input type="text" name="edit_emp_title"><br>
                     <label>Location</label> <input type="text" name="edit_location"><br>
-                    <label>Email</label> <input type="text" name="edit_email"><br>
-                    <label>Phone <span>(10 digit max)</span></label> <input type="text" name="edit_phone"><br>
+                    <label>Email</label>
+                    <span style="color: red"></span>
+                    <input type="text" name="edit_email" class="field-validation email" ><br>
+
+                    <label>Phone <span>(10 digit max)</span></label>
+                    <span style="color: red"></span>
+                    <input type="text" name="edit_phone" class="field-validation phone" ><br>
                     <label>Fax</label> <input type="text" name="edit_fax"><br>
 
                     <label for="image">Image</label><input id="new_node_image" type="file" name="image" size="chars"><br>
@@ -197,6 +220,23 @@
 
         $("#btn_new_employee").leanModal({top : 100, overlay : 0.6, closeButton: ".modal_close" });
         $("#btn_edit_employee").leanModal({top : 100, overlay : 0.6, closeButton: ".modal_close" });
+
+        var re_name = new RegExp("^[A-Za-z0-9]{1,}$");
+        $('.field-validation.name').keyup(function(){
+            $(this).prev().text(re_name.test($(this).val()) 
+                ? "":"Invalid name");
+        });
+        var re_phone = new RegExp("^[0-9]{1,10}$");
+        $('.field-validation.phone').keyup(function(){
+            $(this).prev().text(re_phone.test($(this).val()) 
+                ? "":"Invalid phone number");
+        });
+        var re_email = new RegExp("^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
+                    + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$");
+        $('.field-validation.email').keyup(function(){
+            $(this).prev().text(re_email.test($(this).val()) 
+                ? "":"Invalid email");
+        });
 
         $('form#form_new_employee').submit(function(e){
             var formData = new FormData(this);

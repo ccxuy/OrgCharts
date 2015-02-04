@@ -484,7 +484,7 @@ $(document).on("ready", function() {
             //for position name
             type_nodo += "child " + add_to_node + "_" + childs;
             var append_text = "<li class='" + type_nodo + " position'>";
-            append_text += "<div class='unclickable'></div>"
+            append_text += "<div class='unclickable'></div>";
             append_text += "<div class='label_node bold' id='pn'>" + texto + "</div>" + "<br>";
 
             //for position discription
@@ -536,6 +536,7 @@ $(document).on("ready", function() {
             //for unit name
             type_nodo += "child " + add_to_node + "_" + childs;
             var append_text = "<li class='" + type_nodo + " unit'>";
+            append_text += "<div class='unclickable'></div>";
             append_text += "<div class='label_node bold' id='un'>" + texto + "</div>" + "<br>";
 
             //for unit discription
@@ -843,6 +844,7 @@ $(document).on("ready", function() {
         });
 
         node_type = "";
+        //WTF is pervious guy doing...
         $.each(classList, function(index, item) {
             if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
                 del_node = item;
@@ -867,6 +869,7 @@ $(document).on("ready", function() {
                 // if node is not leaf node remove all information but keep the actural node
                 // node_to_edit.children("div").remove();
                 // node_to_edit.children("div:not('.opciones')").remove();
+                console.log("node_type="+node_type);
                 if (node_type == "unit") {
                     node_to_edit.find("> .label_node[id=un]").text("");
                     node_to_edit.find("> .label_node[id=ud]").text("");
