@@ -277,19 +277,41 @@ function get_emp(id, node) {
 }
 
 function reset_moreNodesWarning(){
-    console.log("reset_moreNodesWarning");
+    // console.log("reset_moreNodesWarning");
     $('.contracted').next().addClass('warn-more-nodes');
     $('.contracted').next().css('visibility', '');
+    $('.contracted').next().each(function(index){
+        var nodeLineDownParent = $(this).children().first();
+    // console.log('.contracted');
+    // console.log(nodeLineDownParent[0]);
+        if( nodeLineDownParent.children(".warn-block").length > 0){
+        }else{
+            nodeLineDownParent.append( "<a class='warn-block'>Expand</a>" );
+        }
+        nodeLineDownParent.children(".warn-block").css('display', '');
+    });
+    $('.expanded').next().each(function(){
+        var nodeLineDownParent = $(this).children().first();
+    // console.log('.contracted');
+    // console.log(nodeLineDownParent[0]);
+        nodeLineDownParent.children(".warn-block")
+            .css('display', 'none');
+    });
 }
 
 function setUpdateXMLButtonOn(){
     $("#update_button").attr('disabled', true);
     $('#update_button').addClass("disabled");
+
 }
 
 function setUpdateXMLButtonOff(){
     $("#update_button").attr('disabled', false);
     $('#update_button').removeClass("disabled");
+
+    //Disable edit
+    // opts.dragAndDrop = false;
+    
 }
 setUpdateXMLButtonOff();
 
@@ -845,15 +867,23 @@ $(document).on("ready", function() {
 
         node_type = "";
         //WTF is pervious guy doing...
-        $.each(classList, function(index, item) {
-            if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
-                del_node = item;
-                console.log(del_node);
-            }
-            if (item == "position" || item == "unit") {
-                node_type = item;
-            }
-        });
+        // $.each(classList, function(index, item) {
+        //     if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
+        //         del_node = item;
+        //         console.log(del_node);
+        //     }
+        //     if (item == "position" || item == "unit") {
+        //         node_type = item;
+        //     }
+        // });
+        if( $( nodeDiv ).hasClass( "unit" ) ){
+            node_type = "unit";
+        }else if( $( nodeDiv ).hasClass( "position" ) ){
+            node_type = "position";
+        }else{
+            console.log("unkown node type!!!");
+            console.log(nodeDiv[0]);
+        }
 
         node_to_edit = $("li." + del_node + ":not('.temp')");
         //consider removing only if node is not a position node with an employee in it
@@ -879,11 +909,14 @@ $(document).on("ready", function() {
                 if (node_type == "position") {
                     node_to_edit.find("> .label_node[id=pn]").text("");
                     node_to_edit.find("> .label_node[id=pd]").text("");
-                    $('.toast').text('More nodes below or employee inside, only empty current node.')
+                    $('.toast').text('More nodes below, only empty current node.')
                         .fadeIn(400).delay(3000).fadeOut(400);
                 }
             }
             init_tree();
+        }else{
+            $('.toast').text('Unable to perform delete because an employee has located inside this node.')
+                .fadeIn(400).delay(3000).fadeOut(400);
         }
     });
 
@@ -1092,5 +1125,14 @@ $(document).on("ready", function() {
         // $(".resetExtraField").click();
         $("#btn_remove_all_field_extra").click();
     };
+
+    $(document).on('click','.warn-block',function(event){
+        $(this).parent().parent().prev().find(".node").click();
+        reset_moreNodesWarning();
+    });
+    $(document).on('click','.node',function(event){
+        reset_moreNodesWarning();
+    });
+
 
 });

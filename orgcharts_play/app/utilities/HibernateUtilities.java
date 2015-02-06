@@ -24,6 +24,7 @@ import org.hibernate.service.ServiceRegistry;
 import config.Setting;
 import beans.ChartBean;
 import beans.ProfileBean;
+import org.hibernate.stat.Statistics;
 import play.Logger;
 
 //import org.json.simple.JSONObject;
@@ -31,6 +32,9 @@ public class HibernateUtilities {
 
 	private static SessionFactory sessfactory;
 	private static ServiceRegistry serviceRegistry;
+	private static Statistics stats;
+
+	private static Session currentSession = null;
 
 	public static SessionFactory getFactory() throws Exception {
 //		File cfg = new File("hibernate.cfg.xml");
@@ -43,6 +47,8 @@ public class HibernateUtilities {
 			    serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
 			            configuration.getProperties()).build();
 			    sessfactory = configuration.buildSessionFactory(serviceRegistry);
+				stats = sessfactory.getStatistics();
+				stats.setStatisticsEnabled(true);
 			} catch (Exception e) {
 				Logger.error("Initial SessionFactory creation failed." + e);
 				throw new IllegalStateException(
@@ -61,7 +67,7 @@ public class HibernateUtilities {
 	public static List searchResults() throws Exception {
 		List data = null;
 		Query query = null;
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -84,7 +90,7 @@ public class HibernateUtilities {
 
 	public static void addRecord(String sfirstName, String slastName,
 			String email, Blob dataBlob) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -104,7 +110,7 @@ public class HibernateUtilities {
 
 	public static String getId() {
 		String empId = "";
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Query query = null;
 		Transaction tx = null;
 		try {
@@ -132,7 +138,7 @@ public class HibernateUtilities {
 	 * @return 1 if success, 0 if failed
 	 */
 	public static int editNode(ProfileBean employeeProfile) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -160,7 +166,7 @@ public class HibernateUtilities {
 	@Deprecated
 	public static void editNode(String sfirstName, String slastName,
 			String email, Blob image, int empId) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Query query = null;
 		Transaction tx = null;
 		// String hql =
@@ -188,7 +194,7 @@ public class HibernateUtilities {
 	}
 
 	public static void deleteRecord(String nodeid) throws Exception {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Query query = null;
 		Transaction tx = null;
 		String hql = "delete from ProfileBean where node like :nodeid";
@@ -217,7 +223,7 @@ public class HibernateUtilities {
 		Query query2 = null;
 		Query query3 = null;
 		String toAdd = "";
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -248,7 +254,7 @@ public class HibernateUtilities {
 
 	// ////////////////////////////////////
 	public static List getEditedData(String id) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		List data = null;
 		// Query query = null;
 		Transaction tx = null;
@@ -301,7 +307,7 @@ public class HibernateUtilities {
 	public static List searchName(int id) throws Exception {
 		List data = null;
 		Query query = null;
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -323,7 +329,7 @@ public class HibernateUtilities {
 	 * @return Employee ProfileBean if success, null if failed
 	 */
 	public static ProfileBean searchEmployeeById(int id) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -363,7 +369,7 @@ public class HibernateUtilities {
 	 * @return how many Employee or -1 for failed.
 	 */
 	public static long countEmployee(){
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -396,7 +402,7 @@ public class HibernateUtilities {
 	 */
 	public static List<ProfileBean> getAllEmployee(int limitQueries){
 
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -405,6 +411,7 @@ public class HibernateUtilities {
 			if(limitQueries>0)crit.setMaxResults(limitQueries);
 			List<ProfileBean>  empList = crit.list();
 			tx.commit();
+
 			if (null != empList) {
 				// A success query would return not null result even no match
 				return empList;
@@ -424,7 +431,7 @@ public class HibernateUtilities {
 	 * @return id(>0) if success, 0 failed
 	 */
 	public static int saveOrUpdateEmployee(ProfileBean pb) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -453,7 +460,7 @@ public class HibernateUtilities {
 	 * @return 1 if success, 0 if failed,, -1 if chart of this id not found.
 	 */
 	public static int deleteEmployeeById(int empid) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -495,7 +502,7 @@ public class HibernateUtilities {
 	 * @return ChartBean if success, null if failed
 	 */
 	public static ChartBean searchChartByUUID(String uuid) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -510,6 +517,7 @@ public class HibernateUtilities {
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
+
 		} finally {
 			session.close();
 		}
@@ -521,7 +529,7 @@ public class HibernateUtilities {
 	 * @return 1 if success, 0 failed
 	 */
 	public static int saveOrUpdateChart(ChartBean chartBean) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -548,7 +556,7 @@ public class HibernateUtilities {
 	 * @return
 	 */
 	public static List<ChartBean> getAllChart(int limitQueries) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -578,7 +586,7 @@ public class HibernateUtilities {
 	 * @return how many chart have this name. or -1 for failed.
 	 */
 	public static long countCharBytName(String name){
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -619,7 +627,7 @@ public class HibernateUtilities {
 	 * @return list of ChartBean created by this ownerId, null if failed
 	 */
 	public static List<ChartBean> getAllChartByOwnerId(String ownerId, int limitQueries) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -651,7 +659,7 @@ public class HibernateUtilities {
 	 * @return 1 if success, 0 if failed,, -1 if chart of this id not found.
 	 */
 	public static int deleteChartByUUID(String uuid) {
-		Session session = sessfactory.openSession();
+		Session session = openSession();
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
@@ -674,6 +682,20 @@ public class HibernateUtilities {
 			session.close();
 		}
 		return 0;
+	}
+
+	private static Session openSession(){
+		Logger.debug("openSession > getConnectCount()=" + stats.getConnectCount());
+		Logger.debug("openSession > getSessionOpenCount()=" + stats.getSessionOpenCount());
+		Logger.debug("openSession > getSessionCloseCount()=" + stats.getSessionCloseCount());
+//		if(null==currentSession||false==currentSession.isOpen()){
+//			currentSession = sessfactory.openSession();
+//		}else{
+//			currentSession = sessfactory.getCurrentSession();
+//		}
+
+//		return currentSession;
+		return sessfactory.openSession();
 	}
 	
 }

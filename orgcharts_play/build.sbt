@@ -29,7 +29,10 @@ libraryDependencies ++= Seq(
   "com.fasterxml.jackson.core" % "jackson-annotations" % "2.5.0",
   "org.perf4j" % "perf4j" % "0.9.16",
   "com.google.code.gson" % "gson" % "2.3.1",
-  "org.hibernate" % "hibernate-entitymanager" % "4.3.0.Final"
+  "org.hibernate" % "hibernate-entitymanager" % "4.3.0.Final",
+  "org.hibernate" % "hibernate-c3p0" % "4.3.8.Final",
+  "com.mchange" % "c3p0" % "0.9.2.1",
+  "com.mchange" % "mchange-commons-java" % "0.2.9"
 )
 
 // resolvers += Resolver.url("Objectify Play Repository", url("http://deadbolt.ws/releases/"))(Resolver.ivyStylePatterns)

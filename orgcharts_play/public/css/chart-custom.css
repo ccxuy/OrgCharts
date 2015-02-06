@@ -155,11 +155,18 @@ a:hover {
     color: #FF0000;
     background-color: #FFF9F2;
 }
-.jOrgChart .warn-more-nodes td::after { 
-    content: "More nodes";
-    background: #c00;
+/*.jOrgChart .warn-more-nodes td::after { 
+    content: "More";
+    background: gray;
     height: 29px;
     width: 100%;
+}*/
+.jOrgChart .warn-block { 
+    background: gray;
+    color: white;
+    height: 29px;
+    width: 100%;
+    cursor: -webkit-zoom-in;
 }
 
 .hidden {
@@ -241,7 +248,7 @@ a:hover {
     width:200px;
     height:20px;
     height:auto;
-    position:absolute;
+    position:fixed;
     left:50%;
     margin-left:-100px;
     top:50px;
@@ -255,4 +262,5 @@ a:hover {
     -webkit-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
+    z-index: 1000;
 }
