@@ -125,8 +125,8 @@ body {
 /*form .name ::after{
     content: " aaa ";
     color: red;
-}
-form .field-validation ::before{
-    content: " aaa ";
+}*/
+/*.show-invalid::after{
+    content: " Invalid ";
     color: red;
 }*/

@@ -234,7 +234,7 @@
         var re_email = new RegExp("^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
                     + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$");
         $('.field-validation.email').keyup(function(){
-            $(this).prev().text(re_email.test($(this).val()) 
+            $(this).prev().text(re_email.test($(this).val())
                 ? "":"Invalid email");
         });
 
@@ -291,7 +291,15 @@
                     // cTableSel.dataTable().fnAddData(j);
                 },
                 error: function(msg) {
-                    alert(msg.status + ", " + msg.statusText + "\n" + "Failed. Make sure you have permission to do so and check connection to server.");
+                    if(401==msg.status){
+                        alert(msg.status + ", " + msg.statusText + "\n" + "Unauthorized access. Are you readonly user? You may requrest permission from admin.");
+                    }else if(403==msg.status){
+                        alert(msg.status + ", " + msg.statusText + "\n" + "Forbidden access. Make sure your have permission to do so. You may requrest permission from admin or owner.");
+                    }else if(404==msg.status){
+                        alert(msg.status + ", " + msg.statusText + "\n" + "Not Found. What you are looking for may already deleted.");
+                    }else{
+                        alert(msg.status + ", " + msg.statusText + "\n" + "Unkown error. Make sure your input and have permission or connection to server.");
+                    }
                 }
             })
         }

@@ -89,6 +89,10 @@
                 $(opts.chartElement).children().remove();
                 $this.jOrgChart(opts);
                 get_emp_info();
+                
+                if (opts.afterDrop){
+                    opts.afterDrop();
+                }
             });
 
             // Drop event handler for nodes
@@ -256,14 +260,18 @@
                 }
             });
         }
-        $nodeDiv.append(
-                "<div class='opciones hidden overlay'>" +
-                "</div>")
-            .mouseenter(function() {
-                $(this).find(".opciones").toggle();
-            }).mouseleave(function() {
-                $(this).find(".opciones").toggle();
-            });
+
+        if(opts.showOptions){
+            $nodeDiv.append(
+                    "<div class='opciones hidden overlay'>" +
+                    "</div>")
+                .mouseenter(function() {
+                    $(this).find(".opciones").toggle();
+                }).mouseleave(function() {
+                    $(this).find(".opciones").toggle();
+                });
+        }
+        
 
         var append_text = "<li class='temp'></li>";
         var $list_element = $node.clone()

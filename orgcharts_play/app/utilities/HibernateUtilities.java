@@ -697,5 +697,19 @@ public class HibernateUtilities {
 //		return currentSession;
 		return sessfactory.openSession();
 	}
+
+	private static void closeSession(){
+		Logger.debug("closeSession > getConnectCount()=" + stats.getConnectCount());
+		Logger.debug("closeSession > getSessionOpenCount()=" + stats.getSessionOpenCount());
+		Logger.debug("closeSession > getSessionCloseCount()=" + stats.getSessionCloseCount());
+//		if(null==currentSession||false==currentSession.isOpen()){
+//			currentSession = sessfactory.openSession();
+//		}else{
+//			currentSession = sessfactory.getCurrentSession();
+//		}
+
+//		return currentSession;
+		sessfactory.getCurrentSession().close();
+	}
 	
 }

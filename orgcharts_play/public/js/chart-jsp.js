@@ -56,7 +56,11 @@ var id_num = "";
 var load = true;
 var opts = {
     chartElement: '#chart',
-    dragAndDrop: true
+    dragAndDrop: false,
+    showOptions: true,
+    afterDrop: function(){
+        reset_moreNodesWarning();
+    }
 };
 
 function init_tree() {
@@ -276,6 +280,7 @@ function get_emp(id, node) {
     });
 }
 
+// var fnResetMoreNodesWarning = 
 function reset_moreNodesWarning(){
     // console.log("reset_moreNodesWarning");
     $('.contracted').next().addClass('warn-more-nodes');
@@ -298,24 +303,38 @@ function reset_moreNodesWarning(){
             .css('display', 'none');
     });
 }
+// console.log(fnResetMoreNodesWarning);
 
-function setUpdateXMLButtonOn(){
+var editMode = false;
+function setEditModeOff(){
+    editMode = false;
     $("#update_button").attr('disabled', true);
     $('#update_button').addClass("disabled");
 
+    //Disable edit
+    opts.dragAndDrop = false;
+    // opts.showOptions = false;
+    init_tree();
+    if(load==false){
+        init_tree();
+    }
 }
 
-function setUpdateXMLButtonOff(){
+function setEditModeOn(){
+    editMode = true;
     $("#update_button").attr('disabled', false);
     $('#update_button').removeClass("disabled");
 
-    //Disable edit
-    // opts.dragAndDrop = false;
-    
+    //Enable edit
+    opts.dragAndDrop = true;
+    // opts.showOptions = true;
+    if(load==false){
+        init_tree();
+    }
 }
-setUpdateXMLButtonOff();
+setEditModeOn();
 
-var click_flag = true;
+// var click_flag = true;
 var node_to_edit;
 
 //for reset form
@@ -337,6 +356,11 @@ $(document).on("ready", function() {
 
     // Edit node icon
     $(".edit").live("click", function(e) {
+        if(false==editMode){
+            doPopupToast("Please enter edit mode first.");
+            stopPropagation();
+            return;
+        }
         classList = $(this).parent().parent().attr('class').split(/\s+/);
         $.each(classList, function(index, item) {
             if (item != "temp" && item != "node" && item != "child" && item != "ui-draggable" && item != "ui-droppable" && item != "position" && item != "unit") {
@@ -395,8 +419,10 @@ $(document).on("ready", function() {
 
     // Add Node
     $(".add").live("click", function(e) {
-        e.stopPropagation();
-        click_flag = false;
+        if(false==editMode){
+            doPopupToast("Please enter edit mode first.");
+            return;
+        }
         node_type = "";
         classList = $(this).parent().parent().attr('class').split(/\s+/);
         $.each(classList, function(index, item) {
@@ -404,20 +430,21 @@ $(document).on("ready", function() {
                 add_to_node = item;
             }
         });
-    }).fancybox({
-        maxWidth: 550,
-        maxHeight: 300,
-        fitToView: false,
-        width: '70%',
-        height: '70%',
-        autoSize: false,
-        closeClick: false,
-        openEffect: 'elastic',
-        closeEffect: 'elastic',
-        afterClose: function() {
-            click_flag = true;
-            reset_forms();
-        }
+        $(".add").fancybox({
+            maxWidth: 550,
+            maxHeight: 300,
+            fitToView: false,
+            width: '70%',
+            height: '70%',
+            autoSize: false,
+            closeClick: false,
+            openEffect: 'elastic',
+            closeEffect: 'elastic',
+            afterClose: function() {
+                click_flag = true;
+                reset_forms();
+            }
+        })
     });
 
 
@@ -604,11 +631,17 @@ $(document).on("ready", function() {
             }
         });
         if ($(this).parent().parent().attr('id') != null) {
+
             $("#edit_employee").show();
             $("#fancy_new_employee").hide();
             $("#add_employee").hide();
             $("#edit_employee_radio").trigger("click");
         } else {
+            if(false==editMode){
+                doPopupToast("Please enter edit mode first.");
+                stopPropagation();
+                return;
+            }
             $("#edit_employee").hide();
             $("fancy_new_employee").hide();
             $("#add_employee").show();
@@ -743,6 +776,11 @@ $(document).on("ready", function() {
             });
             $("#fancy_edit_employee").show();
         } else {
+            if(false==editMode){
+                doPopupToast("Please enter edit mode first.");
+                $.fancybox.close();
+                return;
+            }
             $("#fancy_new_employee").hide();
             $("#fancy_delete_employee").show();
             $("#fancy_edit_employee").hide();
@@ -849,9 +887,12 @@ $(document).on("ready", function() {
         //return false;
     });
 
-
     // Delete Node
     $(".del").live("click", function(e) {
+        if(false==editMode){
+            doPopupToast("Please enter edit mode first.");
+            return;
+        }
         var nodo = $(this);
         var nodeDiv = null;
 
@@ -887,6 +928,7 @@ $(document).on("ready", function() {
 
         node_to_edit = $("li." + del_node + ":not('.temp')");
         //consider removing only if node is not a position node with an employee in it
+        console.log(node_to_edit.attr("id"));
         if (node_to_edit.attr("id") == null) {
             if (node_to_edit.children('ul').children().length == 0) {
                 //if node is a leaf node remove the node completely
@@ -899,24 +941,22 @@ $(document).on("ready", function() {
                 // if node is not leaf node remove all information but keep the actural node
                 // node_to_edit.children("div").remove();
                 // node_to_edit.children("div:not('.opciones')").remove();
-                console.log("node_type="+node_type);
+                // console.log("node_type="+node_type);
                 if (node_type == "unit") {
-                    node_to_edit.find("> .label_node[id=un]").text("");
-                    node_to_edit.find("> .label_node[id=ud]").text("");
-                    $('.toast').text('More nodes below, only empty current node.')
-                        .fadeIn(400).delay(3000).fadeOut(400);
+                    node_to_edit.children(".label_node[id=un]").text("");
+                    node_to_edit.children(".label_node[id=ud]").text("");
+                    doPopupToast('More nodes below, only empty current unit.');
                 }
                 if (node_type == "position") {
-                    node_to_edit.find("> .label_node[id=pn]").text("");
-                    node_to_edit.find("> .label_node[id=pd]").text("");
-                    $('.toast').text('More nodes below, only empty current node.')
-                        .fadeIn(400).delay(3000).fadeOut(400);
+                    node_to_edit.children(".label_node[id=pn]").text("");
+                    node_to_edit.children(".label_node[id=pd]").text("");
+                    doPopupToast('More nodes below, only empty current position.');
                 }
             }
             init_tree();
         }else{
-            $('.toast').text('Unable to perform delete because an employee has located inside this node.')
-                .fadeIn(400).delay(3000).fadeOut(400);
+            doPopupToast('Unable to perform delete because \
+                an employee has located inside this node.');
         }
     });
 
@@ -968,7 +1008,7 @@ $(document).on("ready", function() {
         if("disabled"===$("#update_button").attr("disabled")){
             return;
         }
-        setUpdateXMLButtonOn();
+        setEditModeOff();
         var updatestrg = $('#org').html();
         $.ajax({
             type: 'Post',
@@ -980,11 +1020,11 @@ $(document).on("ready", function() {
             url: chartRestUrlBase + '../chart/xml/',
             success: function(respose, text, xhr) {
                 alert("Successfully Saved");
-                setUpdateXMLButtonOff();
+                setEditModeOn();
             },
             error: function(msg) {
                 alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
-                setUpdateXMLButtonOff();
+                setEditModeOn();
             }
         });
     });
@@ -1039,19 +1079,19 @@ $(document).on("ready", function() {
                 $("#editSwitch").bootstrapSwitch('setDisabled', false);
                 if (editString === "enable") {
                     $("#editSwitch").bootstrapSwitch('setState', true);
-                    setUpdateXMLButtonOff();
+                    setEditModeOn();
                     ajaxRequestPermission("status");
                 } else if (editString === "disable") {
                     $("#editSwitch").bootstrapSwitch('setState', false);
-                    setUpdateXMLButtonOn();
+                    setEditModeOff();
                     ajaxRequestPermission("status");
                 } else if (editString === "status") {
                     if(respose['isLocked']==="true" && respose['isOwner']==="true"){
                         $("#editSwitch").bootstrapSwitch('setState', true);
-                        setUpdateXMLButtonOff();
+                        setEditModeOn();
                     }else{
                         $("#editSwitch").bootstrapSwitch('setState', false);
-                        setUpdateXMLButtonOn();
+                        setEditModeOff();
                     }
                 }
             },
@@ -1067,6 +1107,19 @@ $(document).on("ready", function() {
         });
     }
 
+    function injectValidateFieldWarning( selField, reExp ){
+        if(false === $(selField).next().hasClass('warning')){
+            $(selField).after("<div></div>");
+            $(selField).next().addClass("validation-warning");
+        }
+        var divWarn = $(selField).next();
+        divWarn.text("");
+        $(selField).on("keyup", function(){
+            console.log(divWarn[0]);
+            divWarn.text("Invalidate field");
+        });
+    }
+
     function onErrorMessage(msg) {
         if (msg.responseText.match("^{")) {
             var responseJson = JSON.parse(msg.responseText);
@@ -1078,6 +1131,10 @@ $(document).on("ready", function() {
         } else {
             alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText);
         }
+    }
+    function doPopupToast(msg) {
+        $('.toast').text(msg)
+            .fadeIn(400).delay(3000).fadeOut(400);
     }
 
 
@@ -1134,5 +1191,7 @@ $(document).on("ready", function() {
         reset_moreNodesWarning();
     });
 
+    injectValidateFieldWarning("input[name=edit_first_name]","ex");
 
-});
+
+}); // END $(document).on("ready"
