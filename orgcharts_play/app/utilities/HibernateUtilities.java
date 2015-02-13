@@ -685,7 +685,10 @@ public class HibernateUtilities {
 	}
 
 	private static Session openSession(){
-		Logger.debug("openSession > current opened seesion=" + (stats.getSessionOpenCount()-stats.getSessionCloseCount()));
+		Session sess = sessfactory.openSession();
+		Logger.debug("openSession > current opened session=" + (stats.getSessionOpenCount()-stats.getSessionCloseCount()));
+		Logger.debug("openSession > getConnectCount=" + stats.getConnectCount());
+
 //		if(null==currentSession||false==currentSession.isOpen()){
 //			currentSession = sessfactory.openSession();
 //		}else{
@@ -693,11 +696,12 @@ public class HibernateUtilities {
 //		}
 
 //		return currentSession;
-		return sessfactory.openSession();
+		return sess;
 	}
 
 	private static void closeSession(){
-		Logger.debug("closeSession > current opened seesion=" + (stats.getSessionOpenCount()-stats.getSessionCloseCount()));
+		Logger.debug("closeSession > unclosed session=" + (stats.getSessionOpenCount()-stats.getSessionCloseCount()));
+		Logger.debug("closeSession > getConnectCount=" + stats.getConnectCount());
 //		if(null==currentSession||false==currentSession.isOpen()){
 //			currentSession = sessfactory.openSession();
 //		}else{
