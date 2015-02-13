@@ -312,6 +312,7 @@ function setEditModeOff(){
     $('#update_button').addClass("disabled");
 
     $("#edit_employee_form input").attr("readonly", "true");
+    $("#edit_employee_form [name=image]").attr("disabled", "true");
     //Disable edit
     opts.dragAndDrop = false;
     // opts.showOptions = false;
@@ -327,6 +328,7 @@ function setEditModeOn(){
     $('#update_button').removeClass("disabled");
 
     $("#edit_employee_form input").removeAttr("readonly");
+    $("#edit_employee_form [name=image]").removeAttr("disabled");
     //Enable edit
     opts.dragAndDrop = true;
     // opts.showOptions = true;
@@ -715,10 +717,11 @@ $(document).on("ready", function() {
     });
 
     var doBlindEditEmployeeFieldValidation = function(){
+        console.log("doBlindEditEmployeeFieldValidation");
         re_nameStr = "^[A-Za-z0-9]{1,}$";
         injectValidateFieldWarning("input[name=edit_first_name]",re_nameStr);
         injectValidateFieldWarning("input[name=edit_last_name]",re_nameStr);
-        re_emailStr = "^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
+        re_emailStr = "^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@"
             + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$";
         injectValidateFieldWarning("input[name=edit_email]",re_emailStr);
         re_phoneStr = "^[0-9]{1,10}$";
@@ -780,6 +783,9 @@ $(document).on("ready", function() {
                 if ("undefined" != empBean['extraString']) {
                     $("#edit_extra").val(empBean['extraString']);
                     $("#btn_update_field_from_extra").click();
+                    if(editMode===false){
+                        $("#edit_employee_form input").attr("readonly", "true");
+                    }
                     // ko.mapping.fromJS(JSON.parse(empBean['extraString']),ExtrafieldsModel);
                     // ExtrafieldsModel.extrafields(empBean['extraString']);
                     // ko.mapping.fromJSON(empBean['extraString'],null,ExtrafieldsModel.extrafields);
@@ -1122,12 +1128,12 @@ $(document).on("ready", function() {
     }
 
     function injectValidateFieldWarning( selField, reExp ){
-        if(false === $(selField).next().hasClass('warning')){
+        if(false === $(selField).next().hasClass('validation-warning')){
             $(selField).after("<div></div>");
             $(selField).next().addClass("validation-warning");
         }
         var divWarn = $(selField).next();
-        divWarn.text("");
+        divWarn.html("");
         var re = new RegExp(reExp);
         $(selField).on("keyup", function(){
             divWarn.text(re.test($(selField).val())?"":"Invalidate field.");

@@ -22,9 +22,12 @@
 }
 .cform p.contact {
     font-size: 12px;
-    margin: 0px 0px 10px 0px;
+    margin: 5px 0px 5px 0px;
     line-height: 14px;
     font-family: Arial, Helvetica;
+}
+.cform table input {
+    margin: 2px 0px 2px 0px;
 }
 .cform input[type="text"] {
     width: 300px;
@@ -62,7 +65,6 @@
     color: #4b4b4b;
     font-size: 14px;
     -webkit-border-radius: 5px;
-    margin-bottom: 15px;
     margin-top: -10px;
 }
 .cform input:focus, textarea:focus {
