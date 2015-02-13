@@ -311,6 +311,7 @@ function setEditModeOff(){
     $("#update_button").attr('disabled', true);
     $('#update_button').addClass("disabled");
 
+    $("#edit_employee_form input").attr("readonly", "true");
     //Disable edit
     opts.dragAndDrop = false;
     // opts.showOptions = false;
@@ -325,6 +326,7 @@ function setEditModeOn(){
     $("#update_button").attr('disabled', false);
     $('#update_button').removeClass("disabled");
 
+    $("#edit_employee_form input").removeAttr("readonly");
     //Enable edit
     opts.dragAndDrop = true;
     // opts.showOptions = true;
@@ -712,6 +714,17 @@ $(document).on("ready", function() {
         }
     });
 
+    var doBlindEditEmployeeFieldValidation = function(){
+        re_nameStr = "^[A-Za-z0-9]{1,}$";
+        injectValidateFieldWarning("input[name=edit_first_name]",re_nameStr);
+        injectValidateFieldWarning("input[name=edit_last_name]",re_nameStr);
+        re_emailStr = "^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
+            + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$";
+        injectValidateFieldWarning("input[name=edit_email]",re_emailStr);
+        re_phoneStr = "^[0-9]{1,10}$";
+        injectValidateFieldWarning("input[name=edit_phone]",re_phoneStr);
+    }
+
     $("input[type=radio][name=change]").click(function() {
         //alert("clicked");
         //alert(node_type);
@@ -722,6 +735,7 @@ $(document).on("ready", function() {
             var empBean;
             node_to_edit = $("li." + add_to_node + ":not('.temp')");
             var empId = node_to_edit.attr("id");
+            doBlindEditEmployeeFieldValidation();
 
             function ajax2() {
                 return $.ajax({
@@ -1114,9 +1128,9 @@ $(document).on("ready", function() {
         }
         var divWarn = $(selField).next();
         divWarn.text("");
+        var re = new RegExp(reExp);
         $(selField).on("keyup", function(){
-            console.log(divWarn[0]);
-            divWarn.text("Invalidate field");
+            divWarn.text(re.test($(selField).val())?"":"Invalidate field.");
         });
     }
 
@@ -1191,7 +1205,6 @@ $(document).on("ready", function() {
         reset_moreNodesWarning();
     });
 
-    injectValidateFieldWarning("input[name=edit_first_name]","ex");
 
 
 }); // END $(document).on("ready"

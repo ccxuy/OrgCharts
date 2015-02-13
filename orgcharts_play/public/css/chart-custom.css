@@ -56,8 +56,12 @@ a:hover {
 .alert-message {
     margin: 2px 0;
 }
-.topbar {
-    position: absolute;
+
+@media screen{
+    .topbar {position: fixed;}
+}
+@media print{
+    .topbar {position: absolute;}
 }
 /* Custom chart styling */
 
@@ -270,4 +274,10 @@ a:hover {
     -moz-box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     z-index: 10000;
+}
+
+form .validation-warning{
+    color: red;
+    float: right;
+    margin-bottom: 20px;
 }

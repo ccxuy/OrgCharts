@@ -116,7 +116,31 @@ public class ChartCtrl extends Controller {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                return badRequest();
+                return internalServerError("Database connection error.");
+            }
+        }
+        Logger.info("ChartCtrl@getChart");
+        return forbidden(" Permission Denied : You don't have permission to access this chart! ");
+    }
+
+    @SubjectPresent
+    public static Result countChart() {
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        // Read ChartBean from storage
+        if (Setting.STORAGE == StorageSetting.HIBERNATE) {
+            String chartName = request().getQueryString("name");
+            if (null == chartName) {
+                chartName = "";
+            }
+            try {
+                System.out.println("ChartCtrl@countChart: name=" + chartName);
+                HibernateUtilities.getFactory();
+                long matchCount = HibernateUtilities
+                        .countCharBytName(chartName);
+                return ok();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return internalServerError();
             }
         }
         Logger.info("ChartCtrl@getChart");

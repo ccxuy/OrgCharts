@@ -118,7 +118,7 @@ public class HibernateUtilities {
 			tx = session.beginTransaction();
 			query = session.createQuery(hql);
 			System.out.println("HibernateUtilities@getId"+query.list());
-			empId = ((Integer) (query.list().get(0))).toString();
+			empId = query.list().get(0).toString();
 			tx.commit();
 
 		} catch (HibernateException e) {
@@ -596,7 +596,7 @@ public class HibernateUtilities {
 			crit.setProjection(Projections.rowCount());
 			if(null != name){
 //				crit.add(Restrictions.eqOrIsNull(Setting.ChartAlias.ChartField_Name, name));
-				crit.add( Restrictions.eq("Setting.ChartAlias.ChartField_Name", name));
+				crit.add( Restrictions.eq("chartName", name));
 			}
 			Long result=(Long)crit.uniqueResult();
 			return result;
@@ -685,9 +685,7 @@ public class HibernateUtilities {
 	}
 
 	private static Session openSession(){
-		Logger.debug("openSession > getConnectCount()=" + stats.getConnectCount());
-		Logger.debug("openSession > getSessionOpenCount()=" + stats.getSessionOpenCount());
-		Logger.debug("openSession > getSessionCloseCount()=" + stats.getSessionCloseCount());
+		Logger.debug("openSession > current opened seesion=" + (stats.getSessionOpenCount()-stats.getSessionCloseCount()));
 //		if(null==currentSession||false==currentSession.isOpen()){
 //			currentSession = sessfactory.openSession();
 //		}else{
@@ -699,9 +697,7 @@ public class HibernateUtilities {
 	}
 
 	private static void closeSession(){
-		Logger.debug("closeSession > getConnectCount()=" + stats.getConnectCount());
-		Logger.debug("closeSession > getSessionOpenCount()=" + stats.getSessionOpenCount());
-		Logger.debug("closeSession > getSessionCloseCount()=" + stats.getSessionCloseCount());
+		Logger.debug("closeSession > current opened seesion=" + (stats.getSessionOpenCount()-stats.getSessionCloseCount()));
 //		if(null==currentSession||false==currentSession.isOpen()){
 //			currentSession = sessfactory.openSession();
 //		}else{
