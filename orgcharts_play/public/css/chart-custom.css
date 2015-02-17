@@ -278,3 +278,7 @@ body .topbar{
     box-shadow: 0px 0px 24px -1px rgba(56, 56, 56, 1);
     z-index: 10000;
 }
+.validation-warning{
+    color: red;
+    float: right;
+}

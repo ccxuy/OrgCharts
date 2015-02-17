@@ -313,6 +313,8 @@ function setEditModeOff(){
 
     $("#edit_employee_form input").attr("readonly", "true");
     $("#edit_employee_form [name=image]").attr("disabled", "true");
+    $("#edit_employee_form a").hide();
+    // $("#edit_employee_form #edit_node_image<.contact").hide();
     //Disable edit
     opts.dragAndDrop = false;
     // opts.showOptions = false;
@@ -329,6 +331,8 @@ function setEditModeOn(){
 
     $("#edit_employee_form input").removeAttr("readonly");
     $("#edit_employee_form [name=image]").removeAttr("disabled");
+    $("#edit_employee_form a").show();
+    // $("#edit_employee_form #edit_node_image<.contact").show();
     //Enable edit
     opts.dragAndDrop = true;
     // opts.showOptions = true;
@@ -780,18 +784,24 @@ $(document).on("ready", function() {
                 } else {
                     $(".emp-image-box").hide();
                 }
+                console.log(empBean['extraString']);
                 if ("undefined" != empBean['extraString']) {
                     $("#edit_extra").val(empBean['extraString']);
-                    $("#btn_update_field_from_extra").click();
                     if(editMode===false){
                         $("#edit_employee_form input").attr("readonly", "true");
+                        $("#edit_employee_form a").hide();
                     }
+                    $("#btn_update_field_from_extra").click();
                     // ko.mapping.fromJS(JSON.parse(empBean['extraString']),ExtrafieldsModel);
                     // ExtrafieldsModel.extrafields(empBean['extraString']);
                     // ko.mapping.fromJSON(empBean['extraString'],null,ExtrafieldsModel.extrafields);
                     // ExtrafieldsModel.extrafields = empBean['extraString'];
                     // ExtrafieldsModel(JSON.parse(empBean['extraString']));
                     // console.log(ExtrafieldsModel.extrafields);
+                }
+                if(editMode===false){
+                    $("#edit_employee_form input").attr("readonly", "true");
+                    $("#edit_employee_form a").hide();
                 }
             });
             $("#fancy_edit_employee").show();
@@ -1136,7 +1146,7 @@ $(document).on("ready", function() {
         divWarn.html("");
         var re = new RegExp(reExp);
         $(selField).on("keyup", function(){
-            divWarn.text(re.test($(selField).val())?"":"Invalidate field.");
+            divWarn.text(re.test($(selField).val())?"":"Invalid field.");
         });
     }
 
