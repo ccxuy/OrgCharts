@@ -37,7 +37,7 @@ public class HibernateUtilities {
 	private static Session currentSession = null;
 
 	public static SessionFactory getFactory() throws Exception {
-//		File cfg = new File("hibernate.cfg.xml");
+//		File cfg = new File("hibernate.cfg.xml");getConnectCount
 		if (sessfactory == null) {
 			System.out.println("Working Directory = " +
 		              System.getProperty("user.dir"));

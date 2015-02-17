@@ -135,9 +135,9 @@ public class ChartCtrl extends Controller {
             try {
                 System.out.println("ChartCtrl@countChart: name=" + chartName);
                 HibernateUtilities.getFactory();
-                long matchCount = HibernateUtilities
+                Long matchCount = HibernateUtilities
                         .countCharBytName(chartName);
-                return ok();
+                return ok(matchCount.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 return internalServerError();

@@ -68,6 +68,7 @@
                     <form id="form_new_chart" method="POST">
                         <label>Chart Name<span style="color:red;">*</span>
                         </label>
+                        <span style="color: red"></span>
                         <input type="text" name="new_chart_name" required>
                         <br>
                         <!-- <label>Owner ID</label>
@@ -310,6 +311,25 @@
             return false;
         });
 
+
+        $('input[name=new_chart_name]').focusout(function(){
+            var self = $("input[name=new_chart_name]")
+            self.prev().text("");
+            $.ajax({
+                type: "GET",
+                data: {
+                    name: $("input[name=new_chart_name]").val()
+                },
+                url: "../chart/count/",
+                success: function(respose, text, xhr) {
+                    if(respose>0){
+                        self.prev().text("Chart with same name already exist.");
+                    }else if(respose==0){
+                        self.prev().text("");
+                    }
+                }
+            });
+        });
         var re_permitted_user = new RegExp("^[A-Za-z0-9]{0,}?(;[A-Za-z0-9]{1,}){0,}$");
         $('textarea.shortname-group').keyup(function(){
             $(this).prev().text(re_permitted_user.test($(this).val()) 
