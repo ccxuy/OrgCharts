@@ -134,9 +134,9 @@
             <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
+                        <li class="sidebar-search" style="display: none;">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <div class="input-group custom-search-form" style="display: none;">
                                 <span class="input-group-btn">
                                     <button class="btn btn-default" type="button">
                                         <i class="fa fa-search"></i>
@@ -174,7 +174,19 @@
 
     </div>
     <!-- /#wrapper -->
-
+    
+    <script>
+        $(function(){
+            $('.sidebar-search input.form-control').keyup(function(){
+                var searchText = $(this).val();
+                $('ul#side-menu > li').not(".sidebar-search").each(function(){
+                    var currentLiText = $(this).text(),
+                        showCurrentLi = currentLiText.indexOf(searchText) !== -1;
+                    $(this).toggle(showCurrentLi);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -22,7 +22,7 @@
                     <div class="col-lg-12">
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Employee query result:
+                                Employee Query Result:
                             </div>
                             <!-- /.panel-heading -->
                             <div class="panel-body">
@@ -38,6 +38,7 @@
                                                 <th>Location</th>
                                                 <th>Phone</th>
                                                 <th>Fax</th>
+                                                <th>Edit</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -170,6 +171,7 @@
 
         var cTableSel = $('#dataTables-employee');
         var cTable = $('#dataTables-employee').DataTable({
+            "autoWidth": false,
             "ajax": '../employee/all/',
             "columns": [
                 { "data": "id" },
@@ -181,13 +183,14 @@
                 { "data": "phone" },
                 { "data": "fax" }
             ],
-            // "columnDefs": [
-            //     {
-            //         "targets": [ 0 ],
-            //         "visible": false,
-            //         "searchable": false
-            //     }
-            // ]
+            "columnDefs": [
+                {
+                    "targets": [ 8 ],
+                    // "visible": false,
+                    // "searchable": false
+                    "defaultContent": "<button class='btnEditable'><i class='fa fa-pencil-square-o'></i></button>"
+                }
+            ]
         });
         
         

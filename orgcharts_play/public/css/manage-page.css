@@ -21,7 +21,7 @@ body {
  
 /* Modal box or Popup box */
 .popupContainer{
-    position:absolute;
+    position:fixed;
     width:330px;
     height: auto;
     left:45%;
@@ -95,8 +95,8 @@ body {
 
 .pop_form .checkbox  {
     margin-bottom:  10px;
-     clear:  both;
-     overflow:  hidden;
+    clear:  both;
+    overflow:  hidden;
 }
  
 .forgot_password  {
@@ -119,6 +119,33 @@ body {
 
 .area-specified_user{
     display: none;
+}
+
+#side-menu li>a {
+    font-size: 18px;
+}
+
+.panel-default>.panel-heading {
+    background-color: #DFEDFF;
+}
+
+/*Custom table css*/
+.table-responsive table{
+    table-layout: fixed;
+    width: 900px;
+}
+.table-responsive th{
+    max-width: 100px;
+}
+.table-responsive td{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.table-striped>tbody>tr:nth-child(odd) {
+    background-color: #E4ECFF;;
+}
+.table-hover>tbody>tr:hover {
+    background-color: #ADCCFF;
 }
 
 /*More custom css for Forms*/
