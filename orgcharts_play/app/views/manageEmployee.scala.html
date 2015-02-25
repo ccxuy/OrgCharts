@@ -194,19 +194,34 @@
         });
         
         
-        var editRow;
-        $('#dataTables-employee tbody').on( 'dblclick', 'tr', function () {
-            editRow = this;
+        // var editRow;
+        // $('#dataTables-employee tbody').on( 'dblclick', 'tr', function () {
+        //     editRow = this;
+        //     $("input[name='emp_Id']").val(this.id);
+        //     $("input[name='edit_first_name']").val(cTable.row( this ).data()['firstName']);
+        //     $("input[name='edit_last_name']").val(cTable.row( this ).data()['lastName']);
+        //     $("input[name='edit_emp_title']").val(cTable.row( this ).data()['employeeTitle']);
+        //     $("input[name='edit_location']").val(cTable.row( this ).data()['location']);
+        //     $("input[name='edit_email']").val(cTable.row( this ).data()['email']);
+        //     $("input[name='edit_phone']").val(cTable.row( this ).data()['phone']);
+        //     $("input[name='edit_fax']").val(cTable.row( this ).data()['fax']);
+        //     // console.log( cTable.row( this ).data() );
+        //     $( "#btn_edit_employee" ).trigger( "click" );
+        // });
+        var openEditEmpDialog = function(editRow){
             $("input[name='emp_Id']").val(this.id);
-            $("input[name='edit_first_name']").val(cTable.row( this ).data()['firstName']);
-            $("input[name='edit_last_name']").val(cTable.row( this ).data()['lastName']);
-            $("input[name='edit_emp_title']").val(cTable.row( this ).data()['employeeTitle']);
-            $("input[name='edit_location']").val(cTable.row( this ).data()['location']);
-            $("input[name='edit_email']").val(cTable.row( this ).data()['email']);
-            $("input[name='edit_phone']").val(cTable.row( this ).data()['phone']);
-            $("input[name='edit_fax']").val(cTable.row( this ).data()['fax']);
+            $("input[name='edit_first_name']").val(cTable.row( editRow ).data()['firstName']);
+            $("input[name='edit_last_name']").val(cTable.row( editRow ).data()['lastName']);
+            $("input[name='edit_emp_title']").val(cTable.row( editRow ).data()['employeeTitle']);
+            $("input[name='edit_location']").val(cTable.row( editRow ).data()['location']);
+            $("input[name='edit_email']").val(cTable.row( editRow ).data()['email']);
+            $("input[name='edit_phone']").val(cTable.row( editRow ).data()['phone']);
+            $("input[name='edit_fax']").val(cTable.row( editRow ).data()['fax']);
             // console.log( cTable.row( this ).data() );
             $( "#btn_edit_employee" ).trigger( "click" );
+        }
+        $('#dataTables-employee tbody').on('click', '.btnEditable', function() {
+            openEditEmpDialog($(this).parent().parent());
         });
 
         // For new employee form

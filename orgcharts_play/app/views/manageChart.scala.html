@@ -29,7 +29,7 @@
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover" id="dataTables-chart">
                                 <thead>
-                                    <tr style="background: #84C2FF;">
+                                    <tr>
                                         <th>ID</th>
                                         <th>Chart Name</th>
                                         <th>Owner ID</th>
@@ -268,7 +268,7 @@
         // $( "#dataTables-chart tbody" ).dblclick(function() {
         //     $( "#btn_edit_chart" ).trigger( "click" );
         // });
-        var editRow;
+        // var editRow;
         var openEditChartDialog = function(editRow){
             // console.log(editRow[0]);
             // console.log( cTable.row( editRow ).data() );
@@ -282,9 +282,9 @@
             $("textarea[name='edit_chart_permitted_user']").val(cTable.row(editRow).data()['permittedUser']);
             $("#btn_edit_chart").trigger("click");
         }
-        $('#dataTables-chart tbody').on('dblclick', 'tr', function() {
-            openEditChartDialog(this);
-        });
+        // $('#dataTables-chart tbody').on('dblclick', 'tr', function() {
+        //     openEditChartDialog(this);
+        // });
         $('#dataTables-chart tbody').on('click', '.btnEditable', function() {
             openEditChartDialog($(this).parent().parent());
         });

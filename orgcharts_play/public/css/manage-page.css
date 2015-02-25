@@ -1,153 +1,157 @@
 /* Importing Google Webfonts */
+
 @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,700italic,400italic);
- 
 body {
-    font-family: 'Source Sans Pro', sans-serif; 
-    font-size: 14px; 
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
     color: #666;
 }
-
 /* Overlay when Modal is open */
+
 #lean_overlay {
     position: fixed;
-    z-index:1000;
+    z-index: 1000;
     top: 0px;
     left: 0px;
-    height:100%;
-    width:100%;
+    height: 100%;
+    width: 100%;
     background: #000;
     display: none;
 }
- 
 /* Modal box or Popup box */
-.popupContainer{
-    position:fixed;
-    width:330px;
+
+.popupContainer {
+    position: fixed;
+    width: 330px;
     height: auto;
-    left:45%;
-    top:80px;
+    left: 45%;
+    top: 80px;
     background: #FFF;
 }
-
-#modal_trigger  {
+#modal_trigger {
     margin: 100px auto;
     width: 100px;
     display: block;
 }
-
 /* Popup Styles*/
-.popupHeader  {
+
+.popupHeader {
     font-size: 16px;
-     text-transform:  uppercase;
+    text-transform: uppercase;
 }
- 
-.popupHeader  {
+.popupHeader {
     background: #F4F4F2;
-     position: relative;
-     padding: 10px 20px;
-     border-bottom: 1px solid #DDD;
-     font-weight: bold;
+    position: relative;
+    padding: 10px 20px;
+    border-bottom: 1px solid #DDD;
+    font-weight: bold;
 }
- 
-.popupHeader .modal_close  {
-    position:  absolute;
-     right:  0;
-     top: 0;
-     padding: 10px 15px;
-     background: #E4E4E2;
-     cursor:  pointer;
-     color: #aaa;
-     font-size: 16px;
+.popupHeader .modal_close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px 15px;
+    background: #E4E4E2;
+    cursor: pointer;
+    color: #aaa;
+    font-size: 16px;
 }
- 
-.popupBody  {
+.popupBody {
     padding: 20px;
     max-height: 400px;
     overflow: scroll;
-}*/
-
-/* Custom Form General */
-.pop_form  {
-    display:  none;
 }
- 
-.pop_form label  {
-    display:  block;
+*/
+/* Custom Form General */
+
+.pop_form {
+    display: none;
+}
+.pop_form label {
+    display: block;
     margin-bottom: 5px;
 }
- 
 .pop_form input:not([type=button]):not([type=reset]):not([type=submit]), .pop_form textarea, .pop_form select {
-    display:  block;
+    display: block;
     width: 90%;
-    padding:  10px;
+    padding: 10px;
     border: 1px solid #DDD;
     color: #666;
 }
- 
-.pop_form input[type="checkbox"]  {
+.pop_form input[type="checkbox"] {
     float: left;
-     margin-right: 5px;
+    margin-right: 5px;
 }
- 
-.pop_form input[type="checkbox"]+label  {
+.pop_form input[type="checkbox"]+label {
     float: left;
 }
-
-.pop_form .checkbox  {
-    margin-bottom:  10px;
-    clear:  both;
-    overflow:  hidden;
+.pop_form .checkbox {
+    margin-bottom: 10px;
+    clear: both;
+    overflow: hidden;
 }
- 
-.forgot_password  {
+.forgot_password {
     display: block;
-    margin:  20px 0 10px;
-    clear:  both;
-    overflow:  hidden;
-    text-decoration:  none;
+    margin: 20px 0 10px;
+    clear: both;
+    overflow: hidden;
+    text-decoration: none;
     color: #ED6347;
 }
-
 .pop_form .centered {
     display: block;
-    padding:  10px;
+    padding: 10px;
 }
-
 .pop_form input[type=submit], .pop_form input[type=button] {
     margin-right: 10px;
 }
-
-.area-specified_user{
+.area-specified_user {
     display: none;
 }
-
 #side-menu li>a {
     font-size: 18px;
 }
-
 .panel-default>.panel-heading {
     background-color: #DFEDFF;
 }
-
 /*Custom table css*/
-.table-responsive table{
+
+.table-responsive table {
     table-layout: fixed;
-    width: 900px;
+    width: 876px;
 }
-.table-responsive th{
+.table-responsive th {
     max-width: 100px;
 }
-.table-responsive td{
+.table-responsive td {
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .table-striped>tbody>tr:nth-child(odd) {
-    background-color: #E4ECFF;;
+    background-color: #E4ECFF;
+    ;
 }
 .table-hover>tbody>tr:hover {
     background-color: #ADCCFF;
 }
+#dataTables-chart, #dataTables-employee {
+    font-size: 16px;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 5px;
+}
 
+table.table>thead>tr{
+    background: #84C2FF;
+}
+table.table>thead>tr th{
+    vertical-align: top;
+}
+/*table th {
+    display: block;
+}*/
 /*More custom css for Forms*/
 /*form .name ::after{
     content: " aaa ";
