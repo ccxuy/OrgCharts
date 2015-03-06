@@ -101,6 +101,7 @@ function reset_forms() {
     $("#employees").val("");
     $(".cform textarea").val("");
     $("#btn_remove_all_field_extra").click();
+    $(".validation-warning").text("");
     reset_moreNodesWarning();
     console.log("reset_forms");
 }
@@ -409,7 +410,6 @@ $(document).on("ready", function() {
             $("#edit_unit_name").val(node_to_edit.find("> .label_node:eq(0)").text());
         }
     }).fancybox({
-
         maxWidth: 550,
         maxHeight: 300,
         fitToView: false,
@@ -670,11 +670,32 @@ $(document).on("ready", function() {
         }
     });
 
+    var doBlindEditEmployeeFieldValidation = function(){
+        console.log("doBlindEditEmployeeFieldValidation");
+        re_nameStr = "^[A-Za-z0-9]{1,}$";
+        injectValidateFieldWarning("input[name=new_first_name]",re_nameStr);
+        injectValidateFieldWarning("input[name=new_last_name]",re_nameStr);
+        injectValidateFieldWarning("input[name=edit_first_name]",re_nameStr);
+        injectValidateFieldWarning("input[name=edit_last_name]",re_nameStr);
+        re_emailStr = "^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$";
+        injectValidateFieldWarning("input[name=new_email]",re_emailStr);
+        injectValidateFieldWarning("input[name=edit_email]",re_emailStr);
+        re_phoneStr = "^[0-9]{7,10}$";
+        injectValidateFieldWarning("input[name=new_phone]",re_phoneStr, "Phone number should between 7 to 10 digits.");
+        injectValidateFieldWarning("input[name=edit_phone]",re_phoneStr, "Phone number should between 7 to 10 digits.");
+    }
+
+    doBlindEditEmployeeFieldValidation();
     // load employee when click 
     $("input[type=radio][name=employee_type]").click(function() {
         //alert("clicked");
         //alert(node_type);
         if ($(this).val() == "new_employee") {
+            $("form#add_employee_form")[0].reset();
+            $("#add_employee_form .validation-warning").text("");
+            // console.log($("form#add_employee_form")[0]);
+            // console.log($(".contact .validation-warning")[0]);
             $("#fancy_curr_employee").hide();
             $("#fancy_new_employee").show();
         } else {
@@ -720,29 +741,19 @@ $(document).on("ready", function() {
         }
     });
 
-    var doBlindEditEmployeeFieldValidation = function(){
-        console.log("doBlindEditEmployeeFieldValidation");
-        re_nameStr = "^[A-Za-z0-9]{1,}$";
-        injectValidateFieldWarning("input[name=edit_first_name]",re_nameStr);
-        injectValidateFieldWarning("input[name=edit_last_name]",re_nameStr);
-        re_emailStr = "^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@"
-            + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$";
-        injectValidateFieldWarning("input[name=edit_email]",re_emailStr);
-        re_phoneStr = "^[0-9]{1,10}$";
-        injectValidateFieldWarning("input[name=edit_phone]",re_phoneStr);
-    }
-
     $("input[type=radio][name=change]").click(function() {
         //alert("clicked");
         //alert(node_type);
         if ($(this).val() == "edit_employee") {
+            $("form#edit_employee_form")[0].reset();
+            $("#edit_employee_form .validation-warning").text("");
             $(".emp-image").attr("src", "");
             $("#fancy_new_employee").hide();
             $("#fancy_delete_employee").hide();
             var empBean;
             node_to_edit = $("li." + add_to_node + ":not('.temp')");
             var empId = node_to_edit.attr("id");
-            doBlindEditEmployeeFieldValidation();
+            // doBlindEditEmployeeFieldValidation();
 
             function ajax2() {
                 return $.ajax({
@@ -1049,7 +1060,7 @@ $(document).on("ready", function() {
             },
             url: chartRestUrlBase + '../chart/xml/',
             success: function(respose, text, xhr) {
-                alert("Successfully Saved");
+                doPopupToast("Successfully Saved.");
                 setEditModeOn();
             },
             error: function(msg) {
@@ -1137,7 +1148,8 @@ $(document).on("ready", function() {
         });
     }
 
-    function injectValidateFieldWarning( selField, reExp ){
+    function injectValidateFieldWarning( selField, reExp, warnText ){
+        warnText = (typeof warnText === "undefined") ? "Invalid field." : warnText;
         if(false === $(selField).next().hasClass('validation-warning')){
             $(selField).after("<div></div>");
             $(selField).next().addClass("validation-warning");
@@ -1146,7 +1158,7 @@ $(document).on("ready", function() {
         divWarn.html("");
         var re = new RegExp(reExp);
         $(selField).on("keyup", function(){
-            divWarn.text(re.test($(selField).val())?"":"Invalid field.");
+            divWarn.text(re.test($(selField).val())?"":warnText);
         });
     }
 

@@ -127,7 +127,7 @@ public class ChartBean {
 	}
 
 	public void setXmlDefault() {
-		this.setXmlString("<li class=\"root unit\"><span class=\"label_node\" id=\"un\"></span><br><span class=\"label_node\" id=\"ud\"></span></li>");
+		this.setXmlString("<li class=\"root unit\"><span class=\"label_node\" id=\"un\">Root Unit</span><br><span class=\"label_node\" id=\"ud\"></span></li>");
 	}
 
 	public Clob getXml() {

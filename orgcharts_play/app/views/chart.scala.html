@@ -5,7 +5,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>@chartBean.getChartName() - Interactive Organization Chart</title>
+    <title>OrgChart - @chartBean.getChartName()</title>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -126,9 +126,9 @@
                     <label for="chart_type">Chart Type</label>
                 </p>
                 <label for="unit">
-                    <input type="radio" class="chart_type" id="unit" name="chart_type" value="unit" />unit</label>
+                    <input type="radio" class="chart_type" id="unit" name="chart_type" value="unit" />Unit</label>
                 <label for="position">
-                    <input type="radio" class="chart_type" id="position" name="chart_type" value="position" />position</label>
+                    <input type="radio" class="chart_type" id="position" name="chart_type" value="position" />Position</label>
                 <br>
             </form>
         </div>
@@ -176,15 +176,15 @@
     <div id="fancy_employee" class="hidden">
         <div id="add_employee" class="cform">
             <h1>Add Employee</h1>
-            <form id="add_employee_form" method="GET" action=".">
+            <form id="add_employee_type_form" method="GET" action=".">
                 <p class="contact">
                     <label for="chart_type">Employee Type</label>
                 </p>
                 <label>
-                    <input type="radio" class="employee_type" id="new_employee" name="employee_type" value="new_employee" />new employee</label>
+                    <input type="radio" class="employee_type" id="new_employee" name="employee_type" value="new_employee" />New Employee</label>
                 <label>
-                    <input type="radio" class="employee_type" id="curr_employee" name="employee_type" value="curr_employee" />current employee</label>
-
+                    <input type="radio" class="employee_type" id="curr_employee" name="employee_type" value="curr_employee" />Current Employee</label>
+                <br>
             </form>
         </div>
         <div id="edit_employee" class="cform">
@@ -209,17 +209,20 @@
                     </label>
                     <input type="text" placeholder="Alphabats and digits only" name="new_first_name" id="new_first_name" required/>
                 </p>
+                <br>
 
                 <p class="contact">
                     <label for="new_last_name">Last Name<span style="color:red;">*</span>
                     </label>
                     <input type="text" placeholder="Alphabats and digits only" name="new_last_name" id="new_last_name" required/>
                 </p>
+                <br>
 
                 <p class="contact">
                     <label for="new_title">Employee Title</label>
                     <input type="text" placeholder="Employee Title" name="new_title" id="new_node_title" />
                 </p>
+                <br>
 
                 <p class="contact">
                     <label for="new_location">Location</label>
@@ -235,7 +238,7 @@
 
                 <p class="contact">
                     <label for="new_phone">Phone Number</label>
-                    <input type="text" placeholder="maximum 10 digits" name="new_phone" id="new_node_phone" />
+                    <input type="text" placeholder="Phone Number" name="new_phone" id="new_node_phone" />
                 </p>
                 <br>
 

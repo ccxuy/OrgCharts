@@ -144,10 +144,19 @@ body {
 }
 
 table.table>thead>tr{
-    background: #84C2FF;
+    background: #4AA5FF;
+    color: #353535;
 }
 table.table>thead>tr th{
     vertical-align: top;
+}
+
+div.panel-heading,
+.btn-mgnt-new,
+.panel-body .dataTables_length label,
+.panel-body .dataTables_filter label,
+.dataTables_info{
+    font-weight: bold;
 }
 /*table th {
     display: block;

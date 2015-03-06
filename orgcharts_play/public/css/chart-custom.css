@@ -64,7 +64,9 @@ body .topbar{
     .topbar {position: fixed;}
 }
 @media print{
-    .topbar {position: absolute;}
+    .topbar {
+        display: none;
+    }
 }
 /* Custom chart styling */
 
@@ -235,28 +237,6 @@ body .topbar{
     cursor: auto; 
 }
 
-/* Keep option text in form in one line*/
-.cform label {
-    white-space: nowrap;
-}
-
-.cform .emp-image-box{
-    box-shadow: 0px 0px 10px 4px rgba(194, 218, 252, 0.75);
-    -moz-box-shadow: 0px 0px 10px 4px rgba(194, 218, 252, 0.75);
-    -webkit-box-shadow: 0px 0px 10px 4px rgba(194, 218, 252, 0.75);
-    width: 200px;
-    height: auto;
-    display: inline-block;
-    padding: 0;
-    margin-bottom: 25px;
-    margin-left: 130px;
-}
-
-.emp-image-box .emp-image{
-    position: relative; /* This protects the inner element from being blurred */
-    padding: 0;
-    width: 100%;
-}
 
 .toast {
     width:200px;

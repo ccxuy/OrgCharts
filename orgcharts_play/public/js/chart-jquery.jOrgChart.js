@@ -399,13 +399,13 @@
         }
 
         if (!$nodeDiv.hasClass("temp")) {
-            $nodeDiv.find(".opciones:eq(0)").append("<span class='add' href='#fancy'></span>");
-            $nodeDiv.find(".opciones:eq(0)").append("<span class='edit' href='#fancy_edit'></span>");
+            $nodeDiv.find(".opciones:eq(0)").append("<span class='add' href='#fancy' title='Add Unit or Position'></span>");
+            $nodeDiv.find(".opciones:eq(0)").append("<span class='edit' href='#fancy_edit' title='Edit'></span>");
             if ($nodeDiv.hasClass("child")) {
-                $nodeDiv.find(".opciones:eq(0)").append("<span class='del'></span>");
+                $nodeDiv.find(".opciones:eq(0)").append("<span class='del' title='Delete'></span>");
             }
             if ($nodeDiv.hasClass("position")) {
-                $nodeDiv.find(".opciones:eq(0)").append("<span class='emp' href='#fancy_employee'></span>");
+                $nodeDiv.find(".opciones:eq(0)").append("<span class='emp' href='#fancy_employee' title='Manage Employee'></span>");
             }
         }
         $table.append($tbody);

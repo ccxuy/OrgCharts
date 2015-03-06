@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <p>
-                            <button id="btn_new_employee" href="#popup_form" class="btn btn-default">New Employee</button>
+                            <button id="btn_new_employee" href="#popup_form" class="btn btn-success btn-mgnt-new">New Employee</button>
                             <button id="btn_edit_employee" href="#popup_form" class="btn btn-default" style="display: none;">Edit Employee</button>
                         </p>
                     </div>
@@ -80,7 +80,7 @@
                     <span style="color: red"></span>
                     <input type="text" name="new_title" class="field-validation email" ><br>
 
-                    <label>Phone<span style="color:red;">10 digit max</span></label> 
+                    <label>Phone<span style="color:red;"> (7 - 10 digits) </span></label> 
                     <span style="color: red"></span>
                     <input type="text" name="new_phone" class="field-validation phone" ><br>
 
@@ -208,8 +208,11 @@
         //     // console.log( cTable.row( this ).data() );
         //     $( "#btn_edit_employee" ).trigger( "click" );
         // });
+        
+        var CUR_EDIT_ROW;
         var openEditEmpDialog = function(editRow){
-            $("input[name='emp_Id']").val(this.id);
+            CUR_EDIT_ROW = editRow[0];
+            $("input[name='emp_Id']").val(editRow[0].id);
             $("input[name='edit_first_name']").val(cTable.row( editRow ).data()['firstName']);
             $("input[name='edit_last_name']").val(cTable.row( editRow ).data()['lastName']);
             $("input[name='edit_emp_title']").val(cTable.row( editRow ).data()['employeeTitle']);
@@ -244,10 +247,10 @@
             $(this).prev().text(re_name.test($(this).val()) 
                 ? "":"Invalid name");
         });
-        var re_phone = new RegExp("^[0-9]{1,10}$");
+        var re_phone = new RegExp("^[0-9]{7,10}$");
         $('.field-validation.phone').keyup(function(){
             $(this).prev().text(re_phone.test($(this).val()) 
-                ? "":"Invalid phone number");
+                ? "":"Phone number should be 7 - 10 digits");
         });
         var re_email = new RegExp("^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
                     + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$");
@@ -268,10 +271,10 @@
             var formData = new FormData(this);
             var submitSuccessCallbackFn = function(i){
                 // console.log( cTableSel.dataTable().fnSettings().aoData );
-                // console.log( editRow );
+                // console.log( CUR_EDIT_ROW );
                 // console.log( cTable );
                 // console.log( cTableSel.dataTable() );
-                var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                var pos = cTableSel.dataTable().fnGetPosition(CUR_EDIT_ROW);
                 cTableSel.dataTable().fnUpdate(i, pos);
                 $('form#form_edit_employee')[0].reset();
             }
@@ -282,7 +285,7 @@
             var empid = $("form#form_edit_employee input[name='emp_Id']").val()
             var formData = new FormData($('form#form_edit_employee'));
             var submitSuccessCallbackFn = function(i){
-                var pos = cTableSel.dataTable().fnGetPosition(editRow);
+                var pos = cTableSel.dataTable().fnGetPosition(CUR_EDIT_ROW);
                 cTableSel.dataTable().fnDeleteRow(pos);
                 $('form#form_edit_employee')[0].reset();
             }
