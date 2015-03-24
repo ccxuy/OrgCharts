@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.*;
 import javax.sql.rowset.serial.SerialBlob;
@@ -39,6 +41,8 @@ public class ProfileBean {
 	Clob extra;
 	@JsonIgnore
 	Blob img;
+	@JsonIgnore
+	Set<ChartBean> relatedCharts = new HashSet<ChartBean>(0);;
 
 	public ProfileBean() {
 	}
@@ -179,7 +183,15 @@ public class ProfileBean {
 	public void setExtraString(String extraString) {
 		this.extra = ClobConverter.stringToClob(extraString);
 	}
-	
+
+	public Set<ChartBean> getRelatedCharts() {
+		return null==relatedCharts ? new HashSet() : relatedCharts;
+	}
+
+	public void setRelatedCharts(Set<ChartBean> relatedCharts) {
+		this.relatedCharts = relatedCharts;
+	}
+
 	@JsonProperty("DT_RowId")
 	public String getRowId(){
 		return String.valueOf(this.id);
@@ -189,12 +201,19 @@ public class ProfileBean {
 	public String toString() {
 
 		long imgLength = -1;
+		long relChartsCount = -1;
 		try {
 			if (null == img) {
 				imgLength = 0;
 			} else {
 				imgLength = img.length();
 			}
+			if (null == relatedCharts) {
+				relChartsCount = 0;
+			} else {
+				relChartsCount = relatedCharts.size();
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -202,7 +221,8 @@ public class ProfileBean {
 				+ ", lastName=" + lastName + ", email=" + email
 				+ ", employeeTitle=" + employeeTitle + ", location=" + location
 				+ ", phone=" + phone + ", fax=" + fax + ", extra=" + getExtraString()
-				+ ", img.length()=" + imgLength + "]";
+				+ ", img.length()=" + imgLength
+				+ ", relChartsCount=" + relChartsCount+ "]";
 	}
 
 	public void setImg(File imgFile) {

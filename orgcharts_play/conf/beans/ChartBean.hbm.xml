@@ -1,36 +1,44 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
                                    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <!-- Generated Oct 28, 2014 3:08:10 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
- <class name="beans.ChartBean" table="CHART">
-  <id name="uuid" type="java.lang.String">
-   <column name="UUID"/>
-   <generator class="assigned"/>
-  </id>
-  <property generated="never" lazy="false" name="ownerID" type="java.lang.String">
-   <column name="OWNER_ID"/>
-  </property>
-  <property generated="never" lazy="false" name="chartName" type="java.lang.String">
-   <column name="CHART_NAME"/>
-  </property>
-  <property generated="never" lazy="false" name="xml" type="java.sql.Clob">
-   <column name="XML"/>
-  </property>
-  <property generated="never" lazy="false" name="timeLastModified" type="java.sql.Timestamp">
-   <column name="LAST_MODIFIED_TIME"/>
-  </property>
-  <property generated="never" lazy="false" name="version" type="int">
-   <column name="VERSION"/>
-  </property>
-  <property generated="never" lazy="false" name="editUserId" type="java.lang.String">
-   <column name="EDIT_USER"/>
-  </property>
-  <property generated="never" lazy="false" name="permission" type="java.lang.String">
-   <column name="PERMISSION"/>
-  </property>
-  <property generated="never" lazy="false" name="permittedUser" type="java.lang.String">
-   <column name="PERMITTED_USER"/>
-  </property>
- </class>
+    <class name="beans.ChartBean" table="CHART">
+        <id name="uuid" type="java.lang.String">
+            <column name="UUID" />
+            <generator class="assigned" />
+        </id>
+        <property generated="never" lazy="false" name="ownerID" type="java.lang.String">
+            <column name="OWNER_ID" />
+        </property>
+        <property generated="never" lazy="false" name="chartName" type="java.lang.String">
+            <column name="CHART_NAME" />
+        </property>
+        <property generated="never" lazy="false" name="xml" type="java.sql.Clob">
+            <column name="XML" />
+        </property>
+        <property generated="never" lazy="false" name="timeLastModified" type="java.sql.Timestamp">
+            <column name="LAST_MODIFIED_TIME" />
+        </property>
+        <property generated="never" lazy="false" name="version" type="int">
+            <column name="VERSION" />
+        </property>
+        <property generated="never" lazy="false" name="editUserId" type="java.lang.String">
+            <column name="EDIT_USER" />
+        </property>
+        <property generated="never" lazy="false" name="permission" type="java.lang.String">
+            <column name="PERMISSION" />
+        </property>
+        <property generated="never" lazy="false" name="permittedUser" type="java.lang.String">
+            <column name="PERMITTED_USER" />
+        </property>
+        <!-- <set name="relatedEmployee" table="EMP_CHART" inverse="true" lazy="false" fetch="select" cascade="none">
+            <key>
+                <column name="CHART_ID" not-null="true" />
+            </key>
+            <many-to-many entity-name="beans.ChartBean">
+                <column name="EMP_ID" not-null="true" />
+            </many-to-many>
+        </set> -->
+    </class>
 </hibernate-mapping>

@@ -4,6 +4,8 @@ import java.sql.Clob;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +29,7 @@ public class ChartBean {
 	public final static String[] PERMISSION_OPTIONS = { "public", PERMISSION_SPECIFIED, "private" };
 	String permission = PERMISSION_OPTIONS[0];
 	String permittedUser;
+	Set<ProfileBean> relatedEmployee= new HashSet<ProfileBean>(0);
 
 	/**
 	 * Empty Constructor
@@ -191,7 +194,15 @@ public class ChartBean {
 	public void setPermittedUser(String permittedUser) {
 		this.permittedUser = permittedUser;
 	}
-	
+
+	public Set<ProfileBean> getRelatedEmployee() {
+		return relatedEmployee;
+	}
+
+	public void setRelatedEmployee(Set<ProfileBean> relatedEmployee) {
+		this.relatedEmployee = relatedEmployee;
+	}
+
 	public String getPermissionDisplay(){
 		if(null!=this.permission){
 			//If this.permission === "specified" 

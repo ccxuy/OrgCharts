@@ -188,7 +188,7 @@
                     "targets": [ 8 ],
                     // "visible": false,
                     // "searchable": false
-                    "defaultContent": "<button class='btnEditable'><i class='fa fa-pencil-square-o'></i></button>"
+                    "defaultContent": "<button class='btnEditable' title='Edit Employee'><i class='fa fa-pencil-square-o'></i></button>"
                 }
             ]
         });
@@ -312,7 +312,10 @@
                     // cTableSel.dataTable().fnAddData(j);
                 },
                 error: function(msg) {
-                    if(401==msg.status){
+                    console.log(msg);
+                    if(400==msg.status){
+                        alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText + "\n" + "Please ensure no chart has reference to this employee.");
+                    }else if(401==msg.status){
                         alert(msg.status + ", " + msg.statusText + "\n" + "Unauthorized access. Are you readonly user? You may requrest permission from admin.");
                     }else if(403==msg.status){
                         alert(msg.status + ", " + msg.statusText + "\n" + "Forbidden access. Make sure your have permission to do so. You may requrest permission from admin or owner.");

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Set;
 
 import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.actions.Group;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.google.common.collect.Iterables;
 import model.MessageCommon;
 import model.ProfileBeanIgnoreFieldsMixIn;
 import play.Logger;
@@ -282,9 +284,21 @@ public class EmployeeCtrl extends Controller {
 		if (form.hasErrors()) {
 			return badRequest(form.get().toString());
 		} else {
-			String chart_id = null != id ? id : form.get("emp_id");
+			String emp_id = null != id ? id : form.get("emp_id");
 			try {
-				int ret = HibernateUtilities.deleteEmployeeById(chart_id);
+				ProfileBean emp = HibernateUtilities.searchEmployeeById(emp_id);
+				Logger.debug("EmployeeCtrl@deleteEmployee emp="+emp);
+				Set<ChartBean> relCharts = emp.getRelatedCharts();
+				if(relCharts!=null && relCharts.size()>0){
+					ChartBean c = null;
+					for(ChartBean cb : relCharts){
+						c = cb;
+						break;
+					}
+					return badRequest("This employee has linked to some charts.\n " +
+							"One of them has name:"+ c.getChartName() + "id:" +c.getUuid() +"\n");
+				}
+				int ret = HibernateUtilities.deleteEmployeeById(emp_id);
 				switch (ret) {
 				case -1:
 					return badRequest("employee id not exist.\n EmployeeCtrl@deleteEmployee\n");
@@ -294,7 +308,7 @@ public class EmployeeCtrl extends Controller {
 					return ok();
 
 				default:
-					return internalServerError("Unkown Error\n EmployeeCtrl@deleteEmployee\n");
+					return internalServerError("Unkown Error\n EmployeeCtrl@deleteEmployee\nreturn error code: "+ret);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

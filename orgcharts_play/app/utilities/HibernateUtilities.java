@@ -5,14 +5,9 @@ import java.io.FileInputStream;
 import java.sql.Blob;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Example;
@@ -333,7 +328,11 @@ public class HibernateUtilities {
 		Transaction tx = null;
 		try {
 			tx = session.beginTransaction();
-			ProfileBean emp = (ProfileBean) session.get(ProfileBean.class, id);
+//			ProfileBean emp = (ProfileBean) session.get(ProfileBean.class, id);
+			ProfileBean emp = (ProfileBean) session.createCriteria(ProfileBean.class)
+					.setFetchMode("relatedCharts", FetchMode.JOIN)
+					.add( Restrictions.idEq(id) )
+					.uniqueResult();;
 			tx.commit();
 			if (null != emp) {
 				// success
@@ -534,6 +533,62 @@ public class HibernateUtilities {
 		try {
 			tx = session.beginTransaction();
 			session.saveOrUpdate(chartBean);
+			tx.commit();
+			// success
+			return 1;
+		} catch (HibernateException e) {
+			if (tx != null)
+				tx.rollback();
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return 0;
+	}
+
+	/**
+	 *
+	 * @param chartBean
+	 * @param empRelatedToAdd
+	 * @param empRelatedToDel
+	 * @return 1 if success, 0 failed
+	 */
+	public static int saveOrUpdateChart(ChartBean chartBean, Set<String> empRelatedToAdd, Set<String> empRelatedToDel) {
+		Session session = openSession();
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			session.saveOrUpdate(chartBean);
+
+			if(null!=empRelatedToDel){
+				for(String empId : empRelatedToDel){
+//					String hql = "delete from EMP_CHART where CHART_ID= :cid and EMP_ID= :empid";
+//					Query query = session.createQuery(hql);
+//					query.setString("cid", chartBean.getUuid());
+
+					ProfileBean emp = (ProfileBean) session.get(ProfileBean.class, Integer.parseInt(empId));
+					if(null!=emp){
+						Logger.debug("del emp="+emp);
+						emp.getRelatedCharts().remove(chartBean);
+						Logger.debug("HibernateUtilities@saveOrUpdateChart empRelatedToDel>> emp.getRelatedCharts()="+emp.getRelatedCharts());
+						session.persist(emp);
+					}else{
+						// Else: employee record lost
+
+					}
+				}
+			}
+
+			if(null!=empRelatedToAdd){
+				for(String empId : empRelatedToAdd){
+					ProfileBean emp = (ProfileBean) session.get(ProfileBean.class, Integer.parseInt(empId));
+					Logger.debug("add emp="+emp);
+					emp.getRelatedCharts().add(chartBean);
+					Logger.debug("HibernateUtilities@saveOrUpdateChart empRelatedToAdd>> emp.getRelatedCharts()="+emp.getRelatedCharts());
+					session.persist(emp);
+				}
+			}
+
 			tx.commit();
 			// success
 			return 1;

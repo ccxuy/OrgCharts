@@ -243,6 +243,7 @@
                         $('td:eq(3)', row).html(data["timeLastModified"].substring(0, data["timeLastModified"].length - 4));
                     }
                     $('td:eq(6)', row).html("<button class='btnEditable' title='Edit Chart'><i class='fa fa-pencil-square-o'></i></button>");
+                    // $('td:eq(6)', row).html("<button class='btnEditable' title='Edit Chart'><i class='fa fa-pencil-square-o'></i></button><button class='btnUnlock' title='Force Unlock Chart'><i class='fa fa-unlock'></i></button>");
             }
                 // ,
                 // tableTools: {
@@ -462,6 +463,7 @@
                     // cTableSel.dataTable().fnAddData(j);
                 },
                 error: function(msg) {
+                    console.log(msg);
                     if(401==msg.status){
                         alert(msg.status + ", " + msg.statusText + "\n" + "Unauthorized access. Are you readonly user? You may requrest permission from admin.");
                     }else if(403==msg.status){

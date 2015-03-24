@@ -7,6 +7,7 @@ import com.feth.play.module.pa.PlayAuthenticate;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import play.*;
+import play.libs.Json;
 import play.mvc.*;
 import play.mvc.Http.Session;
 import providers.NyAuthUser;
@@ -106,6 +107,10 @@ public class Application extends Controller {
         session("shortname", "jin");
         OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.READONLY.toString());
         return ok(views.html.tmp.render("Application@loginAsReadonly"));
+    }
+    public static Result getCurrentLoginUser() {
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        return ok(Json.toJson(ocu));
     }
 
 }

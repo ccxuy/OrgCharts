@@ -26,6 +26,8 @@ import security.OrgChartUser;
 import utilities.HibernateUtilities;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChartCtrl extends Controller {
     // This is only for record lock information, to judge a chart is lock or not, please ask database.
@@ -465,12 +467,28 @@ public class ChartCtrl extends Controller {
             if (null != chartBean && null != update_str) {
                 OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
                 if (isUserWriteChartAllowed(chartBean, ocu)) {
-                    Logger.debug("chartBean.getVersion()="+chartBean.getVersion());
+                    HashSet empRelatedListOld = getEmployeeIdFromXML(chartBean.getXmlString());
+
                     chartBean.setVersion(chartBean.getVersion() + 1);
                     chartBean.setXmlString(update_str);
                     chartBean.setTimeLastModifiedNow();
-                    HibernateUtilities.saveOrUpdateChart(chartBean);
-                    return ok();
+
+                    HashSet empRelatedListNew = getEmployeeIdFromXML(update_str);
+                    //Update Employee related charts reference
+                    HashSet empRelatedListTobeAdd = new HashSet(empRelatedListNew);
+                    empRelatedListTobeAdd.removeAll(empRelatedListOld);
+                    HashSet empRelatedListTobeDel = new HashSet(empRelatedListOld);
+                    empRelatedListTobeDel.removeAll(empRelatedListNew);
+                    Logger.debug("ChartCtrl@updateChartXML>> empRelatedListTobeAdd="+empRelatedListTobeAdd);
+                    Logger.debug("ChartCtrl@updateChartXML>> empRelatedListTobeDel="+empRelatedListTobeDel);
+
+                    int ret = HibernateUtilities.saveOrUpdateChart(chartBean, empRelatedListTobeAdd, empRelatedListTobeDel);
+
+                    if(ret == 1){
+                        return ok();
+                    }else{
+                        return internalServerError();
+                    }
                 }else{
                     return forbidden(" Permission Denied : You need to enter EDIT mode to edit this chart! ");
                 }
@@ -484,6 +502,17 @@ public class ChartCtrl extends Controller {
                     + form.get().toString().length());
         }
 //        return forbidden(" Permission Denied : You need to enter EDIT mode to edit this chart! ");
+    }
+
+    private static HashSet getEmployeeIdFromXML(String xmlStr){
+        final Matcher mtr = Pattern.compile("<[^<>]+?(?:position[^<>]+?id=[\"|'](\\d+)[^<>]+?)>" +
+                "|<[^<>]+?(?:id=[\"|'](\\d+)[^<>]+?position)[^<>]+?>").matcher(xmlStr);
+//        final Matcher mtr = Pattern.compile("(?<=<[^<>]{1,30}position[^<>]{1,30}id=[\"|'])(\\d+)(?=[^<>]{1,30}>)" +
+//                "|(?<=<[^<>]{1,30}id=[\"|'])(\\d+)(?=[^<>]{1,30}position[^<>]{1,30}>)").matcher(xmlStr);
+        HashSet<String> set = new HashSet<String>() {{
+            while (mtr.find()) add(mtr.group(1));
+        }};
+        return set;
     }
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER)})

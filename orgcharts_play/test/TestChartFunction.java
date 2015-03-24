@@ -34,7 +34,7 @@ public class TestChartFunction {
 	public void testSaveOrUpdateChart() {
 		System.out.println("testSaveOrUpdateChart");
 		ChartBean cb;
-		cb = new ChartBean(82, "test chart");
+		cb = new ChartBean("82", "test chart");
 		cb.setXmlDefault();
 		System.out.println(cb);
 		int ret = HibernateUtilities.saveOrUpdateChart(cb);
@@ -44,7 +44,7 @@ public class TestChartFunction {
 //	@Test
 	public void testGetAllChartByOwnerId(){
 		System.out.println("testGetAllChartByOwnerId");
-		List<ChartBean> cbl = HibernateUtilities.getAllChartByOwnerId(0, 100);
+		List<ChartBean> cbl = HibernateUtilities.getAllChartByOwnerId("0", 100);
 		System.out.println(cbl.size());
 		assertNotNull(cbl);
 	}
