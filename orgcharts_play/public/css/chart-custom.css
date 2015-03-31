@@ -236,6 +236,9 @@ body .topbar{
     margin-right: auto;
     cursor: auto; 
 }
+.emp-inactive>div {
+    text-decoration: line-through;
+}
 
 
 .toast {

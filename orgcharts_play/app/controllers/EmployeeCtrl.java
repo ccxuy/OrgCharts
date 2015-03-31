@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.common.collect.Iterables;
 import model.MessageCommon;
 import play.Logger;
+import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -145,6 +146,7 @@ public class EmployeeCtrl extends Controller {
 				ProfileBean employee = HibernateUtilities.searchEmployeeById(id);
 				ObjectNode employeeJson = (ObjectNode)Json.toJson(employee);
 				employeeJson.put("hasRelatedChart", employee.hasRelatedChart());
+				employeeJson.put("hasImage", employee.getImg()!=null);
 				return ok(employeeJson);
 			} catch (Exception e) {
 				e.printStackTrace();

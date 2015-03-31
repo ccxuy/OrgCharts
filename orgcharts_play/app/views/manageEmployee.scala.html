@@ -252,10 +252,7 @@
             $("div[name=warn-employee-relate-chart]").hide();
             $.ajax({
                 url: "../employee/"+editRow[0].id,
-                type: "GET",
-                data: {
-                    empId: editRow[0].id
-                },
+                type: "GET"
             }).done(function(msg) {
                 var warnRelateChart = "";
                 if(msg["hasRelatedChart"]==true){

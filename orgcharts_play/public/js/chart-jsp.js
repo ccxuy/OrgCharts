@@ -177,59 +177,39 @@ function get_emp_info() {
    in the specified node
 */
 function get_emp(id, node) {
-    var fn;
-    var ln;
+    var empJson;
+    var fn = "[deleted]";
+    var ln = "";
     var email;
-    var image;
+    var image = "";
     //alert(empId);
     function ajax3() {
         return $.ajax({
             type: "GET",
-            data: {
-                empId: id
-            },
-            url: chartRestUrlBase + "../employee/EditData/",
-            success: function(respose, text, xhr) {
-                //alert(text+","+respose);
-                //location.reload();
-                //first_name
-                if (respose.split(',')[0] != " ") {
-                    fn = respose.split(',')[0];
-                } else {
-                    fn = "";
-                }
-                //last_name
-                if (respose.split(',')[1] != " ") {
-                    ln = respose.split(',')[1];
-                } else {
-                    ln = "";
-                }
-                //email
-                if (respose.split(',')[2] != " ") {
-                    email = respose.split(',')[2];
-                } else {
-                    email = "";
-                }
-                //image
-                if (respose.split(',')[3] != "null") {
+            url: chartRestUrlBase + "../employee/"+id,
+            success: function(msg) {
+                empJson = msg;
+                fn = msg["firstName"];
+                ln = msg["lastName"];
+                email = msg["email"];
+                if (msg["hasImage"] == true) {
                     image = baseurl + chartRestUrlBase + "../employee/image/?empId=" + id;
-                } else {
-                    image = "";
                 }
-
-                //alert(temp);
             },
-            error: function(xhr, textstatus, ethrown) {
-                alert(textstatus + ", " + ethrown + xhr.status);
+            error: function(msg) {
+                // console.log(msg);
                 //location.reload();
             }
         });
     }
-    $.when(ajax3()).done(function() {
+    $.when(ajax3()).always(function() {
         //              if(node.children("div[class=empinfo]").length>0){
         //                node.children("div[class=empinfo]").remove();
         //              }
         var nodeText = "<div class='empinfo'></div>";
+        if(empJson!=null && empJson["employeeStatus"] == "Inactive"){
+            nodeText = "<div class='empinfo emp-inactive'></div>";
+        }
 
         //for employee first name
         var append_first = "<div class='label_node' id='fn'>" + fn + "</div>" + "<br>";
