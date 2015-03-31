@@ -672,7 +672,7 @@ $(document).on("ready", function() {
 
     var doBlindEditEmployeeFieldValidation = function(){
         console.log("doBlindEditEmployeeFieldValidation");
-        re_nameStr = "^[A-Za-z0-9]{1,}$";
+        re_nameStr = "^[ A-Za-z0-9]{1,}$";
         injectValidateFieldWarning("input[name=new_first_name]",re_nameStr);
         injectValidateFieldWarning("input[name=new_last_name]",re_nameStr);
         injectValidateFieldWarning("input[name=edit_first_name]",re_nameStr);
@@ -783,6 +783,7 @@ $(document).on("ready", function() {
                 $("#edit_node_email").val(empBean['email']);
                 $("#edit_node_phone").val(empBean['phone']);
                 $("#edit_node_fax").val(empBean['fax']);
+                $("#edit_node_status").val(empBean['employeeStatus']);
                 if (node_to_edit.find("img").length != 0) {
                     $("#edit_node_image").val(image);
                 }

@@ -12,6 +12,7 @@ public class MessageChartStatus extends MessageCommon{
     public String chartId;
     public String isLocked = IS_LOCKED_UNKNOWN; //true, false, unknown
     public String isOwner = IS_OWNER_UNKNOWN; //true, false, unknown
+    public String hasLinkedChart = HAS_LINKED_CHART_UNKNOWN;
     public ChartLock lock;
     public String msg = "";
     public String fromUserId;
@@ -39,4 +40,11 @@ public class MessageChartStatus extends MessageCommon{
     public static final String IS_OWNER_FALSE = "false";
     @JsonIgnore
     public static final String IS_OWNER_UNKNOWN = "unknown";
+
+    @JsonIgnore
+    public static final String HAS_LINKED_CHART_TRUE = "true";
+    @JsonIgnore
+    public static final String HAS_LINKED_CHART_FALSE = "false";
+    @JsonIgnore
+    public static final String HAS_LINKED_CHART_UNKNOWN = "unknown";
 }

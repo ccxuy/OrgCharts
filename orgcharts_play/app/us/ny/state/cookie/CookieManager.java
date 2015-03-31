@@ -170,7 +170,7 @@ public class CookieManager {
 	/**
 	 *
 	 * @param cookieName
-	 * @param fieldValue
+	 * @param fieldName
 	 * @return
 	 */
 	public String getParamFromCookie(String cookieName, String fieldName){

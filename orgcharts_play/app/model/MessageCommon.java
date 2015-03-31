@@ -1,5 +1,7 @@
 package model;
 
+import utilities.InjectionUtilities;
+
 /**
  * Created by yxx03 on 1/23/2015.
  */
@@ -9,4 +11,19 @@ public class MessageCommon {
     public String msg = "";
     public String fromUserId;
     public String fromMethod;
+
+    public MessageCommon() {
+        this.fromMethod = InjectionUtilities.getMethodName(2);
+    }
+
+    @Override
+    public String toString() {
+        return "MessageCommon{" +
+                "messageType='" + messageType + '\'' +
+                ", status='" + status + '\'' +
+                ", msg='" + msg + '\'' +
+                ", fromUserId='" + fromUserId + '\'' +
+                ", fromMethod='" + fromMethod + '\'' +
+                '}';
+    }
 }

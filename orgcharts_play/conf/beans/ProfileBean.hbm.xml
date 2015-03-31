@@ -31,6 +31,9 @@
         <property name="fax" type="java.lang.String">
             <column name="FAX" />
         </property>
+        <property name="employeeStatus" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
         <property name="extra" type="java.sql.Clob">
             <column name="EXTRA" />
         </property>

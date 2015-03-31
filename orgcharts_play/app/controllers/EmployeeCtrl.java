@@ -11,13 +11,13 @@ import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
 import be.objectify.deadbolt.java.actions.SubjectPresent;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.google.common.collect.Iterables;
 import model.MessageCommon;
-import model.ProfileBeanIgnoreFieldsMixIn;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
@@ -143,7 +143,9 @@ public class EmployeeCtrl extends Controller {
 			try {
 				HibernateUtilities.getFactory();
 				ProfileBean employee = HibernateUtilities.searchEmployeeById(id);
-				return ok(Json.toJson(employee));
+				ObjectNode employeeJson = (ObjectNode)Json.toJson(employee);
+				employeeJson.put("hasRelatedChart", employee.hasRelatedChart());
+				return ok(employeeJson);
 			} catch (Exception e) {
 				e.printStackTrace();
 				Logger.error("EmployeeCtrl@getEmployee", e);
@@ -191,7 +193,7 @@ public class EmployeeCtrl extends Controller {
 			// Since first name and last name is required, if they are empty,
 			// return 400
 			if (null == first_name || null == last_name) {
-				return badRequest();
+				return badRequest("First name and last name are required to create an employee");
 			}
 
 			ProfileBean employeeProfileBean = new ProfileBean(first_name,
@@ -202,6 +204,7 @@ public class EmployeeCtrl extends Controller {
 			employeeProfileBean.setEmail(form.get("new_email"));
 			employeeProfileBean.setPhone(form.get("new_phone"));
 			employeeProfileBean.setFax(form.get("new_fax"));
+			employeeProfileBean.setEmployeeStatus(form.get("new_status"));
 			employeeProfileBean.setExtraString(form.get("new_extra"));
 
 			MultipartFormData mfrom = request().body().asMultipartFormData();
@@ -248,6 +251,7 @@ public class EmployeeCtrl extends Controller {
 				employeeProfileBean.setEmail(form.get("edit_email"));
 				employeeProfileBean.setPhone(form.get("edit_phone"));
 				employeeProfileBean.setFax(form.get("edit_fax"));
+				employeeProfileBean.setEmployeeStatus(form.get("edit_status"));
 				employeeProfileBean.setExtraString(form.get("edit_extra"));
 
 				MultipartFormData mfrom = request().body()
@@ -258,11 +262,12 @@ public class EmployeeCtrl extends Controller {
 				}
 				System.out.println(employeeProfileBean);
 
-				if(employeeProfileBean.isValid()){
+				MessageCommon msg = new MessageCommon();
+				if(employeeProfileBean.isValid(msg)){
 					HibernateUtilities.editNode(employeeProfileBean);
 					return ok(parseEmployeeBeanToJsonObjectNode(employeeProfileBean));
 				}else{
-					return badRequest("Invalid employee information, please check your input.");
+					return badRequest(Json.toJson(msg));
 				}
 			}
 			// This is the old way..
@@ -278,7 +283,7 @@ public class EmployeeCtrl extends Controller {
 		}
 	}
 
-	@Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
+	@Restrict({@Group(OrgChartRoleType.ADMIN)})
 	public static Result deleteEmployee(String id) {
 		DynamicForm form = Form.form().bindFromRequest();
 		if (form.hasErrors()) {
@@ -288,16 +293,18 @@ public class EmployeeCtrl extends Controller {
 			try {
 				ProfileBean emp = HibernateUtilities.searchEmployeeById(emp_id);
 				Logger.debug("EmployeeCtrl@deleteEmployee emp="+emp);
-				Set<ChartBean> relCharts = emp.getRelatedCharts();
-				if(relCharts!=null && relCharts.size()>0){
-					ChartBean c = null;
-					for(ChartBean cb : relCharts){
-						c = cb;
-						break;
-					}
-					return badRequest("This employee has linked to some charts.\n " +
-							"One of them has name:"+ c.getChartName() + "id:" +c.getUuid() +"\n");
-				}
+
+				//Check employee related charts
+//				Set<ChartBean> relCharts = emp.getRelatedCharts();
+//				if(relCharts!=null && relCharts.size()>0){
+//					ChartBean c = null;
+//					for(ChartBean cb : relCharts){
+//						c = cb;
+//						break;
+//					}
+//					return badRequest("This employee has linked to some charts.\n " +
+//							"One of them has name:"+ c.getChartName() + " ,id:" +c.getUuid() +"\n");
+//				}
 				int ret = HibernateUtilities.deleteEmployeeById(emp_id);
 				switch (ret) {
 				case -1:

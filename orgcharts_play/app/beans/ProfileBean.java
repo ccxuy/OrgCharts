@@ -16,6 +16,7 @@ import javax.persistence.*;
 import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
+import model.MessageCommon;
 import org.hibernate.internal.util.io.StreamCopier;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import play.Logger;
 import utilities.ClobConverter;
+import utilities.InjectionUtilities;
 
 @Entity
 public class ProfileBean {
@@ -36,6 +38,9 @@ public class ProfileBean {
 	String location;
 	String phone;
 	String fax;
+	String employeeStatus = EMPLOYEE_STATUS_DEFAULT;
+	@JsonIgnore
+	final static String EMPLOYEE_STATUS_DEFAULT = "Active";
 	@Basic(fetch = FetchType.LAZY)
 	@JsonIgnore
 	Clob extra;
@@ -168,6 +173,22 @@ public class ProfileBean {
 		this.fax = (null == fax ? "" : fax);
 	}
 
+	public String getEmployeeStatus() {
+		return employeeStatus;
+	}
+
+	/**
+	 * Save to EMPLOYEE_STATUS_DEFAULT if #employeeStatus is null or ""
+	 * @param employeeStatus null or "" would turn to {@link #EMPLOYEE_STATUS_DEFAULT} value. This field must match {@link #STATUS_PATTERN} regular pattern.
+	 */
+	public void setEmployeeStatus(String employeeStatus) {
+		if(employeeStatus!=null && false==employeeStatus.equals("")){
+			this.employeeStatus = employeeStatus;
+		}else{
+			this.employeeStatus = EMPLOYEE_STATUS_DEFAULT;
+		}
+	}
+
 	public Clob getExtra() {
 		return extra;
 	}
@@ -190,6 +211,13 @@ public class ProfileBean {
 
 	public void setRelatedCharts(Set<ChartBean> relatedCharts) {
 		this.relatedCharts = relatedCharts;
+	}
+
+	public boolean hasRelatedChart(){
+		if(relatedCharts!=null && relatedCharts.size()>0){
+			return true;
+		}
+		return false;
 	}
 
 	@JsonProperty("DT_RowId")
@@ -264,7 +292,7 @@ public class ProfileBean {
 
 	@JsonIgnore
 	private static final String NAME_PATTERN =
-			"^[A-Za-z0-9]{1,}$";
+			"^[ A-Za-z0-9]{1,}$";
 	@JsonIgnore
 	private static final String EMAIL_PATTERN =
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -273,34 +301,65 @@ public class ProfileBean {
 	private static final String PHONE_PATTERN =
 			"^[0-9]{0,10}$";
 	@JsonIgnore
+	private static final String STATUS_PATTERN =
+			"^(Active|Inactive)$";
+	@JsonIgnore
 	public boolean isValid() {
+		return isValid(null);
+	}
+
+	@JsonIgnore
+	public boolean isValid(MessageCommon msg) {
 
 		if( this.id < 0){
 			return false;
 		}
 
+		String errMsg = "";
 		if(this.firstName == null
 				|| false == this.firstName.matches(NAME_PATTERN)
 				|| this.lastName == null
 				|| false == this.lastName.matches(NAME_PATTERN) ){
-			Logger.debug("invalid name="+this.getWholeName());
+			errMsg = "invalid name: "+this.getWholeName();
+			handleLogs(errMsg, msg);
 			return false;
 		}
 
 		if( null!=email
 				&& (false == this.email.trim().equals(""))
-				&& ( false == this.email.matches(EMAIL_PATTERN)) ){
-			Logger.debug("invalid email="+email);
+				&& (false == this.email.matches(EMAIL_PATTERN)) ){
+			errMsg = "invalid email: "+email;
+			handleLogs(errMsg, msg);
 			return false;
 		}
 
 		if( null!=phone
 				&& (false == this.phone.matches(PHONE_PATTERN)) ){
-			Logger.debug("invalid phone="+phone);
+			errMsg = "invalid phone: "+phone;
+			handleLogs(errMsg, msg);
+			return false;
+		}
+
+		if( null!=employeeStatus
+				&& (false == this.employeeStatus.matches(STATUS_PATTERN)) ){
+			errMsg = "invalid employeeStatus: "+employeeStatus;
+			handleLogs(errMsg, msg);
 			return false;
 		}
 
 		return true;
+	}
+
+	private void handleLogs(String errMsg, MessageCommon msg){
+		if(null==msg){
+			msg = new MessageCommon();
+		}
+		// This part is just for easy record method name, not necessary. Comment the if block if cause any problem.
+		if(true){
+			msg.fromMethod = InjectionUtilities.getMethodName(2);
+		}
+		Logger.debug(msg.toString());
+		if(null!=msg)msg.msg = errMsg;
 	}
 
 }

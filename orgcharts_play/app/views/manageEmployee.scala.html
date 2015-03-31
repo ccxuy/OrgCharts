@@ -38,6 +38,7 @@
                                                 <th>Location</th>
                                                 <th>Phone</th>
                                                 <th>Fax</th>
+                                                <th>Status</th>
                                                 <th>Edit</th>
                                             </tr>
                                         </thead>
@@ -86,6 +87,13 @@
 
                     <label>Fax</label> <input type="text" name="new_fax"><br>
 
+                    <label>Status</label>
+                    <select class="select-employee-status" name="new_status">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                    <br>
+
                     <label for="image">Image</label><input id="new_node_image" type="file" name="new_image" size="chars"><br>
              
                     <div class="action_btns centered">
@@ -125,12 +133,25 @@
                     <input type="text" name="edit_phone" class="field-validation phone" ><br>
                     <label>Fax</label> <input type="text" name="edit_fax"><br>
 
+                    <label>Status</label>
+                    <select class="select-employee-status" name="edit_status">
+                        <option>Active</option>
+                        <option>Inactive</option>
+                    </select>
+                    <br>
+
                     <label for="image">Image</label><input id="new_node_image" type="file" name="image" size="chars"><br>
+
+                    <div name="warn-employee-relate-chart" class="alert alert-warning"  role="alert">Warning</div><br>
              
                     <div class="action_btns centered">
                         <div class="">
-                            <input type=button id="submit_delete_employee" name="submit_delete_employee" class="btn btn-danger" value="Delete">
-                            <input type=submit id="submit_edit_employee" name="submit_edit_employee" class="btn btn-warning" value="Modifiy">
+                            @defining(Application.getLoginUser(session())) { user =>
+                                @if(user.isAdmin) {
+                                    <input type=button id="submit_delete_employee" name="submit_delete_employee" class="btn btn-danger" value="Delete">
+                                }
+                            }
+                            <input type=submit id="submit_edit_employee" name="submit_edit_employee" class="btn btn-warning" value="Update">
                         </div>
                     </div>
                 </form>
@@ -181,11 +202,12 @@
                 { "data": "employeeTitle" },
                 { "data": "location" },
                 { "data": "phone" },
-                { "data": "fax" }
+                { "data": "fax" },
+                { "data": "employeeStatus" }
             ],
             "columnDefs": [
                 {
-                    "targets": [ 8 ],
+                    "targets": [ 9 ],
                     // "visible": false,
                     // "searchable": false
                     "defaultContent": "<button class='btnEditable' title='Edit Employee'><i class='fa fa-pencil-square-o'></i></button>"
@@ -220,8 +242,33 @@
             $("input[name='edit_email']").val(cTable.row( editRow ).data()['email']);
             $("input[name='edit_phone']").val(cTable.row( editRow ).data()['phone']);
             $("input[name='edit_fax']").val(cTable.row( editRow ).data()['fax']);
+            $("#form_edit_employee .select-employee-status option").filter(function() {
+                var status = cTable.row(editRow).data()['employeeStatus'];
+                if(status == "") status = "Active";
+                return $(this).text() == status;
+            }).first().prop("selected", true);
+
+            // Query employee status like related charts and give warnings.
+            $("div[name=warn-employee-relate-chart]").hide();
+            $.ajax({
+                url: "../employee/"+editRow[0].id,
+                type: "GET",
+                data: {
+                    empId: editRow[0].id
+                },
+            }).done(function(msg) {
+                var warnRelateChart = "";
+                if(msg["hasRelatedChart"]==true){
+                    warnRelateChart = "WARNING: \nThis employee has used in other chart. Update or deletion would effect to all chart.";
+                    // console.log("warnRelateChart"+warnRelateChart);
+                    $("div[name='warn-employee-relate-chart']").text(warnRelateChart);
+                    $("div[name=warn-employee-relate-chart]").show();
+                }
+            });
             // console.log( cTable.row( this ).data() );
             $( "#btn_edit_employee" ).trigger( "click" );
+
+            // Check employee related charts
         }
         $('#dataTables-employee tbody').on('click', '.btnEditable', function() {
             openEditEmpDialog($(this).parent().parent());
@@ -242,18 +289,18 @@
         $("#btn_new_employee").leanModal({top : 100, overlay : 0.6, closeButton: ".modal_close" });
         $("#btn_edit_employee").leanModal({top : 100, overlay : 0.6, closeButton: ".modal_close" });
 
-        var re_name = new RegExp("^[A-Za-z0-9]{1,}$");
+        var re_name = new RegExp("^[ A-Za-z0-9]{1,}$");
         $('.field-validation.name').keyup(function(){
             $(this).prev().text(re_name.test($(this).val()) 
                 ? "":"Invalid name");
         });
-        var re_phone = new RegExp("^[0-9]{7,10}$");
+        var re_phone = new RegExp("^([0-9]{7,10})?$");
         $('.field-validation.phone').keyup(function(){
             $(this).prev().text(re_phone.test($(this).val()) 
                 ? "":"Phone number should be 7 - 10 digits");
         });
-        var re_email = new RegExp("^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
-                    + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$");
+        var re_email = new RegExp("^([_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@@"
+                    + "[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,}))?$");
         $('.field-validation.email').keyup(function(){
             $(this).prev().text(re_email.test($(this).val())
                 ? "":"Invalid email");
@@ -313,8 +360,14 @@
                 },
                 error: function(msg) {
                     console.log(msg);
-                    if(400==msg.status){
-                        alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText + "\n" + "Please ensure no chart has reference to this employee.");
+                    // For MessageCommon, if match left brace
+                    if (msg.responseText.match("^\u007B")) {
+                        var responseJson = JSON.parse(msg.responseText);
+                        alert(responseJson['msg']);
+                        
+                    // For regular error response
+                    }else if(400==msg.status){
+                        alert(msg.status + ", " + msg.statusText + "\n" + msg.responseText + "\n");
                     }else if(401==msg.status){
                         alert(msg.status + ", " + msg.statusText + "\n" + "Unauthorized access. Are you readonly user? You may requrest permission from admin.");
                     }else if(403==msg.status){
