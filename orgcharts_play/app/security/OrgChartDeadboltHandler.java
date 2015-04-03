@@ -62,7 +62,7 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 	@Override
 	public Promise<Subject> getSubject(Context context) {
 		final AuthUserIdentity u = PlayAuthenticate.getUser(context);
-		Logger.info("OrgChartDeadboltHandler@getSubject:u.getId()="+u.getId());
+//		Logger.info("OrgChartDeadboltHandler@getSubject:u.getId()="+u.getId());
 		
 		//Get current user here using provided cookie
 		UserInfo userInfo = getUserInfoBySession(context.session());
@@ -88,7 +88,7 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 	}
 	
 	private static UserInfo getUserInfoBySession(Session session){
-    	System.out.println("OrgChartDeadboltHandler@getUserInfoBySession session="+session);
+		Logger.info("OrgChartDeadboltHandler@getUserInfoBySession session="+session);
         CookieManager cookieman = new CookieManager();
         cookieman.injectCookies(session);	
 

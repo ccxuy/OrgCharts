@@ -1,1 +1,2 @@
-activator war
+call activator war
+pause

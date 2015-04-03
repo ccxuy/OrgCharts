@@ -2,7 +2,19 @@
 
   <conversionRule conversionWord="coloredLevel" converterClass="play.api.Logger$ColoredLevel" />
   <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-    <file>${application.home}/logs/application.log</file>
+    <!-- <file>${application.home}/logs/application.log</file> -->
+    <!-- <file>${CATALINA_HOME}/logs/Orgchart.log</file> -->
+    <file>logs/Orgchart.log</file>
+    <!-- <if condition='isDefined("CATALINA_HOME")'>
+      <then>
+        <file>${CATALINA_HOME}/logs/application.log</file>
+        <property name="LOG_FILE" value="${CATALINA_HOME}/logs/Orgchart.log"/>
+      </then>
+      <else>
+        <file>logs/Orgchart.log</file>
+        <property name="LOG_FILE" value="logs/Orgchart.log"/>
+      </else>
+    </if> -->
     <encoder>
       <pattern>%date - [%level] - from %logger %n%message%n%xException%n</pattern>
     </encoder>
@@ -22,8 +34,8 @@
   <logger name="com.avaje.ebeaninternal.server.core.XmlConfigLoader" level="OFF" />
   <logger name="com.avaje.ebeaninternal.server.lib.BackgroundThread" level="OFF" />
 
-  <root level="ERROR">
-    <appender-ref ref="STDOUT" />
+  <root level="ALL">
+    <!-- <appender-ref ref="STDOUT" /> -->
     <appender-ref ref="FILE" />
   </root>
 

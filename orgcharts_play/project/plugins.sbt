@@ -18,4 +18,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-digest" % "1.0.0")
 addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "1.3-beta2")
+addSbtPlugin("com.github.play2war" % "play2-war-plugin" % "1.3-beta3")

@@ -1,1 +1,2 @@
-activator compile
+call activator compile
+pause
