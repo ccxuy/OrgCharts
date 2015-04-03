@@ -6,7 +6,7 @@ version := "1.0"
 
 Play2WarPlugin.play2WarSettings
 
-Play2WarKeys.servletVersion := "3.1"
+Play2WarKeys.servletVersion := "3.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayJava)
 
