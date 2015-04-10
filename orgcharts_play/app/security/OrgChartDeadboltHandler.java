@@ -20,7 +20,7 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 
 	@Override
 	public Promise<Result> beforeAuthCheck(final Http.Context context) {
-        System.out.println("OrgChartDeadboltHandler@beforeAuthCheck context="+context);
+		Logger.info("OrgChartDeadboltHandler@beforeAuthCheck context=" + context);
         if (PlayAuthenticate.isLoggedIn(context.session())) {
 			// user is logged in
 			return F.Promise.pure(null);
@@ -65,10 +65,10 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 //		Logger.info("OrgChartDeadboltHandler@getSubject:u.getId()="+u.getId());
 		
 		//Get current user here using provided cookie
-		UserInfo userInfo = getUserInfoBySession(context.session());
-        OrgChartUser user = new OrgChartUser(userInfo);
-
-		doBuildFakeLoginUser(context.session(), user);
+//		UserInfo userInfo = getUserInfoBySession(context.session());
+//        OrgChartUser user = new OrgChartUser(userInfo);
+//		doBuildFakeLoginUser(context.session(), user);
+		OrgChartUser user = getOrgChartUserBySession(context.session());
 
 		// Caching might be a good idea here
 		return F.Promise.pure((Subject)user);
@@ -90,7 +90,8 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 	private static UserInfo getUserInfoBySession(Session session){
 		Logger.info("OrgChartDeadboltHandler@getUserInfoBySession session="+session);
         CookieManager cookieman = new CookieManager();
-        cookieman.injectCookies(session);	
+        cookieman.injectCookies(session);
+		cookieman.printDebugInfo();
 
         UserInfo uInfo = new UserInfo();
         uInfo.inputCookies(cookieman);
@@ -99,10 +100,22 @@ public class OrgChartDeadboltHandler extends AbstractDeadboltHandler {
 	}
 
 	public static OrgChartUser getOrgChartUserBySession(Session session) {
-		UserInfo userInfo = getUserInfoBySession(session);
-		OrgChartUser user = new OrgChartUser(userInfo);
-		doBuildFakeLoginUser(session, user);
-		return user;
+		if(session.containsKey("fakelogin")){
+			OrgChartUser user = new OrgChartUser(new UserInfo());
+			doBuildFakeLoginUser(session, user);
+			Logger.info("@getOrgChartUserBySession doBuildFakeLoginUser");
+			return user;
+		}else{
+			UserInfo userInfo = getUserInfoBySession(session);
+			if(null!=userInfo&&null!=userInfo.getHinuser()&&false==userInfo.getHinuser().equals("")){
+				OrgChartUser user = new OrgChartUser(userInfo);
+				Logger.info("@getOrgChartUserBySession OrgChartUser="+user);
+				return user;
+			}else{
+				Logger.debug("@getOrgChartUserBySession: Cookies input failed: userInfo="+userInfo);
+				return null;
+			}
+		}
 	}
 
 }

@@ -187,6 +187,10 @@ public class CookieManager {
 
 	}
 
+	public void printDebugInfo(){
+		Logger.debug("cookieMaps="+this.cookieMaps);
+	}
+
 	public static void main(String[] args) {
 
 		CookieManager cm = new CookieManager();

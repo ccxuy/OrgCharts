@@ -1,8 +1,8 @@
 import com.github.play2war.plugin._
 
-name := """OrgChart"""
+name := """doh2#applinks#orgchart"""
 
-version := "1.0"
+version := "1.1"
 
 Play2WarPlugin.play2WarSettings
 

@@ -38,7 +38,7 @@ public class ChartCtrl extends Controller {
     }
 
     @SuppressWarnings("unchecked")
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result getAllChart() {
         // Change to use session later...
         String ownerId = null;
@@ -62,7 +62,7 @@ public class ChartCtrl extends Controller {
         }
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result showChart() {
         final Set<Map.Entry<String,String[]>> entries = request().queryString().entrySet();
         for (Map.Entry<String,String[]> entry : entries) {
@@ -98,7 +98,7 @@ public class ChartCtrl extends Controller {
                 " Please contact administrator or chart owner for help.");
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result getChart(String id) {
         OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         // Read ChartBean from storage
@@ -125,7 +125,7 @@ public class ChartCtrl extends Controller {
         return forbidden(" Permission Denied : You don't have permission to access this chart! ");
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result countChart() {
         OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         // Read ChartBean from storage
@@ -149,7 +149,7 @@ public class ChartCtrl extends Controller {
         return forbidden(" Permission Denied : You don't have permission to access this chart! ");
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER)})
     public static Result requestChartEdit(String id) {
         OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         String editReq = request().getQueryString("edit");
@@ -321,7 +321,7 @@ public class ChartCtrl extends Controller {
         return new Status(play.core.j.JavaResults.MethodNotAllowed(), Json.toJson(msg), Codec.javaSupported("utf-8"));
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result getChartXML(String id) {
         OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         // Read XML from storage
@@ -350,7 +350,7 @@ public class ChartCtrl extends Controller {
         return forbidden(" Permission Denied : You don't have permission to access this chart! ");
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result checkChartName(String chartName) {
         try {
             System.out.println("ChartCtrl@checkChartName: chartName=" + chartName);

@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                           controllers.Application.index()
+GET     /log/                       controllers.LogCtrl.getLog(fileName: String = null)
+GET     /log/:fileName              controllers.LogCtrl.getLog(fileName: String)
 
 # Authentication
 GET     /loginadmin                      controllers.Application.loginAsAdmin
@@ -11,7 +13,7 @@ GET     /loginuser                      controllers.Application.loginAsUser
 GET     /loginuser2                      controllers.Application.loginAsUser2
 GET     /loginreadonly                      controllers.Application.loginAsReadonly
 
-GET     /logout                     com.feth.play.module.pa.controllers.Authenticate.logout
+GET     /logout                     controllers.Application.logout()
 GET     /authenticate/:provider     com.feth.play.module.pa.controllers.Authenticate.authenticate(provider: String)
 
 GET     /currentuser                    controllers.Application.getCurrentLoginUser
@@ -49,6 +51,8 @@ GET     /employee/EditData/                      controllers.EmployeeCtrl.getEmp
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 #GET     /*file               controllers.Assets.at(path="/public", file)
+#
+# GET     /logs/*file                 controllers.Assets.at(path="/logs", file)
 
 # tmp html
 GET     /tmp/                               controllers.Application.tmp()

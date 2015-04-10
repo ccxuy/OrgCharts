@@ -48,7 +48,7 @@ public class EmployeeCtrl extends Controller {
 	}
 
 	@BodyParser.Of(BodyParser.Json.class)
-	@SubjectPresent
+	@Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
 	public static Result getAllEmployee() {
 		try {
 			HibernateUtilities.getFactory();
@@ -72,7 +72,7 @@ public class EmployeeCtrl extends Controller {
 	 * @deprecated
 	 */
 	@Deprecated
-	@SubjectPresent
+	@Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
 	public static Result getAllEmployeeNameList() {
 		try {
 			HibernateUtilities.getFactory();
@@ -101,7 +101,7 @@ public class EmployeeCtrl extends Controller {
 	 * @deprecated
 	 */
 	@Deprecated
-	@SubjectPresent
+	@Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
 	public static Result getEmployeeEditData() {
 		try {
 			String empId = request().getQueryString("empId");
@@ -132,7 +132,7 @@ public class EmployeeCtrl extends Controller {
 		}
 	}
 
-	@SubjectPresent
+	@Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
 	public static Result getEmployee(String id) {
 		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
 		MessageCommon msg = new MessageCommon();
@@ -160,7 +160,7 @@ public class EmployeeCtrl extends Controller {
 		return ok(input);
 	}
 
-	@SubjectPresent
+	@Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
 	public static Result getEmployeeImage() {
 		try {
 			HibernateUtilities.getFactory();

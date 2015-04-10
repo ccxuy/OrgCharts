@@ -53,7 +53,11 @@ public class OrgChartUser implements Subject, UserInfoIntegration {
         this.id = id;
     }
 
-    @Override
+	public String getId() {
+		return id;
+	}
+
+	@Override
 	public String getIdentifier() {
 		return id;
 	}

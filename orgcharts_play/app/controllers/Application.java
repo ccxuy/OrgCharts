@@ -29,6 +29,7 @@ public class Application extends Controller {
         return redirect("manage-dashboard/");
     }
 
+    @SubjectPresent
     public static OrgChartUser getLoginUser(final Session session) {
         final OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         return ocu;
@@ -48,18 +49,18 @@ public class Application extends Controller {
         return ok(views.html.manageIndex.render(numCharts.toString(), numEmployees.toString()));
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result ocsCharts() {
         return ok(views.html.manageChart.render());
     }
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result ocsEmployees() {
         return ok(views.html.manageEmployee.render());
     }
     
     //TODO: disable this function in real application
-    @Restrict({@Group(OrgChartRoleType.ADMIN),@Group(OrgChartRoleType.USER)})
+    @Restrict({@Group(OrgChartRoleType.ADMIN)})
     public static Result tmp() {
         System.out.println("Application@tmp");
         return ok(views.html.tmp.render("hi"));
@@ -108,9 +109,18 @@ public class Application extends Controller {
         OrgChartAuthProvider.handleFakeLogin(ctx(), OrgChartRoleType.READONLY.toString());
         return ok(views.html.tmp.render("Application@loginAsReadonly"));
     }
+
+
+    @SubjectPresent
     public static Result getCurrentLoginUser() {
         OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
         return ok(Json.toJson(ocu));
+    }
+
+    public static Result logout(){
+        session().clear();
+//        return com.feth.play.module.pa.controllers.Authenticate.logout();
+        return PlayAuthenticate.logout(session());
     }
 
 }
