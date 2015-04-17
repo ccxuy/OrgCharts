@@ -8,6 +8,7 @@
   <!-- database name -->
   <property name="hibernate.connection.url">jdbc:oracle:thin:@(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = vracdev2.health.state.ny.us)(PORT = 1521))(ADDRESS = (PROTOCOL = TCP)(HOST = vracdev1.health.state.ny.us)(PORT = 1521))(LOAD_BALANCE = YES)(CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = gendev.health.state.ny.us)(FAILOVER_MODE = (TYPE = SELECT)(METHOD = basic)(RETRIES = 180)(DELAY = 5))))</property>
   <property name="hibernate.connection.username">HBXTRACK</property>
+  <!-- temperal password -->
   <property name="hibernate.connection.password">winter2015</property>
 
   <!-- c3p0 config http://www.hibernate.org/214.html -->

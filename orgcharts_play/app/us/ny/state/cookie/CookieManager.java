@@ -8,6 +8,7 @@ import javax.servlet.http.Cookie;
 import play.Logger;
 import play.api.mvc.Cookies;
 import play.api.mvc.RequestHeader;
+import play.mvc.Http;
 import play.mvc.Http.HeaderNames;
 import play.mvc.Http.Session;
 
@@ -37,30 +38,47 @@ public class CookieManager {
 
 
 	/**
-	 * Yet another implementation for injecting cookies directly from a map!
-	 * This function is designed for Play Framework lol!
+	 * inject our cookies
+	 * we only process two cookies and their delimiters
 	 */
-	public void injectCookies(Session session) {
-//		if (cookie.get("PermCookie")!= null){
-//			Map cookieMap = getCookieNameValueMap(cookie.get("PermCookie").get().value(), primary_del, second_del);
-//			cookieMaps.put(cookieName, cookieMap);
-//			this.addCookieMap(cookie, "\\|", ":");
-//		} else if (cookie != null && cookie.getName().equalsIgnoreCase("WaarpCookie")){
-//			this.addCookieMap(cookie, "%7C", "%3A");
-//		}
-
-//        Logger.debug("CookieManager@injectCookies session="+session);
-		if (session != null) {
-			for (String keyString : session.keySet()){
-//                System.out.println("session.keySet().keyString="+keyString);
-				if (keyString.equalsIgnoreCase("PermCookie")){
-					this.addCookieMap(session, "\\|", ":");
-				} else if (keyString.equalsIgnoreCase("WaarpCookie")){
-					this.addCookieMap(session, "%7C", "%3A");
+	public void injectCookies(Http.Cookies cookies) {
+		if (cookies != null) {
+			for(Http.Cookie c : cookies){
+				if(c.name().equalsIgnoreCase("PermCookie")){
+					this.addCookieMap(c, "\\|", ":");
+				}else if(c.name().equalsIgnoreCase("WaarpCookie")){
+					this.addCookieMap(c, "%7C", "%3A");
 				}
 			}
 		}
 	}
+
+
+	/**
+	 * Yet another implementation for injecting cookies directly from a map!
+	 * This function is designed for Play Framework lol!
+	 */
+//	public void injectCookies(Session session) {
+////		if (cookie.get("PermCookie")!= null){
+////			Map cookieMap = getCookieNameValueMap(cookie.get("PermCookie").get().value(), primary_del, second_del);
+////			cookieMaps.put(cookieName, cookieMap);
+////			this.addCookieMap(cookie, "\\|", ":");
+////		} else if (cookie != null && cookie.getName().equalsIgnoreCase("WaarpCookie")){
+////			this.addCookieMap(cookie, "%7C", "%3A");
+////		}
+//
+////        Logger.debug("CookieManager@injectCookies session="+session);
+//		if (session != null) {
+//			for (String keyString : session.keySet()){
+////                System.out.println("session.keySet().keyString="+keyString);
+//				if (keyString.equalsIgnoreCase("PermCookie")){
+//					this.addCookieMap(session, "\\|", ":");
+//				} else if (keyString.equalsIgnoreCase("WaarpCookie")){
+//					this.addCookieMap(session, "%7C", "%3A");
+//				}
+//			}
+//		}
+//	}
 
 
 	/**
@@ -105,6 +123,18 @@ public class CookieManager {
 		String cookieName = cookie.getName();
 		String cookieValue = cookie.getValue();
         //System.out.println(cookieName+" : "+cookieValue);
+		// get CookieMap
+		Map cookieMap = getCookieNameValueMap(cookieValue, primary_del, second_del);
+
+		// add the CookieNameValueMap to the Map
+		cookieMaps.put(cookieName, cookieMap);
+	}
+
+	public void addCookieMap(Http.Cookie cookie, String primary_del, String second_del){
+
+		String cookieName = cookie.name();
+		String cookieValue = cookie.value();
+		//System.out.println(cookieName+" : "+cookieValue);
 		// get CookieMap
 		Map cookieMap = getCookieNameValueMap(cookieValue, primary_del, second_del);
 
@@ -185,10 +215,6 @@ public class CookieManager {
 
 		return fieldValue;
 
-	}
-
-	public void printDebugInfo(){
-		Logger.debug("cookieMaps="+this.cookieMaps);
 	}
 
 	public static void main(String[] args) {

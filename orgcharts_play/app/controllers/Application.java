@@ -1,7 +1,6 @@
 package controllers;
 
 import be.objectify.deadbolt.java.actions.SubjectPresent;
-import beans.ChartBean;
 import com.feth.play.module.pa.PlayAuthenticate;
 
 import be.objectify.deadbolt.java.actions.Group;
@@ -10,16 +9,14 @@ import play.*;
 import play.libs.Json;
 import play.mvc.*;
 import play.mvc.Http.Session;
-import providers.NyAuthUser;
-import providers.NyGovShortnameAuthProvider;
 import providers.OrgChartAuthProvider;
-import providers.NyGovUsernameAuthProvider;
-import scala.reflect.internal.Trees.This;
 import security.OrgChartDeadboltHandler;
 import security.OrgChartRoleType;
 import security.OrgChartUser;
 import utilities.HibernateUtilities;
-import views.html.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Application extends Controller {
 
@@ -31,7 +28,7 @@ public class Application extends Controller {
 
     @SubjectPresent
     public static OrgChartUser getLoginUser(final Session session) {
-        final OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        final OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         return ocu;
     }
 
@@ -111,10 +108,20 @@ public class Application extends Controller {
     }
 
 
-    @SubjectPresent
+    @Restrict({@Group(OrgChartRoleType.ADMIN)})
     public static Result getCurrentLoginUser() {
-        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         return ok(Json.toJson(ocu));
+    }
+
+
+    @Restrict({@Group(OrgChartRoleType.ADMIN)})
+    public static Result getCookie() {
+//        Logger.info(""+request().cookies().get("PermCookie").value());
+        Map<String, String> cookieMap = new HashMap<>();
+        Http.Cookies cookies = request().cookies();
+        cookies.forEach(c -> cookieMap.put(c.name(), c.value()));
+        return ok(Json.toJson(cookieMap));
     }
 
     public static Result logout(){

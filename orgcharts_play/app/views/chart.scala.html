@@ -18,16 +18,16 @@
 
 
     <!-- jQuery includes -->
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.2.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="@routes.Assets.at("js/jquery-1.7.2.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("js/jquery-ui.min.js")"></script>
     <!-- jQuery autocomplete stylesheet -->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="@routes.Assets.at("css/jquery-ui.css")">
     <!-- Bootstrap switch -->
     <link rel="stylesheet" href="@routes.Assets.at("css/bootstrap-switch.css")">
     <script type="text/javascript" src="@routes.Assets.at("js/bootstrap-switch.js")"></script>
     <!-- Knockout.js -->
-    <script type='text/javascript' src='http://knockoutjs.com/downloads/knockout-3.2.0.js'></script>
-    <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/knockout.mapping/2.4.1/knockout.mapping.js'></script>
+    <script type='text/javascript' src='@routes.Assets.at("js/knockout-3.2.0.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.at("js/knockout.mapping.js")'></script>
 
     <script type="text/javascript" src="@routes.Assets.at("js/chart-prettify.js")"></script>
 
@@ -41,6 +41,10 @@
     <script type="text/javascript" src="@routes.Assets.at("fancybox/jquery.fancybox.js")"></script>
     <script src="@routes.Assets.at("js/chart-jquery.jOrgChart.js")"></script>
     <script src="@routes.Assets.at("js/chart-jsp.js")"></script>
+    
+    <script type="text/javascript">
+        document.dohhcsmenuinjection = true;
+    </script>
 </head>
 
 <body onload="prettyPrint();">

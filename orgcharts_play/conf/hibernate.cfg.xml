@@ -4,7 +4,7 @@
 <hibernate-configuration>
  <session-factory>
   <property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
-  <property name="connection.datasource">java:comp/env/jdbc/OrgchartWebAppDB</property>
+  <property name="connection.datasource">java:/comp/env/jdbc/OrgchartWebAppDB</property>
 
   <!-- c3p0 config http://www.hibernate.org/214.html -->
   <!-- <property name="connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>

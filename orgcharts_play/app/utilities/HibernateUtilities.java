@@ -45,7 +45,7 @@ public class HibernateUtilities {
 				stats = sessfactory.getStatistics();
 				stats.setStatisticsEnabled(true);
 			} catch (Exception e) {
-				Logger.error("Initial SessionFactory creation failed." + e);
+				Logger.error("Initial SessionFactory creation failed. ", e );
 			} catch (Throwable ex) {
 				System.err.println("Failed to create sessionFactory object."
 						+ ex);
@@ -53,7 +53,7 @@ public class HibernateUtilities {
 			}
 
 			// Use manual setting file if JNDI lookup failed.
-			boolean flagUseSecondaryHibernateSetting = true;
+			boolean flagUseSecondaryHibernateSetting = false;
 			if (sessfactory == null && flagUseSecondaryHibernateSetting) {
 				Logger.info("Try to use manual setting to Initial SessionFactory.");
 				try {

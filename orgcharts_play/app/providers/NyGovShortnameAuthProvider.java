@@ -45,7 +45,7 @@ public abstract class NyGovShortnameAuthProvider
 	public Object authenticate(Context context, Object payload)
 			throws AuthException {
 		CookieManager cookieman = new CookieManager();
-		cookieman.injectCookies(context.session());
+		cookieman.injectCookies(context.request().cookies());
 		UserInfo uInfo = new UserInfo();
 		uInfo.inputCookies(cookieman);
 		// TODO: combine UserInfo type with OrgChartUser

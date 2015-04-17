@@ -3,7 +3,6 @@ package controllers;
 import be.objectify.deadbolt.core.models.Role;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
 import beans.ChartBean;
 import beans.ProfileBean;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -74,7 +73,7 @@ public class ChartCtrl extends Controller {
         if (null == chartId || chartId.equals("")) {
             chartId = Setting.DefaultData.ChartId_default;
         }
-        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         ChartBean chartBean = new ChartBean();
         // Read ChartBean from storage
         if (Setting.STORAGE == StorageSetting.HIBERNATE) {
@@ -100,7 +99,7 @@ public class ChartCtrl extends Controller {
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result getChart(String id) {
-        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         // Read ChartBean from storage
         if (Setting.STORAGE == StorageSetting.HIBERNATE) {
             String chartId = request().getQueryString("chartid");
@@ -127,7 +126,7 @@ public class ChartCtrl extends Controller {
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result countChart() {
-        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         // Read ChartBean from storage
         if (Setting.STORAGE == StorageSetting.HIBERNATE) {
             String chartName = request().getQueryString("name");
@@ -151,7 +150,7 @@ public class ChartCtrl extends Controller {
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER)})
     public static Result requestChartEdit(String id) {
-        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         String editReq = request().getQueryString("edit");
         Logger.debug("ChartCtrl@requestChartEdit chartidToChartLockMap=" + chartidToChartLockMap);
         MessageChartStatus msg = new MessageChartStatus();
@@ -323,7 +322,7 @@ public class ChartCtrl extends Controller {
 
     @Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
     public static Result getChartXML(String id) {
-        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+        OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
         // Read XML from storage
         if (Setting.STORAGE == StorageSetting.HIBERNATE) {
             String chartId = request().getQueryString("chartid");
@@ -372,7 +371,7 @@ public class ChartCtrl extends Controller {
             String chart_name = form.get("new_chart_name");
             // Replace to use current login user id
 //			String chart_ownerid = form.get("new_chart_owner_id");
-            OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+            OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
             Logger.debug("ChartCtrl@createChart OrgChartUser:=" + ocu);
             String chart_ownerid = ocu.getIdentifier();
             String chart_permission = form.get("new_chart_permission");
@@ -426,7 +425,7 @@ public class ChartCtrl extends Controller {
                             + form.get().toString());
                 }
 
-                OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+                OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
                 // change chart information is fast, is user can lock, it can write.
                 if (isUserGetChartLockAllowed(cb, ocu)
                         ||isUserGetChartLockAllowed(cb, ocu)) {
@@ -465,7 +464,7 @@ public class ChartCtrl extends Controller {
             HibernateUtilities.getFactory();
             ChartBean chartBean = HibernateUtilities.searchChartByUUID(chartId);
             if (null != chartBean && null != update_str) {
-                OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+                OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
                 if (isUserWriteChartAllowed(chartBean, ocu)) {
                     HashSet empRelatedListOld = getEmployeeIdFromXML(chartBean.getXmlString());
 
@@ -526,7 +525,7 @@ public class ChartCtrl extends Controller {
             try {
                 HibernateUtilities.getFactory();
                 ChartBean chartBean = HibernateUtilities.searchChartByUUID(chart_id);
-                OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+                OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
                 if (isUserWriteChartAllowed(chartBean, ocu)
                         ||isUserGetChartLockAllowed(chartBean, ocu)) {
                     int ret = HibernateUtilities.deleteChartByUUID(chart_id);

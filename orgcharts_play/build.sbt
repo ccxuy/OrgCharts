@@ -1,6 +1,8 @@
 import com.github.play2war.plugin._
 
-name := """doh2#applinks#orgchart"""
+name := """aorgchart"""
+
+// The name should start with characters before 'p' to avoid play2war plugin for play framework Slf4jLogger overwrite logging settings for default path \{applicaiton.home}\application.log
 
 version := "1.1"
 

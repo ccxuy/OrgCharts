@@ -6,6 +6,10 @@
 GET     /                           controllers.Application.index()
 GET     /log/                       controllers.LogCtrl.getLog(fileName: String = null)
 GET     /log/:fileName              controllers.LogCtrl.getLog(fileName: String)
+GET     /log/del/:fileName              controllers.LogCtrl.doDelLog(fileName: String)
+GET     /conf/                      controllers.LogCtrl.getConfig(fileName: String = null)
+GET     /conf/:fileName             controllers.LogCtrl.getConfig(fileName: String)
+GET     /cookie/                    controllers.Application.getCookie()
 
 # Authentication
 GET     /loginadmin                      controllers.Application.loginAsAdmin

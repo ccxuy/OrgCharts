@@ -1,25 +1,14 @@
 package controllers;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Set;
 
-import be.objectify.deadbolt.java.DeadboltHandler;
 import be.objectify.deadbolt.java.actions.Group;
 import be.objectify.deadbolt.java.actions.Restrict;
-import be.objectify.deadbolt.java.actions.SubjectPresent;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import com.google.common.collect.Iterables;
 import model.MessageCommon;
 import play.Logger;
-import play.Play;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.libs.Json;
@@ -31,7 +20,6 @@ import security.OrgChartDeadboltHandler;
 import security.OrgChartRoleType;
 import security.OrgChartUser;
 import utilities.HibernateUtilities;
-import beans.ChartBean;
 import beans.ProfileBean;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -134,7 +122,7 @@ public class EmployeeCtrl extends Controller {
 
 	@Restrict({@Group(OrgChartRoleType.ADMIN), @Group(OrgChartRoleType.USER), @Group(OrgChartRoleType.READONLY)})
 	public static Result getEmployee(String id) {
-		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserBySession(session());
+		OrgChartUser ocu = OrgChartDeadboltHandler.getOrgChartUserByContext(ctx());
 		MessageCommon msg = new MessageCommon();
 		msg.fromMethod = "getEmployee";
 		msg.fromUserId = ocu.getIdentifier();
