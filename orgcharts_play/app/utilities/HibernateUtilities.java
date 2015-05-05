@@ -53,7 +53,7 @@ public class HibernateUtilities {
 			}
 
 			// Use manual setting file if JNDI lookup failed.
-			boolean flagUseSecondaryHibernateSetting = false;
+			boolean flagUseSecondaryHibernateSetting = true;
 			if (sessfactory == null && flagUseSecondaryHibernateSetting) {
 				Logger.info("Try to use manual setting to Initial SessionFactory.");
 				try {

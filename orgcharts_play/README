@@ -1,8 +1,35 @@
-#Organization Chart Project
+# Organization Chart Project
 =================================
 
-##Compilation to war
+## Compilation to war
 ===================
 1. All hibernate or other configuration files need to put on \conf\. (Extra files you want to include may put in \war\WEB-INF\classes\)
 2. If you deploy war on path other than root in Tomcat, you need to specify path name to valuable "application.context" in \conf\application.conf.
-3. Run \export-war.bat or "activator war"
+3. If you want to recompile the whole project, you may run clean_compile.bat.
+4. Run \export-war.bat or "activator war" and it will do all rest stuff for you :)
+5. Run on tomcat 7 or 8, jvm 1.8
+
+## To run on Play build in server
+===================
+Run activator.bat and click run app on promot web page. You can also do compilation on this promot web page
+
+## To export project to eclipse
+===================
+Run export-eclipse.bat 
+
+## Project components
+===================
+Java 8
+Java Play 2 framework
+Deadbolt security plugin
+Hibernate
+Joda-time
+Jackson
+JQuery
+Bootstrap
+Knockout.js
+
+## Other things
+===================
+` You may visit www.playframework.org for more documentations. However, the new web proxy seems blocking this website. I don't know why. :(
+` You may choose to use Logger instead of print function if too much log informations.
